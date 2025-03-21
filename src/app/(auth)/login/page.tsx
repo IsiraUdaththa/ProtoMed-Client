@@ -10,7 +10,11 @@ const Apsdap: React.FC = () => {
 	};
 
 	return (
-		<Flex justify="center" align="center" style={{ height: "100vh" }}>
+		<Flex
+			justify="center"
+			align="center"
+			style={{ height: "100vh", background: "linear-gradient(to bottom, white, 20%, #f5f5f5)" }}
+		>
 			<Card
 				style={{
 					width: 400,

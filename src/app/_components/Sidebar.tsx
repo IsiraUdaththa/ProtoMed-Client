@@ -4,10 +4,7 @@ import React, { useState } from "react";
 import { AppstoreOutlined, DashboardOutlined, UserOutlined } from "@ant-design/icons";
 import type { GetProp, MenuProps } from "antd";
 import { Menu } from "antd";
-import Sider from "antd/es/layout/Sider";
 import { useRouter } from "next/navigation";
-
-type MenuTheme = GetProp<MenuProps, "theme">;
 
 type MenuItem = GetProp<MenuProps, "items">[number];
 
@@ -41,7 +38,7 @@ const items: MenuItem[] = [
 	},
 ];
 
-const App: React.FC = () => {
+const Sidebar: React.FC = () => {
 	const router = useRouter();
 
 	const handleMenuClick = (e: any) => {
@@ -50,18 +47,14 @@ const App: React.FC = () => {
 
 	return (
 		<>
-			<Sider>
-				<Menu
-					mode="inline"
-					defaultSelectedKeys={["/dashboard"]}
-					defaultOpenKeys={["/Orders"]}
-					style={{ height: "100%" }}
-					items={items}
-					onClick={handleMenuClick}
-				/>
-			</Sider>
+			<Menu
+				mode="inline"
+				style={{ height: "100%", backgroundColor: "transparent" }}
+				items={items}
+				onClick={handleMenuClick}
+			/>
 		</>
 	);
 };
 
-export default App;
+export default Sidebar;

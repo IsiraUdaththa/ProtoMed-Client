@@ -7,7 +7,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Modal, Flex, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 
-const App: React.FC = () => {
+const Navbar: React.FC = () => {
 	const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -43,4 +43,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default Navbar;
