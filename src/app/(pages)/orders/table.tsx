@@ -1,144 +1,139 @@
-import React from "react";
-import { Space, Table, Tag } from "antd";
-import type { TableProps } from "antd";
+/* eslint-disable compat/compat */
+import React, { useEffect, useState } from "react";
+import type { GetProp, TableProps } from "antd";
+import { Table } from "antd";
+import type { AnyObject } from "antd/es/_util/type";
+import type { SorterResult } from "antd/es/table/interface";
 
-interface DataType {
-	key: string;
+type ColumnsType<T extends object = object> = TableProps<T>["columns"];
+type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
+
+interface PatientDetails {
+	_id: string;
 	name: string;
 	age: number;
 	address: string;
-	tags: string[];
+	category: string;
+	surgeonName: string;
+	plannedSurgeryDate: string;
+	hospital: string;
+	ward: number;
+	comment: string;
+	registeredBy: string;
+	createdAt: string;
+	updatedAt: string;
 }
 
-const columns: TableProps<DataType>["columns"] = [
+interface DataType {
+	key: string;
+	patientDetails: PatientDetails;
+}
+
+interface TableParams {
+	pagination?: TablePaginationConfig;
+	sortField?: SorterResult<any>["field"];
+	sortOrder?: SorterResult<any>["order"];
+	filters?: Parameters<GetProp<TableProps, "onChange">>[1];
+}
+
+const columns: ColumnsType<DataType> = [
 	{
-		title: "Name/OrderID",
-		dataIndex: "name",
-		key: "name",
-		render: (text) => <a>{text}</a>,
+		title: "Name",
+		dataIndex: ["patientDetails", "name"],
+		width: "20%",
 	},
 	{
-		title: "Status",
-		dataIndex: "age",
-		key: "age",
+		title: "Gender",
+		dataIndex: ["patientDetails", "category"],
+		filters: [
+			{ text: "Male", value: "male" },
+			{ text: "Female", value: "female" },
+		],
+		width: "20%",
 	},
 	{
-		title: "Date Created",
-		dataIndex: "address",
-		key: "address",
-	},
-	{
-		title: "Last Updated",
-		key: "tags",
-		dataIndex: "tags",
-		render: (_, { tags }) => (
-			<>
-				{tags.map((tag) => {
-					let color = tag.length > 5 ? "geekblue" : "green";
-					if (tag === "loser") {
-						color = "volcano";
-					}
-					return (
-						<Tag color={color} key={tag}>
-							{tag.toUpperCase()}
-						</Tag>
-					);
-				})}
-			</>
-		),
-	},
-	{
-		title: "Actions",
-		key: "action",
-		render: (_, record) => (
-			<Space size="middle">
-				<a>Invite {record.name}</a>
-				<a>Delete</a>
-			</Space>
-		),
+		title: "Email",
+		dataIndex: ["patientDetails", "age"],
 	},
 ];
 
-const data: DataType[] = [
-	{
-		key: "1",
-		name: "John Brown",
-		age: 32,
-		address: "New York No. 1 Lake Park",
-		tags: ["nice", "developer"],
-	},
-	{
-		key: "2",
-		name: "Jim Green",
-		age: 42,
-		address: "London No. 1 Lake Park",
-		tags: ["loser"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-	{
-		key: "3",
-		name: "Joe Black",
-		age: 32,
-		address: "Sydney No. 1 Lake Park",
-		tags: ["cool", "teacher"],
-	},
-];
+const toURLSearchParams = <T extends AnyObject>(record: T) => {
+	const params = new URLSearchParams();
+	for (const [key, value] of Object.entries(record)) {
+		params.append(key, value);
+	}
+	return params;
+};
 
-const App: React.FC = () => <Table<DataType> scroll={{ x: 600 }} columns={columns} dataSource={data} />;
- 
+const getRandomuserParams = (params: TableParams) => ({
+	results: params.pagination?.pageSize,
+	page: params.pagination?.current,
+	...params,
+});
+
+const App: React.FC = () => {
+	const [data, setData] = useState<DataType[]>();
+	const [loading, setLoading] = useState(false);
+	const [tableParams, setTableParams] = useState<TableParams>({
+		pagination: {
+			current: 1,
+			pageSize: 10,
+		},
+	});
+
+	const params = toURLSearchParams(getRandomuserParams(tableParams));
+
+	const fetchData = () => {
+		setLoading(true);
+		fetch(`http://localhost:5000/api/orders?${params.toString()}`)
+			.then((res) => res.json())
+			.then(({ results }) => {
+				setData(results);
+				setLoading(false);
+				setTableParams({
+					...tableParams,
+					pagination: {
+						...tableParams.pagination,
+						total: 200,
+						// 200 is mock data, you should read it from server
+						// total: data.totalCount,
+					},
+				});
+			});
+	};
+
+	useEffect(fetchData, [
+		tableParams.pagination?.current,
+		tableParams.pagination?.pageSize,
+		tableParams?.sortOrder,
+		tableParams?.sortField,
+		JSON.stringify(tableParams.filters),
+	]);
+
+	const handleTableChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter) => {
+		setTableParams({
+			pagination,
+			filters,
+			sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
+			sortField: Array.isArray(sorter) ? undefined : sorter.field,
+		});
+
+		// `dataSource` is useless since `pageSize` changed
+		if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+			setData([]);
+		}
+	};
+
+	return (
+		<Table<DataType>
+			columns={columns}
+			// rowKey={(record) => record.login.uuid}
+			dataSource={data}
+			pagination={tableParams.pagination}
+			loading={loading}
+			onChange={handleTableChange}
+		/>
+	);
+};
+
 export default App;
