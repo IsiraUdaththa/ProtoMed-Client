@@ -2,8 +2,8 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React, { useState, useEffect } from "react";
-import { Layout, Avatar, Modal, Flex, Space, Card, Steps, Badge, Drawer } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Layout, Avatar, Modal, Flex, Space, Card, Steps, Badge, Drawer, Button, FloatButton } from "antd";
+import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 import "antd/dist/reset.css";
 import MySider from "../../_components/Sidebar";
 import OrdersTable from "./table";
@@ -28,25 +28,21 @@ const Dashboard: React.FC = () => {
 		{ title: "Status", dataIndex: "status", key: "status" },
 	];
 
+	function setIsModalVisible(arg0: boolean): void {
+		throw new Error("Function not implemented.");
+	}
+
 	return (
 		<>
 			<Content>
 				<Timeline />
 				<br />
-				{/* <Flex justify="flex-end">
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
-              Add
-            </Button>
-          </Flex>
-          <br /> */}
 				<Card>
+					<br />
 					<OrdersTable />
 				</Card>
 			</Content>
-
-			{/* <Modal title="Add New Patient" open={isModalVisible} onCancel={() => setIsModalVisible(false)} footer={null}>
-					<RegistrationForm onClose={() => setIsModalVisible(false)} />
-				</Modal> */}
+			<FloatButton icon={<PlusOutlined />} tooltip={<div>Create New Order</div>} />
 		</>
 	);
 };

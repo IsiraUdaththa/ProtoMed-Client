@@ -5,13 +5,27 @@ import React, { useState } from "react";
 import { DeleteOutlined, EditOutlined, SettingOutlined } from "@ant-design/icons";
 import type { CollapseProps } from "antd";
 import { Collapse, Divider, Select, Space } from "antd";
+
 import Patient from "./Patient";
 import CTScan from "./CTScan";
 import CTValidation from "./CTValidation";
-import DesignSubmit from "./DesignSubmit"
+import Quotation from "./Quotation";
+import PaymentAdvance from "./PaymentAdvance";
+import DesignSubmit from "./DesignSubmit";
 import DesignApproval from "./DesignApproval";
-import Advance from "./Quotation";
+// import PLAOuterPrint from "./PLAOuterPrint"
+// import PLAOuterApproval from "./PLAOuterApproval"
+import PLAFlapPrint from "./PLAFlapPrint";
+// import PLAApproval from "./PLAApproval"
+// import PEEKPrint from "./PEEKPrint";
+import PEEKAnnealing from "./PEEKAnnealing";
+import PEEKRoughPolishing from "./PEEKRoughPolishing";
+import PEEKApprove from "./PEEKApprove";
+import PEEKLaserMarking from "./PEEKLaserMarking";
+import PEEKFinalPolishing from "./PEEKFinalPolishing";
 import Packing from "./Packing";
+import PaymentCompletion from "./PaymentCompletion";
+import Invoice from "./Invoice";
 const { Option } = Select;
 
 const text = `
@@ -52,7 +66,8 @@ const App: React.FC = () => {
 			children: (
 				<>
 					<CTScan />
-					<Divider /> <CTValidation />
+					<Divider />
+					<CTValidation />
 				</>
 			),
 			extra: genExtra(),
@@ -60,25 +75,52 @@ const App: React.FC = () => {
 		{
 			key: "4",
 			label: "Quotation & Payment",
-			children: <Advance />,
+			children: (
+				<>
+					<Quotation />
+					<Divider />
+					<PaymentAdvance />
+				</>
+			),
 			extra: genExtra(),
 		},
 		{
 			key: "5",
 			label: "Design Attemps",
-			children: <><DesignSubmit/><DesignApproval/></>,
+			children: (
+				<>
+					<DesignSubmit />
+					<DesignApproval />
+				</>
+			),
 			extra: genExtra(),
 		},
 		{
 			key: "6",
 			label: "PLA Print Details",
-			// children: <><PLAOuter/><PLAFlap/></>,
+			children: (
+				<>
+					<PLAFlapPrint />
+				</>
+			),
 			extra: genExtra(),
 		},
 		{
 			key: "7",
 			label: "Peek Print Details",
-			// children: <Peek/>,
+			children: (
+				<>
+					<PEEKAnnealing />
+					<Divider />
+					<PEEKRoughPolishing />
+					<Divider />
+					<PEEKApprove />
+					<Divider />
+					<PEEKLaserMarking />
+					<Divider />
+					<PEEKFinalPolishing />
+				</>
+			),
 			extra: genExtra(),
 		},
 		{
@@ -90,7 +132,12 @@ const App: React.FC = () => {
 		{
 			key: "9",
 			label: "Final Payment and Invoice",
-			// children: <Invoice/>,
+			children: (
+				<>
+					<PaymentCompletion />
+					<Invoice />
+				</>
+			),
 			extra: genExtra(),
 		},
 	];
