@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AppstoreOutlined, DashboardOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, DashboardOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import type { GetProp, MenuProps } from "antd";
 import { Menu } from "antd";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ const items: MenuItem[] = [
 		label: "Orders",
 		icon: <AppstoreOutlined />,
 		children: [
+			{ key: "/orders/", label: "All" },
 			{ key: "/orders/accuplasty", label: "Accuplasty" },
 			{ key: "/orders/accupectomy", label: "Accupectomy" },
 			{ key: "/orders/accufacial", label: "Accufacial" },
@@ -36,6 +37,11 @@ const items: MenuItem[] = [
 		icon: <UserOutlined />,
 		label: "Users",
 	},
+	{
+		key: "/settings",
+		icon: <SettingOutlined />,
+		label: "Settings",
+	},
 ];
 
 const Sidebar: React.FC = () => {
@@ -48,7 +54,7 @@ const Sidebar: React.FC = () => {
 	return (
 		<>
 			<Menu
-				mode="inline"
+				mode="vertical"
 				style={{ height: "100%", backgroundColor: "transparent" }}
 				items={items}
 				onClick={handleMenuClick}
