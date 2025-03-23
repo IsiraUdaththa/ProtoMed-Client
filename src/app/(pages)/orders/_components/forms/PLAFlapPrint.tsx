@@ -45,7 +45,7 @@ export default function PLAFlapPrint() {
   return (
 
 
-            <Card title="PLA Flap Print Process" style={{ textAlign: "center" }}>
+            <Card title="PLA Flap Print Process" style={{ textAlign: "left", maxWidth: 600, margin: "auto" }}>
               <Steps current={current} direction="horizontal">
                 <Step title="Details" icon={<SolutionOutlined />} />
                 <Step title="Confirm & Print" icon={<PrinterOutlined />} />
@@ -62,8 +62,8 @@ export default function PLAFlapPrint() {
                     <Option value="Machine A">Machine A</Option>
                     <Option value="Machine B">Machine B</Option>
                   </Select>
-                  <DatePicker style={{ width: "100%", marginBottom: 10 }} onChange={(date, dateString) => setFormData({ ...formData, printTime: dateString })} />
-                  <TimePicker style={{ width: "100%" }} onChange={(time, timeString) => setFormData({ ...formData, printTime: timeString })} />
+                  <DatePicker style={{ width: "100%", marginBottom: 10 }} onChange={(date, dateString) => setFormData({ ...formData, printTime: typeof dateString === "string" ? dateString : "" })} />
+                  <TimePicker style={{ width: "100%" }} onChange={(time, timeString) => setFormData({ ...formData, printTime: Array.isArray(timeString) ? timeString.join(", ") : timeString })} />
                   <div style={{ marginTop: 20 }}>
                     <Button type="primary" onClick={next}>Next</Button>
                   </div>

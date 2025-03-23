@@ -1,83 +1,114 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Button, Space, Dropdown, Menu, message, Input, Card, Flex } from "antd";
-import { SaveOutlined, DownOutlined } from "@ant-design/icons";
+import { Form, InputNumber, Button, Space, Dropdown, Menu, message, Steps, Typography, Flex, Result, Card } from "antd";
+import { SaveOutlined, DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+
+const { Step } = Steps;
+const { Text } = Typography;
 
 const QuotationPage: React.FC = () => {
+	const [form] = Form.useForm();
+	const [current, setCurrent] = useState(0);
 	const [currency, setCurrency] = useState<string>("USD");
-	const [quotationValue, setQuotationValue] = useState<number>(0);
+	const [formData, setFormData] = useState<{ currency?: string; quotationValue?: number }>({});
+	const [dateTime, setDateTime] = useState<string>("");
+	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+	const dummyUsername = "JohnDoe"; // Dummy username
 
-	const onFinish = (values: any) => {
-		console.log("Received values of form: ", values);
-		message.success("Quotation submitted successfully!");
+	// Get current date and time
+	const getCurrentDateTime = () => new Date().toLocaleString();
+
+	// Steps Navigation
+	const next = () => setCurrent(current + 1);
+	const prev = () => setCurrent(current - 1);
+
+	// Handle form submission
+	const handleSubmit = (values: { quotationValue: number }) => {
+		setFormData({ ...values, currency });
+		setDateTime(getCurrentDateTime());
+		next();
 	};
 
-	const handleValueChange = (value: number | null) => {
-		if (value !== null) {
-			setQuotationValue(value);
-		}
+	// Handle confirmation
+	const handleConfirm = () => {
+		console.log("Confirmed data:", formData);
+		setIsSuccess(true); // Simulating success
+		next();
 	};
 
+	// Currency selection menu
 	const currencyMenu = (
 		<Menu>
-			<Menu.Item key="USD" onClick={() => setCurrency("USD")}>
-				USD
-			</Menu.Item>
-			<Menu.Item key="LKR" onClick={() => setCurrency("LKR")}>
-				LKR
-			</Menu.Item>
-			<Menu.Item key="SRD" onClick={() => setCurrency("SRD")}>
-				SRD
-			</Menu.Item>
+			<Menu.Item key="USD" onClick={() => setCurrency("USD")}>USD</Menu.Item>
+			<Menu.Item key="LKR" onClick={() => setCurrency("LKR")}>LKR</Menu.Item>
+			<Menu.Item key="SRD" onClick={() => setCurrency("SRD")}>SRD</Menu.Item>
 		</Menu>
 	);
 
-	const [form] = Form.useForm();
-
-	const handleReset = () => {
-		form.resetFields();
-		setCurrency("USD");
-		setQuotationValue(0);
-	};
-
 	return (
-		<Flex justify="center" align="center">
-			<Form
-				form={form}
-				name="quotation"
-				onFinish={onFinish}
-				layout="vertical"
-				initialValues={{
-					quantity: 1,
-					unitPrice: 100,
-				}}
-			>
-				<Form.Item label="Quotation Value" required>
-					<Space>
-						<Dropdown overlay={currencyMenu} trigger={["click"]}>
-							<Button>
-								{currency} <DownOutlined />
-							</Button>
-						</Dropdown>
-						<InputNumber
-							value={quotationValue}
-							onChange={handleValueChange}
-							style={{ width: "100%" }}
-							placeholder="Enter value"
-							min={0}
-						/>
-					</Space>
-				</Form.Item>
+		<Card title="Quotation Value" style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
+			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
+				<Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Step title="Confirm" icon={<SolutionOutlined />} />
+				<Step title="Status" icon={<SmileOutlined />} />
+			</Steps>
 
-				<Form.Item>
-					<Space>
-						<Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
-							Save Quotation
+			{/* Step 1: Enter Quotation Details */}
+			{current === 0 && (
+				<Form
+					form={form}
+					onFinish={handleSubmit}
+					layout="vertical"
+					style={{ width: "100%", maxWidth: 500 }}
+				>
+					<Form.Item label="Quotation Value" name="quotationValue" rules={[{ required: true, message: "Please enter a value!" }]}>
+						<Space>
+							<Dropdown overlay={currencyMenu} trigger={["click"]}>
+								<Button>{currency} <DownOutlined /></Button>
+							</Dropdown>
+							<InputNumber
+								style={{ width: "100%" }}
+								placeholder="Enter value"
+								min={0}
+							/>
+						</Space>
+					</Form.Item>
+
+					<Form.Item>
+						<Button type="primary" htmlType="submit" >
+							Next
 						</Button>
+					</Form.Item>
+				</Form>
+			)}
+
+			{/* Step 2: Confirm Data */}
+			{current === 1 && formData.quotationValue !== undefined && (
+				<>
+					<Text><strong>Username:</strong> {dummyUsername}</Text><br />
+					<Text><strong>Date and Time:</strong> {dateTime}</Text><br />
+					<Text><strong>Currency:</strong> {formData.currency}</Text><br />
+					<Text><strong>Quotation Value:</strong> {formData.quotationValue}</Text><br />
+
+					<Space>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>Confirm</Button>
 					</Space>
-				</Form.Item>
-			</Form>
-		</Flex>
+				</>
+			)}
+
+			{/* Step 3: Success or Failure Message */}
+			{current === 2 && (
+				<>
+					{isSuccess ? (
+						<Result status="success" title="Data Submitted Successfully" />
+					) : (
+						<Result status="error" title="Submission Failed" subTitle="Please check details and try again." />
+					)}
+				</>
+			)}
+		
+		</Card>
 	);
 };
 
