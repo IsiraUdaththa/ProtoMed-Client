@@ -40,34 +40,62 @@ const columns: ColumnsType<DataType> = [
 	{
 		title: "Name",
 		dataIndex: ["patientDetails", "name"],
-		width: "20%",
+		sorter: true,
+		render: (_, record) => <a href={`orders/${record.patientDetails._id}`}>{record.patientDetails.name}</a>,
 	},
 	{
-		title: "Gender",
+		title: "Age",
+		dataIndex: ["patientDetails", "age"],
+		sorter: true,
+	},
+	{
+		title: "Date Created",
+		dataIndex: ["patientDetails", "createdAt"],
+		sorter: true,
+		render: (createdAt) => {
+      const date = new Date(createdAt);
+      return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    },
+	},
+	{
+		title: "Category",
 		dataIndex: ["patientDetails", "category"],
 		filters: [
-			{ text: "Male", value: "male" },
-			{ text: "Female", value: "female" },
+			{ text: "Accuplasty", value: "Accuplasty" },
+			{ text: "Accupectomy", value: "Accupectomy" },
+			{ text: "Accufacial", value: "Accufacial" },
+			{ text: "Accuortho", value: "Accuortho" },
+			{ text: "Lamifix", value: "Lamifix" },
+			{ text: "Screws", value: "Screws" },
+			{ text: "Accumesh", value: "Accumesh" },
+			{ text: "Screws and Plates", value: "Screws and Plates" },
+			{ text: "Other", value: "Other" },
 		],
-		width: "20%",
 	},
 	{
-		title: "Email",
-		dataIndex: ["patientDetails", "age"],
+		title: "Doctor",
+		dataIndex: ["patientDetails", "surgeonName"],
 	},
 ];
 
 const toURLSearchParams = <T extends AnyObject>(record: T) => {
 	const params = new URLSearchParams();
 	for (const [key, value] of Object.entries(record)) {
-		params.append(key, value);
+		if (key === "sortField" && typeof value === "object" && value !== null) {
+			params.append(key, String(value).replace(",", ".")); // Convert it to a dot seperated
+		} else if (key === "filters" && typeof value === "object" && value !== null) {
+			params.append(key, JSON.stringify(value)); // Convert it to a dot seperated
+		} else {
+			params.append(key, String(value)); // For other keys, convert normally
+		}
 	}
 	return params;
 };
 
 const getRandomuserParams = (params: TableParams) => ({
-	results: params.pagination?.pageSize,
+	pageLimit: params.pagination?.pageSize,
 	page: params.pagination?.current,
+
 	...params,
 });
 
@@ -87,16 +115,15 @@ const App: React.FC = () => {
 		setLoading(true);
 		fetch(`http://localhost:5000/api/orders?${params.toString()}`)
 			.then((res) => res.json())
-			.then(({ results }) => {
+			.then(({ results, pagination }) => {
 				setData(results);
 				setLoading(false);
 				setTableParams({
 					...tableParams,
 					pagination: {
 						...tableParams.pagination,
-						total: 200,
 						// 200 is mock data, you should read it from server
-						// total: data.totalCount,
+						total: pagination.total,
 					},
 				});
 			});
@@ -127,7 +154,7 @@ const App: React.FC = () => {
 	return (
 		<Table<DataType>
 			columns={columns}
-			// rowKey={(record) => record.login.uuid}
+			rowKey={(record) => record.patientDetails._id}
 			dataSource={data}
 			pagination={tableParams.pagination}
 			loading={loading}
