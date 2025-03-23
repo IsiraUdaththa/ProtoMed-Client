@@ -5,6 +5,7 @@ import { Layout } from "antd";
 import SidebarMenu from "../_components/Sidebar";
 import Header from "../_components/Navbar";
 import Footer from "../_components/Footer";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const { Sider, Content } = Layout;
 
@@ -23,7 +24,7 @@ export default function PagesLayout({ children }: { children: React.ReactNode })
 				>
 					<SidebarMenu />
 				</Sider>
-				<Content style={{ padding: "30px", paddingTop: "10px", overflow: "auto" }}>
+				<Content style={{ padding: "40px", overflow: "auto" }}>
 					{children}
 					<Footer />
 				</Content>
