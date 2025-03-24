@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, message, Card, Row, Col, Steps, Typography, Result } from "antd";
+import { Form, Input, Button, message, Card, Steps, Typography, Result } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 
 const { Step } = Steps;
@@ -57,7 +57,15 @@ const InvoicePage: React.FC = () => {
 	};
 
 	return (
-		<Card title="Invoice Submission">
+		<Card
+			title="Invoice Submission"
+			style={{
+				textAlign: "center",
+				maxWidth: "600px",
+				margin: "0 auto"// Centers the card horizontally
+				
+			}}
+		>
 			<Steps current={current} direction="horizontal">
 				<Step title="Enter Invoice" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -65,7 +73,7 @@ const InvoicePage: React.FC = () => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical" style={{ marginTop: 20 }}>
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<Form.Item
 						label="Invoice Number"
 						name="invoiceNumber"

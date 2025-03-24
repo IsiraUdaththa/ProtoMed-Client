@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Steps, Button, Select, Input, Card, Typography, message, Result, Flex } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Step } = Steps;
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export default function PaymentStepForm() {
 	const [current, setCurrent] = useState(0);
@@ -14,12 +13,11 @@ export default function PaymentStepForm() {
 	const [amount, setAmount] = useState("");
 	const [userName, setUserName] = useState("Fetching...");
 	const [dateTime, setDateTime] = useState("");
-	const [isSuccess, setIsSuccess] = useState<boolean | null>(null); // Track success or failure
+	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	useEffect(() => {
 		setTimeout(() => setUserName("John Doe"), 1000);
-		const now = new Date();
-		setDateTime(now.toLocaleString());
+		setDateTime(new Date().toLocaleString());
 	}, []);
 
 	const next = () => {
@@ -39,12 +37,10 @@ export default function PaymentStepForm() {
 		try {
 			await fakeApiCall(paymentData);
 			setIsSuccess(true);
-			setCurrent(3); // Go to success screen
 		} catch (error) {
-			console.error("Payment failed:", error);
 			setIsSuccess(false);
-			setCurrent(3); // Go to error screen
 		}
+		setCurrent(3);
 	};
 
 	const fakeApiCall = (data: any) => {
@@ -56,81 +52,49 @@ export default function PaymentStepForm() {
 	};
 
 	return (
-		<>
-			{current !== 3 && (
-				<Steps
-					style={{ maxWidth: 600, width: "100%" }}
-					current={current}
-					direction="horizontal"
-					items={[
-						{
-							title: "Enter Details",
-							status: current === 0 ? "process" : current > 0 ? "finish" : "wait",
-							icon: <UserOutlined />,
-						},
-						{
-							title: "Confirm Details",
-							status: current === 1 ? "process" : current > 1 ? "finish" : "wait",
-							icon: <SolutionOutlined />,
-						},
-						{
-							title: "Success",
-							status: current === 2 ? "process" : "wait",
-							icon: <SmileOutlined />,
-						},
-					]}
-				/>
-			)}
+		<Card title="Advance Payment" style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
+			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
+				<Step title="Enter Details" icon={<UserOutlined />} />
+				<Step title="Confirm Details" icon={<SolutionOutlined />} />
+				<Step title="Status" icon={<SmileOutlined />} />
+			</Steps>
 
 			{current === 0 && (
-				<div style={{ marginTop: 20 }}>
-					<Select value={currency} onChange={setCurrency} style={{ width: 80 }}>
-						<Option value="LKR">Rs</Option>
-						<Option value="USD">$</Option>
-					</Select>
-					<Input
-						type="number"
-						value={amount}
-						onChange={(e) => setAmount(e.target.value)}
-						placeholder="Enter amount"
-						style={{ width: 200, marginLeft: 10 }}
-						step="0.01"
-					/>
-					<Button type="primary" onClick={next} style={{ marginTop: 20 }}>
-						Submit
+				<Card  style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
+					<Flex gap={10} align="center">
+						<Select value={currency} onChange={setCurrency} style={{ width: 100 }}>
+							<Option value="LKR">Rs</Option>
+							<Option value="USD">$</Option>
+						</Select>
+						<Input
+							type="number"
+							value={amount}
+							onChange={(e) => setAmount(e.target.value)}
+							placeholder="Enter amount"
+							style={{ flex: 1 }}
+							step="0.01"
+						/>
+					</Flex>
+					<Button type="primary" onClick={next} style={{ marginTop: 20, width: "100%" }}>
+						Next
 					</Button>
-				</div>
+				</Card>
 			)}
 
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Payment</Title>
-					<div style={{ textAlign: "left" }}>
-						<Text>
-							<strong>Name:</strong> {userName}
-						</Text>
-						<br />
-						<Text>
-							<strong>Date & Time:</strong> {dateTime}
-						</Text>
-						<br />
-						<Text>
-							<strong>Amount:</strong> {currency} {amount}
-						</Text>
-					</div>
-					<div style={{ marginTop: 20 }}>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</div>
-				</div>
+				<Card title="Confirm Payment" style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
+					<Text><strong>Name:</strong> {userName}</Text><br />
+					<Text><strong>Date & Time:</strong> {dateTime}</Text><br />
+					<Text><strong>Amount:</strong> {currency} {amount}</Text><br />
+					<Flex justify="space-between" style={{ marginTop: 20 }}>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>Confirm</Button>
+					</Flex>
+				</Card>
 			)}
 
 			{current === 3 && (
-				<div style={{ marginTop: 20, textAlign: "center" }}>
+				<Card title="Payment Status" style={{ width: "100%", maxWidth: 500, marginTop: 20, textAlign: "center" }}>
 					{isSuccess ? (
 						<Result
 							status="success"
@@ -154,8 +118,8 @@ export default function PaymentStepForm() {
 							</div>
 						</Result>
 					)}
-				</div>
+				</Card>
 			)}
-		</>
+		</Card>
 	);
 }

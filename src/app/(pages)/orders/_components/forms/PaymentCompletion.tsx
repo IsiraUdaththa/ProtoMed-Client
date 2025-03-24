@@ -36,7 +36,7 @@ export default function PaymentProcess() {
 	};
 
 	return (
-		<Card title="Payment Process" style={{ textAlign: "center" }}>
+		<Card title="Payment Process" style={{ textAlign: "center", maxWidth: 600, margin: "auto" }}>
 			<Steps current={current} direction="horizontal">
 				<Step title="Details" icon={<SolutionOutlined />} />
 				<Step title="Confirm & Pay" icon={<CreditCardOutlined />} />
