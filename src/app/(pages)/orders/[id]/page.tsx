@@ -5,6 +5,7 @@ import Steps from "../_components/ProgressBar";
 import { Breadcrumb, Tabs } from "antd";
 import Details from "../_components/views/All";
 import Jobs from "../_components/forms/All";
+import Link from "next/link";
 
 export default function OrderDetailsPage() {
 	const params = useParams();
@@ -14,15 +15,12 @@ export default function OrderDetailsPage() {
 			<Breadcrumb
 				items={[
 					{
-						title: "Orders",
-						href: "/orders",
+						title: <Link href="/orders">Orders</Link>,
 					},
 					{
-						title: ":id",
-						href: "",
+						title: params.id,
 					},
 				]}
-				params={{ id: params.id }}
 			/>
 			<h2>Order number: {params.id}</h2>
 			Basic Info. 

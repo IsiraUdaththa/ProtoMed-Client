@@ -4,6 +4,7 @@ import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
+import Link from "next/link";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
@@ -41,7 +42,11 @@ const columns: ColumnsType<DataType> = [
 		title: "Name",
 		dataIndex: ["patientDetails", "name"],
 		sorter: true,
-		render: (_, record) => <a href={`orders/${record.patientDetails._id}`}>{record.patientDetails.name}</a>,
+		render: (_, record) => (
+			<Link href={`/orders/${record.patientDetails._id}`} passHref>
+				<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
+			</Link>
+		),
 	},
 	{
 		title: "Age",
@@ -53,9 +58,9 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: ["patientDetails", "createdAt"],
 		sorter: true,
 		render: (createdAt) => {
-      const date = new Date(createdAt);
-      return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-    },
+			const date = new Date(createdAt);
+			return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+		},
 	},
 	{
 		title: "Category",
