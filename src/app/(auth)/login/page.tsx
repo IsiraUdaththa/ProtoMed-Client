@@ -1,12 +1,22 @@
 "use client";
+import "@ant-design/v5-patch-for-react-19";
 
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Card, Image, Flex } from "antd";
+import { Button, Checkbox, Form, Input, Card, Image, Flex, message } from "antd";
+import { login } from "@/services/authService";
 
+import { useRouter } from "next/navigation";
 const Apsdap: React.FC = () => {
-	const onFinish = (values: any) => {
-		console.log("Received values of form: ", values);
+	const router = useRouter();
+
+	const onFinish = async (values: any) => {
+		try {
+			login(values.email, values.password);
+			router.push("/dashboard");
+		} catch (error) {
+			message.error("Login failed. Please check your credentials.");
+		}
 	};
 
 	return (
