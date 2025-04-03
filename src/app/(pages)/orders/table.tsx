@@ -26,6 +26,7 @@ interface PatientDetails {
 }
 
 interface DataType {
+	_id: any;
 	key: string;
 	patientDetails: PatientDetails;
 }
@@ -43,7 +44,7 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: ["patientDetails", "name"],
 		sorter: true,
 		render: (_, record) => (
-			<Link href={`/orders/${record.patientDetails._id}`} passHref>
+			<Link href={`/orders/${record._id}`} passHref>
 				<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
 			</Link>
 		),
