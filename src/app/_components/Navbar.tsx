@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
 	return (
 		<>
 			<Header
-				style={{ backgroundColor: "#fff", padding: "0px 55px 0px 20px", borderBottom: "1px solid #f0f0f0", height: "55px" }}
+				style={{ backgroundColor: "#fff", padding: "0px 20px 0px 20px", borderBottom: "1px solid #f0f0f0", height: "55px" }}
 			>
 				<Flex align="center" justify="space-between" style={{ height: "100%" }}>
 					<img src="/logo.png" alt="Logo" style={{ height: "30px" }} />
