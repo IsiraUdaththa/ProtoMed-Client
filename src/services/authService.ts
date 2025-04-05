@@ -3,9 +3,11 @@ import api, { getAccessToken, setAccessToken } from '@/lib/axiosInstance';
 import { message } from 'antd';
 import axios from 'axios';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const login = async (email: string, password: string) => {
     const response = await axios.post(
-        'http://localhost:5000/api/auth/login',
+        `${apiUrl}/auth/login`,
         { email, password },
         {
             withCredentials: true,

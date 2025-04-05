@@ -5,6 +5,7 @@ import { Table } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
+import api from "@/lib/axiosInstance";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
@@ -119,19 +120,23 @@ const App: React.FC = () => {
 
 	const fetchData = () => {
 		setLoading(true);
-		fetch(`http://localhost:5000/api/orders?${params.toString()}`)
-			.then((res) => res.json())
-			.then(({ results, pagination }) => {
+		api
+			.get(`/orders?${params.toString()}`)
+			.then((response) => {
+				const { results, pagination } = response.data;
 				setData(results);
 				setLoading(false);
 				setTableParams({
 					...tableParams,
 					pagination: {
 						...tableParams.pagination,
-						// 200 is mock data, you should read it from server
 						total: pagination.total,
 					},
 				});
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error);
+				setLoading(false);
 			});
 	};
 
