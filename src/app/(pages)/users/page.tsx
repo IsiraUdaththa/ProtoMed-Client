@@ -4,6 +4,7 @@ import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
 import { Card } from "antd";
 import UsersList from "./UsersList";
+import AddUserDrawer from "./Drawer";
 
 const App: React.FC = () => {
 	return (
@@ -11,6 +12,7 @@ const App: React.FC = () => {
 			<Card>
 				<UsersList />
 			</Card>
+			<AddUserDrawer/>
 		</>
 	);
 };
