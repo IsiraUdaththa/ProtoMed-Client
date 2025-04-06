@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import PhoneInput from "antd-phone-input";
 import api from "@/lib/axiosInstance";
+import { RuleObject } from "antd/es/form";
 
 const App: React.FC = () => {
 	const [form] = Form.useForm();
+	type PhoneValue = {
+		countryCode: string;
+		areaCode: string;
+		phoneNumber: string;
+		valid: () => boolean;
+	};
 
-	const phoneValidator = (_: any, value: { valid: () => any }) => {
+	const phoneValidator = (_: RuleObject, value: PhoneValue): Promise<void> => {
 		if (value?.valid()) return Promise.resolve();
 		return Promise.reject("Invalid phone number");
 	};
@@ -20,7 +27,7 @@ const App: React.FC = () => {
 		{ value: "qc", label: "QC" },
 	];
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: { phone: { countryCode: string; areaCode: string; phoneNumber: string } }) => {
 		console.log(values);
 		try {
 			const user = {

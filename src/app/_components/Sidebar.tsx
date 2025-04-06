@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AppstoreOutlined, DashboardOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
 import type { GetProp, MenuProps } from "antd";
 import { Menu } from "antd";
@@ -47,7 +47,7 @@ const items: MenuItem[] = [
 const Sidebar: React.FC = () => {
 	const router = useRouter();
 
-	const handleMenuClick = (e: any) => {
+	const handleMenuClick = (e: { key: string; }) => {
 		router.push(e.key);
 	};
 

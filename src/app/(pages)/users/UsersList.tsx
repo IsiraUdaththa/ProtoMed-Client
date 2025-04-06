@@ -34,35 +34,32 @@ const UserList: React.FC = () => {
 	const [roleFilter, setRoleFilter] = useState<string>("All");
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
-	const fetchData = async () => {
-		setLoading(true);
-		try {
-			const params: Record<string, string | number | undefined> = {
-				page: currentPage,
-				limit: PAGE_SIZE,
-			};
-			if (roleFilter !== "All") {
-				params.role = roleFilter.toLowerCase();
-			}
-			if (searchQuery) {
-				params.search = searchQuery;
-			}
-
-			const response = await api.get("/users", {
-				params,
-			});
-
-			setData(response.data.results);
-			setTotal(response.data.pagination.total);
-			console.log(response.data);
-		} catch (error) {
-			console.error("Failed to fetch users", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
+		const fetchData = async () => {
+			setLoading(true);
+			try {
+				const params: Record<string, string | number | undefined> = {
+					page: currentPage,
+					limit: PAGE_SIZE,
+				};
+				if (roleFilter !== "All") {
+					params.role = roleFilter.toLowerCase();
+				}
+				if (searchQuery) {
+					params.search = searchQuery;
+				}
+
+				const response = await api.get("/users", { params });
+				setData(response.data.results);
+				setTotal(response.data.pagination.total);
+				console.log(response.data);
+			} catch (error) {
+				console.error("Failed to fetch users", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
 		fetchData();
 	}, [currentPage, roleFilter, searchQuery]);
 

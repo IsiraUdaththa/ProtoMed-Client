@@ -10,12 +10,13 @@ import { useRouter } from "next/navigation";
 const Apsdap: React.FC = () => {
 	const router = useRouter();
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: { email: string; password: string }) => {
 		try {
 			login(values.email, values.password);
 			router.push("/dashboard");
 		} catch (error) {
 			message.error("Login failed. Please check your credentials.");
+			console.log(error);
 		}
 	};
 
