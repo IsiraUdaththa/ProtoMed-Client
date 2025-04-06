@@ -1,16 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import SidebarMenu from "../_components/Sidebar";
 import Header from "../_components/Navbar";
 import Footer from "../_components/Footer";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import Loading from "../loading";
 
 const { Sider, Content } = Layout;
 
 export default function PagesLayout({ children }: { children: React.ReactNode }) {
-	const [collapsed, setCollapsed] = useState(false);
+	const [isHydrated, setIsHydrated] = useState(false);
+
+	useEffect(() => {
+		setIsHydrated(true);
+	}, []);
+
+	if (!isHydrated) {
+		return <Loading />;
+	}
 
 	return (
 		<Layout style={{ height: "100vh" }}>
