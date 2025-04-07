@@ -1,14 +1,17 @@
-"use client";
-import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
-import { Button, Card, DatePicker, Flex, Form, Input, Steps, Typography, Result } from "antd";
+import { Button, Card, DatePicker, Form, Input, Steps, Typography, Result } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { TextArea } = Input;
 const { Step } = Steps;
 const { Title, Text } = Typography;
 
-const CTScanForm: React.FC = () => {
+interface CTScanFormProps {
+	orderId: string;
+}
+
+const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -23,20 +26,38 @@ const CTScanForm: React.FC = () => {
 	};
 
 	const handleConfirm = async () => {
+		if (!orderId) {
+			console.error("Order ID is missing!");
+			setIsSuccess(false);
+			next();
+			return;
+		}
+
 		console.log("Submitting Data:", formData);
+
 		try {
-			// Fake API call simulation
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			const response = await api.post(`http://localhost:5000/api/orders/${orderId}/ct-scan`, {
+				ctScanLink: formData.ctScanLink,
+				ctNumber: formData.ctNumber,
+				ctDate: formData.ctDate?.toISOString(), // Convert date to ISO string
+				comment: formData.comment,
+			});
+
+			if (response.status !== 200) {
+				throw new Error("Failed to submit data");
+			}
+
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
 			setIsSuccess(false);
 		}
+
 		next(); // Move to success/error step
 	};
 
 	return (
-		<Card title="CT Scan Verification Form" style={{ maxWidth: 600, margin: "auto" }}>
+		<Card title="CT Scan Update Form" style={{ maxWidth: 600, margin: "auto" }}>
 			<Steps current={current}>
 				<Step title="Enter Details" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
