@@ -1,10 +1,10 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 
-import React, { useState } from "react";
-import { DeleteOutlined, EditOutlined, SettingOutlined } from "@ant-design/icons";
+import React from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { CollapseProps } from "antd";
-import { Card, Collapse, Select, Space } from "antd";
+import { Card, Collapse, Space } from "antd";
 import Patient from "./Patient";
 import CTScan from "./CTScan";
 import Design from "./Design";
@@ -14,31 +14,17 @@ import PLAFlap from "./PLAFlap";
 import Peek from "./Peek";
 import Packing from "./Packing";
 import Invoice from "./Payment";
-const { Option } = Select;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+interface DetailsProps {
+	orderId: string;
+}
 
-const App: React.FC = () => {
-	const onChange = (key: string | string[]) => {
-		console.log(key);
-	};
-
+const Details: React.FC<DetailsProps> = ({ orderId }) => {
 	const genExtra = () => (
-		<>
-			<Space>
-				<EditOutlined
-					onClick={(event) => {
-						// If you don't want click extra trigger collapse, you can prevent this:
-						event.stopPropagation();
-					}}
-				/>
-				<DeleteOutlined />
-			</Space>
-		</>
+		<Space>
+			<EditOutlined onClick={(event) => event.stopPropagation()} />
+			<DeleteOutlined />
+		</Space>
 	);
 
 	const items: CollapseProps["items"] = [
@@ -47,7 +33,7 @@ const App: React.FC = () => {
 			label: "Patient Details",
 			children: (
 				<Card>
-					<Patient />
+					<Patient orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -57,7 +43,7 @@ const App: React.FC = () => {
 			label: "CT Scan Details",
 			children: (
 				<Card>
-					<CTScan />
+					<CTScan orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -67,17 +53,19 @@ const App: React.FC = () => {
 			label: "Quotation & Payment",
 			children: (
 				<Card>
-					<Advance />
+					<Advance //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
 		},
 		{
 			key: "5",
-			label: "Design Attemps",
+			label: "Design Attempts",
 			children: (
 				<Card>
-					<Design />
+					<Design //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
@@ -87,8 +75,10 @@ const App: React.FC = () => {
 			label: "PLA Print Details",
 			children: (
 				<Card>
-					<PLAOuter />
-					<PLAFlap />
+					<PLAOuter //orderId={orderId}
+					/>
+					<PLAFlap //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
@@ -98,7 +88,8 @@ const App: React.FC = () => {
 			label: "Peek Print Details",
 			children: (
 				<Card>
-					<Peek />
+					<Peek //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
@@ -108,7 +99,8 @@ const App: React.FC = () => {
 			label: "Packing Details",
 			children: (
 				<Card>
-					<Packing />
+					<Packing //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
@@ -118,18 +110,15 @@ const App: React.FC = () => {
 			label: "Final Payment and Invoice",
 			children: (
 				<Card>
-					<Invoice />
+					<Invoice //orderId={orderId}
+					/>
 				</Card>
 			),
 			extra: genExtra(),
 		},
 	];
 
-	return (
-		<>
-			<Collapse ghost onChange={onChange} items={items} />
-		</>
-	);
+	return <Collapse ghost items={items} />;
 };
 
-export default App;
+export default Details;
