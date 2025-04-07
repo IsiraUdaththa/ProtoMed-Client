@@ -1,15 +1,21 @@
-"use client";
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
 import { Button, Card, DatePicker, Form, Input, Radio, Select, Steps, Typography, Result } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
+import axios from "axios";
+import api from "@/lib/axiosInstance";
+import moment from "moment"; // Make sure you have moment imported if you're dealing with date objects.
 
 const { Step } = Steps;
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
-const RegistrationForm: React.FC = () => {
+interface PatientProps {
+	orderId?: string; // Optional orderId prop
+}
+
+const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -18,10 +24,8 @@ const RegistrationForm: React.FC = () => {
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	useEffect(() => {
-		// Simulating a user fetch
 		setTimeout(() => setUserName("John Doe"), 1000);
 
-		// Update date & time every second
 		const interval = setInterval(() => {
 			setDateTime(new Date().toLocaleString());
 		}, 1000);
@@ -29,8 +33,43 @@ const RegistrationForm: React.FC = () => {
 		return () => clearInterval(interval);
 	}, []);
 
+	// Fetch data if orderId is provided
+	useEffect(() => {
+		if (orderId) {
+			const fetchOrderData = async () => {
+				try {
+					const response = await api.get(`http://localhost:5000/api/orders/${orderId}`);
+					console.log(response);
+
+					const order = response.data.patientDetails;
+					setFormData(order);
+
+					// Populate form fields with the fetched data
+					form.setFieldsValue({
+						name: order.name,
+						gender: order.gender,
+						dob: order.dob ? moment(order.dob) : null,
+						category: order.category,
+						collectingMethod: order.collectingMethod,
+						contactNumber: order.contactNumber,
+						doctor: order.doctor,
+						hospital: order.hospital,
+						plannedDate: order.plannedDate ? moment(order.plannedDate) : null,
+						comment: order.comment,
+					});
+				} catch (error) {
+					console.error("Error fetching order data:", error);
+				}
+			};
+			fetchOrderData();
+		} else {
+			// If no orderId, initialize form with empty data for a new order
+			form.resetFields();
+		}
+	}, [orderId, form]);
+
 	// Phone number validator
-	const phoneValidator = (_: any, value: { valid: () => any; }) => {
+	const phoneValidator = (_: any, value: { valid: () => any }) => {
 		if (value?.valid()) return Promise.resolve();
 		return Promise.reject("Invalid phone number");
 	};
@@ -41,39 +80,37 @@ const RegistrationForm: React.FC = () => {
 
 	// Handle Form Submission (First Step)
 	const handleNext = async (values: any) => {
-		// Store full phone number: "+{countryCode} {phoneNumber}"
-		values.contactNumber = `+${values.contactNumber.countryCode} ${values.contactNumber.phoneNumber}`;
-
+		values.contactNumber = `${values.contactNumber.countryCode} ${values.contactNumber?.areaCode}${values.contactNumber.phoneNumber}`;
 		setFormData(values);
 		next(); // Move to confirmation step
 	};
 
-	// Handle Final Confirmation & Send POST request
+	// Handle Final Confirmation & Send POST or PUT request
 	const handleConfirm = async () => {
 		const submissionData = {
 			...formData,
 			userName,
 			dateTime,
-			dob: formData.dob?.format("YYYY-MM-DD"),
 			plannedDate: formData.plannedDate?.format("YYYY-MM-DD"),
 		};
 
-		console.log("Submitting Data:", submissionData);
-
 		try {
-			const response = await fetch("https://your-api-endpoint.com/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(submissionData),
-			});
-
-			if (response.ok) {
-				setIsSuccess(true);
+			if (orderId) {
+				// Update existing order (PUT request)
+				const response = await api.put(`http://localhost:5000/api/orders/${orderId}`, submissionData);
+				if (response.status === 200) {
+					setIsSuccess(true);
+				} else {
+					setIsSuccess(false);
+				}
 			} else {
-				console.error("Submission failed:", await response.text());
-				setIsSuccess(false);
+				// Create new order (POST request)
+				const response = await api.post("http://localhost:5000/api/orders", submissionData);
+				if (response.status === 201) {
+					setIsSuccess(true);
+				} else {
+					setIsSuccess(false);
+				}
 			}
 		} catch (error) {
 			console.error("Error during submission:", error);
@@ -104,13 +141,27 @@ const RegistrationForm: React.FC = () => {
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: "Please select your birth date" }]}>
+					<Form.Item
+						label="Date of Birth"
+						name="dob"
+						rules={[{ required: true, message: "Please select your birth date" }]}
+					>
 						<DatePicker style={{ width: "100%" }} />
 					</Form.Item>
 
 					<Form.Item label="Category" name="category" rules={[{ required: true, message: "Please select a category" }]}>
 						<Select>
-							{["Accuplasty", "Accupectomy", "Accufacial", "Accuortho", "Lamifix", "Screws", "Accumesh", "Screws And Plates", "Other"].map((item) => (
+							{[
+								"Accuplasty",
+								"Accupectomy",
+								"Accufacial",
+								"Accuortho",
+								"Lamifix",
+								"Screws",
+								"Accumesh",
+								"Screws and Plates",
+								"Other",
+							].map((item) => (
 								<Select.Option key={item} value={item}>
 									{item}
 								</Select.Option>
@@ -118,9 +169,21 @@ const RegistrationForm: React.FC = () => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="CT Scan Collecting Method" name="collectingMethod" rules={[{ required: true, message: "Please select a method" }]}>
+					<Form.Item
+						label="CT Scan Collecting Method"
+						name="collectingMethod"
+						rules={[{ required: true, message: "Please select a method" }]}
+					>
 						<Select>
-							{["DVD - Courrier by patient", "DVD - Collect by company", "Google Drive Upload", "Website Upload", "WeTransfer", "Screws", "Clay Model", "None"].map((method) => (
+							{[
+								"DVD - Courrier by patient",
+								"DVD - Collect by company",
+								"Google Drive Upload",
+								"Website Upload",
+								"WeTransfer",
+								"Clay Model",
+								"None",
+							].map((method) => (
 								<Select.Option key={method} value={method}>
 									{method}
 								</Select.Option>
@@ -187,12 +250,31 @@ const RegistrationForm: React.FC = () => {
 						Back
 					</Button>
 					<Button type="primary" onClick={handleConfirm}>
-						Confirm & Submit
+						Submit
 					</Button>
 				</div>
 			)}
 
-			{current === 2 && <Result status={isSuccess ? "success" : "error"} title={isSuccess ? "Registration Successful" : "Registration Failed"} />}
+			{current === 2 && (
+				<div style={{ marginTop: 20 }}>
+					{isSuccess !== null && (
+						<Result
+							status={isSuccess ? "success" : "error"}
+							title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
+							subTitle={
+								isSuccess
+									? "Your order has been submitted successfully."
+									: "There was an issue submitting your order. Please try again."
+							}
+							extra={[
+								<Button key="back" type="primary" onClick={() => setCurrent(0)}>
+									Go Back
+								</Button>,
+							]}
+						/>
+					)}
+				</div>
+			)}
 		</Card>
 	);
 };
