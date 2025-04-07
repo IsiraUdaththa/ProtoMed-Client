@@ -2,14 +2,30 @@
 
 import { useParams } from "next/navigation";
 import Steps from "../_components/ProgressBar";
-import { Breadcrumb, Tabs } from "antd";
+import { Breadcrumb, Tabs, Alert } from "antd";
 import Details from "../_components/views/All";
 import Jobs from "../_components/forms/All";
 import Link from "next/link";
+import OrderInfo from "../_components/views/Patient"; // Fetch order details
+import { useState, useEffect } from "react";
 
 export default function OrderDetailsPage() {
 	const params = useParams();
-	console.log(params);
+	const [orderId, setOrderId] = useState<string | null>(null);
+
+	useEffect(() => {
+		const urlOrderId = params?.id;
+
+		// Directly set the orderId from the URL
+		if (urlOrderId) {
+			setOrderId(urlOrderId);
+		}
+	}, [params?.id]); // Dependency array to track changes in URL params
+
+	if (!orderId) {
+		return <Alert message="Error" description="Order ID is missing." type="error" showIcon />;
+	}
+
 	return (
 		<>
 			<Breadcrumb
@@ -18,16 +34,14 @@ export default function OrderDetailsPage() {
 						title: <Link href="/orders">Orders</Link>,
 					},
 					{
-						title: params.id,
+						title: orderId,
 					},
 				]}
 			/>
-			<h2>Order number: {params.id}</h2>
-			Basic Info. 
-			Lasts Updated, etc... 
-			<br />
-			<br />
-			{/* <Patient/> */}
+			<h2>Order number: {orderId}</h2>
+
+			<OrderInfo orderId={orderId} />
+
 			<Steps />
 			<Tabs
 				defaultActiveKey="1"
@@ -35,17 +49,15 @@ export default function OrderDetailsPage() {
 					{
 						key: "1",
 						label: "My Jobs",
-						children: <Jobs />,
+						children: <Jobs orderId={orderId} />, // Pass orderId
 					},
 					{
-						key: "Orders",
+						key: "2",
 						label: "Details",
-						children: <Details />,
+						children: <Details orderId={orderId} />, // Pass orderId
 					},
 				]}
 			/>
-
-			<br />
 		</>
 	);
 }
