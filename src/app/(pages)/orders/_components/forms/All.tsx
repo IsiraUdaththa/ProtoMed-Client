@@ -1,10 +1,7 @@
-"use client";
 import "@ant-design/v5-patch-for-react-19";
-
-import React, { useState } from "react";
-import { DeleteOutlined, EditOutlined, SettingOutlined } from "@ant-design/icons";
-import type { CollapseProps } from "antd";
-import { Collapse, Divider, Select, Space } from "antd";
+import React from "react";
+import { Collapse, Divider, Space } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import Patient from "./Patient";
 import CTScan from "./CTScan";
@@ -13,11 +10,7 @@ import Quotation from "./Quotation";
 import PaymentAdvance from "./PaymentAdvance";
 import DesignSubmit from "./DesignSubmit";
 import DesignApproval from "./DesignApproval";
-// import PLAOuterPrint from "./PLAOuterPrint"
-// import PLAOuterApproval from "./PLAOuterApproval"
 import PLAFlapPrint from "./PLAFlapPrint";
-// import PLAApproval from "./PLAApproval"
-// import PEEKPrint from "./PEEKPrint";
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
 import PEEKApprove from "./PEEKApprove";
@@ -26,127 +19,129 @@ import PEEKFinalPolishing from "./PEEKFinalPolishing";
 import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
-const { Option } = Select;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+import useRole from "../forms/hooks/userole"; // Import role hook
 
-const App: React.FC = () => {
+interface JobsProps {
+	orderId: string;
+}
+
+const Jobs: React.FC<JobsProps> = ({ orderId }) => {
+	const { hasRole } = useRole();
+
 	const onChange = (key: string | string[]) => {
 		console.log(key);
 	};
 
 	const genExtra = () => (
-		<>
-			<Space>
-				<EditOutlined
-					onClick={(event) => {
-						// If you don't want click extra trigger collapse, you can prevent this:
-						event.stopPropagation();
-					}}
-				/>
-				<DeleteOutlined />
-			</Space>
-		</>
+		<Space>
+			<EditOutlined onClick={(event) => event.stopPropagation()} />
+			<DeleteOutlined />
+		</Space>
 	);
 
-	const items: CollapseProps["items"] = [
-		{
+	const items = [
+		hasRole(["admin", "designer"]) && {
 			key: "1",
 			label: "Patient Details",
-			children: <Patient />,
+			children: <Patient orderId={orderId} />,
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "designer"]) && {
 			key: "2",
 			label: "CT Scan Details",
 			children: (
 				<>
-					<CTScan />
+					<CTScan orderId={orderId} />
 					<Divider />
-					<CTValidation />
+					<CTValidation orderId={orderId} />
 				</>
 			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "finance"]) && {
 			key: "4",
 			label: "Quotation & Payment",
 			children: (
 				<>
-					<Quotation />
+					<Quotation orderId={orderId} />
 					<Divider />
-					<PaymentAdvance />
+					<PaymentAdvance //orderId={orderId}
+					/>
 				</>
 			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "designer"]) && {
 			key: "5",
-			label: "Design Attemps",
+			label: "Design Attempts",
 			children: (
 				<>
-					<DesignSubmit />
-					<DesignApproval />
+					<DesignSubmit //orderId={orderId}
+					/>
+					<DesignApproval //orderId={orderId}
+					/>
 				</>
 			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "designer"]) && {
 			key: "6",
 			label: "PLA Print Details",
 			children: (
-				<>
-					<PLAFlapPrint />
-				</>
+				<PLAFlapPrint //orderId={orderId}
+				/>
 			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "designer"]) && {
 			key: "7",
 			label: "Peek Print Details",
 			children: (
 				<>
-					<PEEKAnnealing />
+					<PEEKAnnealing //orderId={orderId}
+					/>
 					<Divider />
-					<PEEKRoughPolishing />
+					<PEEKRoughPolishing //orderId={orderId}
+					/>
 					<Divider />
-					<PEEKApprove />
+					<PEEKApprove //orderId={orderId}
+					/>
 					<Divider />
-					<PEEKLaserMarking />
+					<PEEKLaserMarking //orderId={orderId}
+					/>
 					<Divider />
-					<PEEKFinalPolishing />
+					<PEEKFinalPolishing //orderId={orderId}
+					/>
 				</>
 			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "packing"]) && {
 			key: "8",
 			label: "Packing Details",
-			children: <Packing />,
+			children: (
+				<Packing //orderId={orderId}
+				/>
+			),
 			extra: genExtra(),
 		},
-		{
+		hasRole(["admin", "finance"]) && {
 			key: "9",
 			label: "Final Payment and Invoice",
 			children: (
 				<>
-					<PaymentCompletion />
-					<Invoice />
+					<PaymentCompletion //orderId={orderId}
+					/>
+					<Invoice //orderId={orderId}
+					/>
 				</>
 			),
 			extra: genExtra(),
 		},
-	];
+	].filter(Boolean);
 
-	return (
-		<>
-			<Collapse ghost onChange={onChange} items={items} />
-		</>
-	);
+	return <Collapse ghost onChange={onChange} items={items} />;
 };
 
-export default App;
+export default Jobs;
