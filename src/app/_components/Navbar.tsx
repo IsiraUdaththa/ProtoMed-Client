@@ -7,6 +7,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Modal, Flex, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar: React.FC = () => {
 	const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
@@ -22,7 +23,7 @@ const Navbar: React.FC = () => {
 				}}
 			>
 				<Flex align="center" justify="space-between" style={{ height: "100%" }}>
-					<Image src="/logo.png" alt="Logo" width={121} height={30} />
+					<Link href='/dashboard'><Image src="/logo.png" alt="Logo" width={121} height={30} /></Link>
 					<Space>
 						<span>John Doe</span>
 						<Avatar icon={<UserOutlined />} onClick={() => setIsProfileModalVisible(true)} />
