@@ -21,12 +21,15 @@ import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
 import useRole from "../forms/hooks/userole"; // Import role hook
+import { login } from "@/services/authService";
 
 interface JobsProps {
 	orderId: string;
 }
 
 const Jobs: React.FC<JobsProps> = ({ orderId }) => {
+	login("admin@example.com", "password");
+
 	const { hasRole } = useRole();
 
 	const onChange = (key: string | string[]) => {
@@ -66,7 +69,7 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 				<>
 					<Quotation orderId={orderId} />
 					<Divider />
-					<PaymentAdvance //orderId={orderId}
+					<PaymentAdvance orderId={orderId}
 					/>
 				</>
 			),
@@ -77,9 +80,9 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Design Attempts",
 			children: (
 				<>
-					<DesignSubmit //orderId={orderId}
+					<DesignSubmit orderId={orderId}
 					/>
-					<DesignApproval //orderId={orderId}
+					<DesignApproval orderId={orderId}
 					/>
 				</>
 			),
@@ -89,7 +92,7 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			key: "6",
 			label: "PLA Print Details",
 			children: (
-				<PLAFlapPrint //orderId={orderId}
+				<PLAFlapPrint orderId={orderId}
 				/>
 			),
 			extra: genExtra(),
@@ -99,19 +102,19 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Peek Print Details",
 			children: (
 				<>
-					<PEEKAnnealing //orderId={orderId}
+					<PEEKAnnealing orderId={orderId}
 					/>
 					<Divider />
-					<PEEKRoughPolishing //orderId={orderId}
+					<PEEKRoughPolishing orderId={orderId}
 					/>
 					<Divider />
-					<PEEKApprove //orderId={orderId}
+					<PEEKApprove orderId={orderId}
 					/>
 					<Divider />
-					<PEEKLaserMarking //orderId={orderId}
+					<PEEKLaserMarking orderId={orderId}
 					/>
 					<Divider />
-					<PEEKFinalPolishing //orderId={orderId}
+					<PEEKFinalPolishing orderId={orderId}
 					/>
 				</>
 			),
@@ -121,7 +124,7 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			key: "8",
 			label: "Packing Details",
 			children: (
-				<Packing //orderId={orderId}
+				<Packing orderId={orderId}
 				/>
 			),
 			extra: genExtra(),
@@ -131,9 +134,9 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Final Payment and Invoice",
 			children: (
 				<>
-					<PaymentCompletion //orderId={orderId}
+					<PaymentCompletion orderId={orderId}
 					/>
-					<Invoice //orderId={orderId}
+					<Invoice orderId={orderId}
 					/>
 				</>
 			),
