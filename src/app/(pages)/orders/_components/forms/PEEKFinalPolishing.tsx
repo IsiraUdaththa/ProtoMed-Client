@@ -26,7 +26,7 @@ const PEEKFinalPolishing: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const prev = () => setCurrent(current - 1);
 
 	const handleSubmit = async () => {
-		console.log(`Submitting PEEK Final Polishing:`, { userName, dateTime });4
+		console.log(`Submitting PEEK Final Polishing:`, { userName, dateTime });
 
 		const formData = {
 			date: dateTime,

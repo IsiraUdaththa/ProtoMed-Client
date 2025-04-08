@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, message, Card, Steps, Typography, Result } from "antd";
+import { Form, Input, Button, Card, Steps, Typography, Result } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -46,6 +46,7 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 		try {
 			const response = await api.post(`/orders/${orderId}/invoice`, formData);
+			console.log(response.data)
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);

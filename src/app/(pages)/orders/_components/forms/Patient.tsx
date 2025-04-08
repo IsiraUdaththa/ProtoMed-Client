@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Card, DatePicker, Form, Input, Radio, Select, Steps, Typography, Result } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
-import axios from "axios";
 import api from "@/lib/axiosInstance";
 // import moment from "moment"; // Make sure you have moment imported if you're dealing with date objects.
 
@@ -238,7 +237,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 					<br />
 					<Text strong>Phone Number:</Text> <Text>{formData.contactNumber}</Text>
 					<br />
-					<Text strong>Doctor's Name:</Text> <Text>{formData.doctor || "N/A"}</Text>
+					<Text strong>Doctor&apos;s Name:</Text> <Text>{formData.doctor || "N/A"}</Text>
 					<br />
 					<Text strong>Hospital Name:</Text> <Text>{formData.hospital || "N/A"}</Text>
 					<br />

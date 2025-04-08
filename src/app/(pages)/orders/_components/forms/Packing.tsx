@@ -30,13 +30,14 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	const handleSubmit = async () => {
-		const formData = new FormData;
-		
+		const formData = new FormData();
+
 		try {
 			const response = await api.post(`/orders/${orderId}/payment-advance`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
+			console.log(error);
 			setIsSuccess(false);
 		}
 		next();

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Form, InputNumber, Button, Space, Dropdown, Menu, Steps, Typography, Result, Card } from "antd";
-import { SaveOutlined, DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+import { DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
 const { Step } = Steps;

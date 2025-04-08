@@ -1,8 +1,6 @@
 import React from "react";
-import { Badge, Button, Descriptions, Divider } from "antd";
+import { Badge, Descriptions, Divider } from "antd";
 import type { DescriptionsProps } from "antd";
-import { Image } from "antd";
-import { DownloadOutlined } from "@ant-design/icons";
 
 const items: DescriptionsProps["items"] = [
 	{

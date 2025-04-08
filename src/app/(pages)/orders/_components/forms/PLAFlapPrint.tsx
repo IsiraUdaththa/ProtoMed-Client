@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Layout, Row, Col, Card, Steps, Input, Select, DatePicker, TimePicker, Result } from "antd";
+import { Button, Typography, Card, Steps, Input, Select, DatePicker, TimePicker, Result } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const { Content } = Layout;
 const { Title, Text } = Typography;
 const { Step } = Steps;
 const { Option } = Select;

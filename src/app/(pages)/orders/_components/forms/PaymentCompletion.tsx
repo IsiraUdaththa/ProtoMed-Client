@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Layout, Row, Col, Card, Steps, Result } from "antd";
+import { Button, Typography, Card, Steps, Result } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Steps, Button, Select, Input, Card, Typography, message, Result, Flex } from "antd";
 import {
-	CheckCircleOutlined,
 	CloseCircleOutlined,
 	SmileOutlined,
 	SolutionOutlined,
@@ -51,6 +50,7 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
+			console.log(error)
 			setIsSuccess(false);
 		}
 		setCurrent(3);

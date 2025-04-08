@@ -8,7 +8,6 @@ import {
 	SolutionOutlined,
 	SmileOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
 import api from "@/lib/axiosInstance";
 
 const { Title, Text } = Typography;
@@ -67,11 +66,6 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				message.error("Error submitting approval. Please try again.");
 			});
 		next(); // Move to Step 3 (Success/Error)
-	};
-
-	// Handle going back to Step 1 from Step 2
-	const goBack = () => {
-		setCurrent(0);
 	};
 
 	return (
@@ -146,7 +140,7 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Card>
 
 					<Form.Item>
-						<Button onClick={goBack} style={{ marginRight: 10 }}>
+						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
