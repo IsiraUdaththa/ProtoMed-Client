@@ -44,11 +44,11 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-			<Card title="Implant Confirmation Process" style={{ maxWidth: "600px", width: "100%", padding: "20px" }}>
+		<>
+			<>
 				<Steps current={current} onChange={setCurrent}>
 					<Step title="Upload Files" icon={<VideoCameraAddOutlined />} />
-					<Step title="Confirm Details" icon={<FileImageOutlined />} />
+					<Step title="Confirm" icon={<FileImageOutlined />} />
 					<Step title="Status" icon={<FileImageOutlined />} />
 				</Steps>
 
@@ -112,33 +112,33 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				)}
 
 				{current === 1 && (
-					<div style={{ textAlign: "center" }}>
+					<>
 						<Text strong>User: {formValues?.userName || "Not Provided"}</Text>
 						<br />
 						<Text strong>Date & Time: {new Date().toLocaleString()}</Text>
 						<br />
-						{/* <div style={{ marginTop: 20 }}> */}
+						{/* <> */}
 						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>
-					</div>
-					// </div>
+					</>
+					// </>
 				)}
 
 				{current === 2 && (
-					<div style={{ textAlign: "center", marginTop: 20 }}>
+					<>
 						{isSuccess ? (
 							<Result status="success" title="Implant Confirmation Successful" />
 						) : (
 							<Result status="error" title="Implant Submission Failed" subTitle="Please try again." />
 						)}
-					</div>
+					</>
 				)}
-			</Card>
-		</div>
+			</>
+		</>
 	);
 };
 

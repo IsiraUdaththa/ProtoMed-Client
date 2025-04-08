@@ -72,15 +72,15 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 	};
 
 	return (
-		<Card style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
-			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
+		<>
+			<Steps current={current}>
 				<Step title="Enter Details" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
 				<Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical" style={{ width: "100%", maxWidth: 500 }}>
+				<Form form={form} onFinish={handleSubmit} layout="vertical" >
 					<Form.Item label="CT Image 2D" name="ct-image-2d" valuePropName="fileList" getValueFromEvent={normFile}>
 						<Upload.Dragger name="ct-image-2d" beforeUpload={() => false}>
 							<p className="ant-upload-drag-icon">
@@ -176,7 +176,7 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 					)}
 				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

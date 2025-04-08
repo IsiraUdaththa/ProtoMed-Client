@@ -120,7 +120,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 	};
 
 	return (
-		<Card title="Patient Registration" style={{ maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current} direction="horizontal">
 				<Step title="Enter Details" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -219,8 +219,8 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 			)}
 
 			{current === 1 && formData && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Your Details</Title>
+				<>
+					
 					<Text strong>User:</Text> <Text>{userName}</Text>
 					<br />
 					<Text strong>Date & Time:</Text> <Text>{dateTime}</Text>
@@ -251,11 +251,11 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 					<Button type="primary" onClick={handleConfirm}>
 						Submit
 					</Button>
-				</div>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess !== null && (
 						<Result
 							status={isSuccess ? "success" : "error"}
@@ -272,9 +272,9 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 							]}
 						/>
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

@@ -14,7 +14,7 @@ import {
 const App: React.FC = () => {
 	return (
 		<Card title="Process progress">
-			<div style={{ overflowX: "auto", whiteSpace: "nowrap", paddingBottom: "8px" }}>
+			<>
 				<Steps
 					style={{ minWidth: "1000px" }} // Ensures it doesn't collapse too much
 					items={[
@@ -82,7 +82,7 @@ const App: React.FC = () => {
 						},
 					]}
 				/>
-			</div>
+			</>
 		</Card>
 	);
 };

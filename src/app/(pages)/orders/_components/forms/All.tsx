@@ -1,6 +1,6 @@
 import "@ant-design/v5-patch-for-react-19";
 import React from "react";
-import { Collapse, Divider, Space } from "antd";
+import { Card, Collapse, Divider, Space } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import Patient from "./Patient";
@@ -20,16 +20,17 @@ import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
+
 import useRole from "../forms/hooks/userole"; // Import role hook
 import { login } from "@/services/authService";
+
+login("admin@example.com", "password");
 
 interface JobsProps {
 	orderId: string;
 }
 
 const Jobs: React.FC<JobsProps> = ({ orderId }) => {
-	login("admin@example.com", "password");
-
 	const { hasRole } = useRole();
 
 	const onChange = (key: string | string[]) => {
@@ -47,7 +48,11 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 		hasRole(["admin", "designer"]) && {
 			key: "1",
 			label: "Patient Details",
-			children: <Patient orderId={orderId} />,
+			children: (
+				<Card>
+					<Patient orderId={orderId} />,
+				</Card>
+			),
 			extra: genExtra(),
 		},
 		hasRole(["admin", "designer"]) && {
@@ -55,9 +60,13 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "CT Scan Details",
 			children: (
 				<>
-					<CTScan orderId={orderId} />
+					<Card>
+						<CTScan orderId={orderId} />
+					</Card>
 					<Divider />
-					<CTValidation orderId={orderId} />
+					<Card>
+						<CTValidation orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -67,10 +76,13 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Quotation & Payment",
 			children: (
 				<>
-					<Quotation orderId={orderId} />
+					<Card>
+						<Quotation orderId={orderId} />
+					</Card>
 					<Divider />
-					<PaymentAdvance orderId={orderId}
-					/>
+					<Card>
+						<PaymentAdvance orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -80,10 +92,13 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Design Attempts",
 			children: (
 				<>
-					<DesignSubmit orderId={orderId}
-					/>
-					<DesignApproval orderId={orderId}
-					/>
+					<Card>
+						<DesignSubmit orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<DesignApproval orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -92,8 +107,9 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			key: "6",
 			label: "PLA Print Details",
 			children: (
-				<PLAFlapPrint orderId={orderId}
-				/>
+				<Card>
+					<PLAFlapPrint orderId={orderId} />
+				</Card>
 			),
 			extra: genExtra(),
 		},
@@ -102,20 +118,25 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Peek Print Details",
 			children: (
 				<>
-					<PEEKAnnealing orderId={orderId}
-					/>
+					<Card>
+						<PEEKAnnealing orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKRoughPolishing orderId={orderId}
-					/>
+					<Card>
+						<PEEKRoughPolishing orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKApprove orderId={orderId}
-					/>
+					<Card>
+						<PEEKApprove orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKLaserMarking orderId={orderId}
-					/>
+					<Card>
+						<PEEKLaserMarking orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKFinalPolishing orderId={orderId}
-					/>
+					<Card>
+						<PEEKFinalPolishing orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -124,8 +145,9 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			key: "8",
 			label: "Packing Details",
 			children: (
-				<Packing orderId={orderId}
-				/>
+				<Card>
+					<Packing orderId={orderId} />,
+				</Card>
 			),
 			extra: genExtra(),
 		},
@@ -134,17 +156,20 @@ const Jobs: React.FC<JobsProps> = ({ orderId }) => {
 			label: "Final Payment and Invoice",
 			children: (
 				<>
-					<PaymentCompletion orderId={orderId}
-					/>
-					<Invoice orderId={orderId}
-					/>
+					<Card>
+						<PaymentCompletion orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<Invoice orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
 		},
 	].filter(Boolean);
 
-	return <Collapse ghost onChange={onChange} items={items} />;
+	return <Collapse ghost onChange={onChange} items={items} defaultActiveKey={[1, 2, 3, 4, 5, 6, 7, 8, 9]} />;
 };
 
 export default Jobs;

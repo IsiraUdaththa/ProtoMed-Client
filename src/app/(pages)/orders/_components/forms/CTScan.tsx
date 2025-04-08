@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, DatePicker, Form, Input, Steps, Typography, Result } from "antd";
+import { Button, DatePicker, Form, Input, Steps, Typography, Result } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -57,7 +57,7 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 	};
 
 	return (
-		<Card title="CT Scan Update Form" style={{ maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current}>
 				<Step title="Enter Details" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -95,8 +95,8 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 			)}
 
 			{current === 1 && formData && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Your Data</Title>
+				<>
+					
 					<Text>
 						<strong>CT Scan Link/DVD:</strong> {formData.ctScanLink}
 					</Text>
@@ -113,27 +113,25 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 						<strong>Comment:</strong> {formData.comment || "No comment"}
 					</Text>
 
-					<div style={{ marginTop: 20 }}>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</div>
-				</div>
+					<Button onClick={prev} style={{ marginRight: 10 }}>
+						Back
+					</Button>
+					<Button type="primary" onClick={handleConfirm}>
+						Confirm
+					</Button>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="CT Scan Data Submitted Successfully" />
 					) : (
 						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

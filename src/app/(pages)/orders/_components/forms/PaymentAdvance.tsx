@@ -1,12 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Steps, Button, Select, Input, Card, Typography, message, Result, Flex } from "antd";
-import {
-	CloseCircleOutlined,
-	SmileOutlined,
-	SolutionOutlined,
-	UserOutlined,
-} from "@ant-design/icons";
+import { CloseCircleOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
 const { Step } = Steps;
@@ -50,24 +45,24 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			setIsSuccess(false);
 		}
 		setCurrent(3);
 	};
 
 	return (
-		<Card title="Advance Payment" style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
-			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
+		<>
+			<Steps current={current}>
 				<Step title="Enter Details" icon={<UserOutlined />} />
-				<Step title="Confirm Details" icon={<SolutionOutlined />} />
+				<Step title="Confirm" icon={<SolutionOutlined />} />
 				<Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Card style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
+				<>
 					<Flex gap={10} align="center">
-						<Select value={currency} onChange={setCurrency} style={{ width: 100 }}>
+						<Select value={currency} onChange={setCurrency}>
 							<Option value="lkr">Rs</Option>
 							<Option value="usd">$</Option>
 						</Select>
@@ -83,11 +78,11 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Button type="primary" onClick={next} style={{ marginTop: 20, width: "100%" }}>
 						Next
 					</Button>
-				</Card>
+				</>
 			)}
 
 			{current === 1 && (
-				<Card title="Confirm Payment" style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
+				<>
 					<Text>
 						<strong>Name:</strong> {userName}
 					</Text>
@@ -100,17 +95,15 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<strong>Amount:</strong> {currency} {amount}
 					</Text>
 					<br />
-					<Flex justify="space-between" style={{ marginTop: 20 }}>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</Flex>
-				</Card>
+					<Button onClick={prev}>Back</Button>
+					<Button type="primary" onClick={handleConfirm}>
+						Confirm
+					</Button>
+				</>
 			)}
 
 			{current === 3 && (
-				<Card title="Payment Status" style={{ width: "100%", maxWidth: 500, marginTop: 20, textAlign: "center" }}>
+				<>
 					{isSuccess ? (
 						<Result
 							status="success"
@@ -123,20 +116,18 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							title="Payment Failed"
 							subTitle="There was an issue with your payment. Please check the details."
 						>
-							<div className="desc">
-								<Text strong style={{ fontSize: 16 }}>
-									Error details:
-								</Text>
-								<br />
-								<Text>
-									<CloseCircleOutlined style={{ fontSize: 16 }} /> The amount is invalid.
-								</Text>
-							</div>
+							<Text strong style={{ fontSize: 16 }}>
+								Error details:
+							</Text>
+							<br />
+							<Text>
+								<CloseCircleOutlined style={{ fontSize: 16 }} /> The amount is invalid.
+							</Text>
 						</Result>
 					)}
-				</Card>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

@@ -37,17 +37,17 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<Card title="PLA Flap Print Process" style={{ textAlign: "left", maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current} direction="horizontal">
 				<Step title="Details" icon={<SolutionOutlined />} />
-				<Step title="Confirm & Print" icon={<PrinterOutlined />} />
+				<Step title="Confirm" icon={<PrinterOutlined />} />
 				<Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{/* Step 1: Input Details */}
 			{current === 0 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Print Details</Title>
+				<>
+					
 					<Input
 						placeholder="Color"
 						onChange={(e) => setFormData({ ...formData, color: e.target.value })}
@@ -78,18 +78,18 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							setFormData({ ...formData, printTime: Array.isArray(timeString) ? timeString.join(", ") : timeString })
 						}
 					/>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button type="primary" onClick={next}>
 							Next
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
-			{/* Step 2: Confirm & Print */}
+			{/* Step 2: Confirm*/}
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm & Print</Title>
+				<>
+					
 					<Text>
 						<strong>Color:</strong> {formData.color}
 					</Text>
@@ -105,28 +105,28 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>Print Time:</strong> {formData.printTime}
 					</Text>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={handlePrint}>
 							Print
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
 			{/* Step 3: Print Status */}
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{printStatus === "success" ? (
 						<Result status="success" title="Print Successful" />
 					) : (
 						<Result status="error" title="Print Failed" subTitle="Please try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 }
 

@@ -70,15 +70,15 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<Card style={{ maxWidth: 600, margin: "20px auto", padding: "20px" }} title="Design Uploader">
+		<>
 			<Steps current={current} direction="horizontal" style={{ marginBottom: 20 }}>
 				<Step title="Upload File" icon={<FileTextOutlined />} />
-				<Step title="Confirm Details" icon={<SolutionOutlined />} />
+				<Step title="Confirm" icon={<SolutionOutlined />} />
 				<Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					<Dragger {...uploadProps}>
 						<p className="ant-upload-drag-icon">
 							<InboxOutlined />
@@ -89,12 +89,12 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Button type="primary" block onClick={next} style={{ marginTop: 16 }} disabled={!file}>
 						Next
 					</Button>
-				</div>
+				</>
 			)}
 
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Details</Title>
+				<>
+					
 					<Text>
 						<strong>User:</strong> {userName}
 					</Text>
@@ -106,27 +106,27 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>File Name:</strong> {file?.name || "No file selected"}
 					</Text>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={handleConfirm} disabled={!file}>
 							Confirm
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="File Uploaded Successfully" />
 					) : (
 						<Result status="error" title="File Upload Failed" subTitle="Please try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

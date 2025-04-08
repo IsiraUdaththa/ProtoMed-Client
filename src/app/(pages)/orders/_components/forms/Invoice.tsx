@@ -46,7 +46,7 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 		try {
 			const response = await api.post(`/orders/${orderId}/invoice`, formData);
-			console.log(response.data)
+			console.log(response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
@@ -56,14 +56,7 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<Card
-			title="Invoice Submission"
-			style={{
-				textAlign: "center",
-				maxWidth: "600px",
-				margin: "0 auto", // Centers the card horizontally
-			}}
-		>
+		<>
 			<Steps current={current} direction="horizontal">
 				<Step title="Enter Invoice" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -88,8 +81,7 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 			)}
 
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Invoice</Title>
+				<>
 					<Text>
 						<strong>User:</strong> {userName}
 					</Text>
@@ -101,27 +93,27 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>Invoice Number:</strong> {invoiceNumber}
 					</Text>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="Invoice Submitted Successfully" />
 					) : (
 						<Result status="error" title="Invoice Submission Failed" subTitle="Please check the invoice details." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

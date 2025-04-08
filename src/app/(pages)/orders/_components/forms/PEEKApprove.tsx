@@ -69,7 +69,7 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<Card title="PEEK Approval" style={{ maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current}>
 				<Step title="Approval" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -119,8 +119,8 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			)}
 
 			{current === 1 && approvalData && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Approval</Title>
+				<>
+					
 					<Card style={{ marginBottom: 20 }}>
 						<Text>
 							<strong>Approval Status:</strong> {approvalData.isApproved ? "Approved" : "Not Approved"}
@@ -147,19 +147,19 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							Submit Approval
 						</Button>
 					</Form.Item>
-				</div>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="PEEK Approval Submitted Successfully" />
 					) : (
 						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

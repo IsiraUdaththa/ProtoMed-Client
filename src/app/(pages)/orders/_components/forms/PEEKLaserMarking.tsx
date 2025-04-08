@@ -45,8 +45,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 
 
 	return (
-		<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-			<Card title="PEEK Laser Marking Process" style={{ textAlign: "center", maxWidth: "600px", width: "100%" }}>
+			<>
 				<Steps current={current} direction="horizontal">
 					<Step title="Start" icon={<UserOutlined />} />
 					<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -55,7 +54,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 
 				{current === 0 && (
 					<Form onFinish={next} style={{ marginTop: 20 }}>
-						<Form.Item style={{ textAlign: "center" }}>
+						<Form.Item >
 							<Button type="primary" htmlType="submit">
 								Get Started
 							</Button>
@@ -64,8 +63,8 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 				)}
 
 				{current === 1 && (
-					<div style={{ marginTop: 20 }}>
-						<Title level={4}>Confirm Details</Title>
+					<>
+						
 						<Text>
 							<strong>User:</strong> {userName}
 						</Text>
@@ -73,19 +72,19 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						<Text>
 							<strong>Date & Time:</strong> {dateTime}
 						</Text>
-						<div style={{ marginTop: 20 }}>
+						<>
 							<Button onClick={prev} style={{ marginRight: 10 }}>
 								Back
 							</Button>
 							<Button type="primary" onClick={handleSubmit}>
 								Confirm
 							</Button>
-						</div>
-					</div>
+						</>
+					</>
 				)}
 
 				{current === 2 && (
-					<div style={{ marginTop: 20 }}>
+					<>
 						{isSuccess ? (
 							<Result status="success" title="PEEK Laser Marking Process Confirmed Successfully" />
 						) : (
@@ -95,10 +94,9 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 								subTitle="Please try again."
 							/>
 						)}
-					</div>
+					</>
 				)}
-			</Card>
-		</div>
+			</>
 	);
 }
 

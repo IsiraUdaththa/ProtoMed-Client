@@ -30,17 +30,16 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	return (
-		<Card title="Payment Process" style={{ textAlign: "center", maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current} direction="horizontal">
 				<Step title="Details" icon={<SolutionOutlined />} />
-				<Step title="Confirm & Pay" icon={<CreditCardOutlined />} />
+				<Step title="Confirm" icon={<CreditCardOutlined />} />
 				<Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{/* Step 1: Payment Details */}
 			{current === 0 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Payment Details</Title>
+				<>
 					<Text>
 						<strong>Amount:</strong> $100
 					</Text>
@@ -48,41 +47,41 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>User:</strong> John Doe
 					</Text>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button type="primary" onClick={next}>
 							Next
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
-			{/* Step 2: Confirm & Pay */}
+			{/* Step 2: Confirm*/}
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm & Pay</Title>
+				<>
+					
 					<Text>Click below to complete your payment.</Text>
-					<div style={{ marginTop: 20 }}>
+					<>
 						<Button onClick={prev} style={{ marginRight: 10 }}>
 							Back
 						</Button>
 						<Button type="primary" onClick={handlePayment}>
 							Pay Now
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
 			{/* Step 3: Payment Status */}
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{paymentStatus === "success" ? (
 						<Result status="success" title="Payment Successful" />
 					) : (
 						<Result status="error" title="Payment Failed" subTitle="Please try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

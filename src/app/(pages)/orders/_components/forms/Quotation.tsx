@@ -80,8 +80,8 @@ const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
 	);
 
 	return (
-		<Card title="Quotation Value" style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
-			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
+		<>
+			<Steps current={current}>
 				<Step title="Enter Details" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
 				<Step title="Status" icon={<SmileOutlined />} />
@@ -89,7 +89,7 @@ const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
 
 			{/* Step 1: Enter Quotation Details */}
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical" style={{ width: "100%", maxWidth: 500 }}>
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<Form.Item
 						label="Quotation Value"
 						name="quotationValue"
@@ -101,7 +101,7 @@ const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
 									{currency} <DownOutlined />
 								</Button>
 							</Dropdown>
-							<InputNumber style={{ width: "100%" }} placeholder="Enter value" min={0} />
+							<InputNumber placeholder="Enter value" min={0} />
 						</Space>
 					</Form.Item>
 
@@ -152,7 +152,7 @@ const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
 					)}
 				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

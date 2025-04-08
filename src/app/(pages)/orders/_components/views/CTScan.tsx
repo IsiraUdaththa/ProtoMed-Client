@@ -73,12 +73,12 @@ const CTScan: React.FC<CTScanProps> = ({ orderId }) => {
 			<Descriptions items={items2} />
 			<br />
 			<Divider />
-			<div style={{ display: "flex", justifyContent: "center", gap: "100px" }}>
+			<>
 				<Image.PreviewGroup>
 					<Image width={200} src={data?.image1} />
 					<Image width={200} src={data?.image2} />
 				</Image.PreviewGroup>
-			</div>
+			</>
 		</>
 	);
 };
