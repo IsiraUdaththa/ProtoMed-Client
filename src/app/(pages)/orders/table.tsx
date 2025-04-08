@@ -1,10 +1,10 @@
-/* eslint-disable compat/compat */
 import React, { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
+import api from "@/lib/axiosInstance";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
@@ -26,14 +26,15 @@ interface PatientDetails {
 }
 
 interface DataType {
+	_id: string;
 	key: string;
 	patientDetails: PatientDetails;
 }
 
 interface TableParams {
 	pagination?: TablePaginationConfig;
-	sortField?: SorterResult<any>["field"];
-	sortOrder?: SorterResult<any>["order"];
+	sortField?: SorterResult<string>["field"];
+	sortOrder?: SorterResult<string>["order"];
 	filters?: Parameters<GetProp<TableProps, "onChange">>[1];
 }
 
@@ -43,7 +44,7 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: ["patientDetails", "name"],
 		sorter: true,
 		render: (_, record) => (
-			<Link href={`/orders/${record.patientDetails._id}`} passHref>
+			<Link href={`/orders/${record._id}`} passHref>
 				<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
 			</Link>
 		),
@@ -114,32 +115,47 @@ const App: React.FC = () => {
 		},
 	});
 
-	const params = toURLSearchParams(getRandomuserParams(tableParams));
+	// Extract the filters into a separate state variable
+	const [filtersValue, setFiltersValue] = useState("");
 
-	const fetchData = () => {
-		setLoading(true);
-		fetch(`http://localhost:5000/api/orders?${params.toString()}`)
-			.then((res) => res.json())
-			.then(({ results, pagination }) => {
-				setData(results);
-				setLoading(false);
-				setTableParams({
-					...tableParams,
-					pagination: {
-						...tableParams.pagination,
-						// 200 is mock data, you should read it from server
-						total: pagination.total,
-					},
+	// Update filtersValue whenever tableParams.filters changes
+	useEffect(() => {
+		setFiltersValue(JSON.stringify(tableParams.filters));
+	}, [tableParams.filters]);
+
+	useEffect(() => {
+		const params = toURLSearchParams(getRandomuserParams(tableParams));
+		const fetchData = () => {
+			setLoading(true);
+
+
+			api
+				.get(`/orders?${params.toString()}`)
+				.then((response) => {
+					const { results, pagination } = response.data;
+					setData(results);
+					setLoading(false);
+
+					setTableParams((prev) => ({
+						...prev,
+						pagination: {
+							...prev.pagination,
+							total: pagination.total,
+						},
+					}));
+				})
+				.catch((error) => {
+					console.error("Error fetching data:", error);
+					setLoading(false);
 				});
-			});
-	};
-
-	useEffect(fetchData, [
+		};
+		fetchData();
+	}, [
 		tableParams.pagination?.current,
 		tableParams.pagination?.pageSize,
-		tableParams?.sortOrder,
 		tableParams?.sortField,
-		JSON.stringify(tableParams.filters),
+		tableParams?.sortOrder,
+		filtersValue, // Use the separate state variable instead
 	]);
 
 	const handleTableChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter) => {

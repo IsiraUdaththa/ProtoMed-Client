@@ -1,23 +1,28 @@
 "use client";
 import "@ant-design/v5-patch-for-react-19";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Modal, Flex, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
+import Image from "next/image";
 
 const Navbar: React.FC = () => {
 	const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
-	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	return (
 		<>
 			<Header
-				style={{ backgroundColor: "#fff", padding: "0px 55px 0px 20px", borderBottom: "1px solid #f0f0f0", height: "55px" }}
+				style={{
+					backgroundColor: "#fff",
+					padding: "0px 20px 0px 20px",
+					borderBottom: "1px solid #f0f0f0",
+					height: "55px",
+				}}
 			>
 				<Flex align="center" justify="space-between" style={{ height: "100%" }}>
-					<img src="/logo.png" alt="Logo" style={{ height: "30px" }} />
+					<Image src="/logo.png" alt="Logo" width={121} height={30} />
 					<Space>
 						<span>John Doe</span>
 						<Avatar icon={<UserOutlined />} onClick={() => setIsProfileModalVisible(true)} />
