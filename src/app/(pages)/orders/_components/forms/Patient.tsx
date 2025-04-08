@@ -5,7 +5,7 @@ import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import axios from "axios";
 import api from "@/lib/axiosInstance";
-import moment from "moment"; // Make sure you have moment imported if you're dealing with date objects.
+// import moment from "moment"; // Make sure you have moment imported if you're dealing with date objects.
 
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -48,13 +48,13 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 					form.setFieldsValue({
 						name: order.name,
 						gender: order.gender,
-						dob: order.dob ? moment(order.dob) : null,
+						// dob: order.dob ? moment(order.dob) : null,
 						category: order.category,
 						collectingMethod: order.collectingMethod,
 						contactNumber: order.contactNumber,
 						doctor: order.doctor,
 						hospital: order.hospital,
-						plannedDate: order.plannedDate ? moment(order.plannedDate) : null,
+						// plannedDate: order.plannedDate ? moment(order.plannedDate) : null,
 						comment: order.comment,
 					});
 				} catch (error) {
@@ -97,7 +97,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 		try {
 			if (orderId) {
 				// Update existing order (PUT request)
-				const response = await api.put(`http://localhost:5000/api/orders/${orderId}`, submissionData);
+				const response = await api.post(`/orders/${orderId}`, submissionData);
 				if (response.status === 200) {
 					setIsSuccess(true);
 				} else {
@@ -105,7 +105,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 				}
 			} else {
 				// Create new order (POST request)
-				const response = await api.post("http://localhost:5000/api/orders", submissionData);
+				const response = await api.post("/orders", submissionData);
 				if (response.status === 201) {
 					setIsSuccess(true);
 				} else {

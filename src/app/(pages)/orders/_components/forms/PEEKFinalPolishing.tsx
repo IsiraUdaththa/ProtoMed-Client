@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Card, Steps, Result, Form } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-export default function PEEKFinalPolishing() {
+const PEEKFinalPolishing: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [userName, setUserName] = useState("Fetching...");
 	const [dateTime, setDateTime] = useState("");
@@ -25,9 +26,15 @@ export default function PEEKFinalPolishing() {
 	const prev = () => setCurrent(current - 1);
 
 	const handleSubmit = async () => {
-		console.log(`Submitting PEEK Final Polishing:`, { userName, dateTime });
+		console.log(`Submitting PEEK Final Polishing:`, { userName, dateTime });4
+
+		const formData = {
+			date: dateTime,
+		};
+
 		try {
-			await fakeApiCall();
+			const response = await api.post(`/orders/${orderId}/peek-final-polishing`, formData);
+			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
@@ -36,13 +43,6 @@ export default function PEEKFinalPolishing() {
 		next();
 	};
 
-	const fakeApiCall = () => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				Math.random() > 0.2 ? resolve() : reject("Submission failed");
-			}, 1000);
-		});
-	};
 
 	return (
 		<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -97,3 +97,5 @@ export default function PEEKFinalPolishing() {
 		</div>
 	);
 }
+
+export default PEEKFinalPolishing;

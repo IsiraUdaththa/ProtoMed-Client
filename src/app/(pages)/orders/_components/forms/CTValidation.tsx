@@ -44,7 +44,7 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 		submissionData.append("orderId", orderId);
 		submissionData.append("username", dummyUsername);
 		submissionData.append("dateTime", dateTime);
-		submissionData.append("sizeSqcm", formData["size-sqcm"]);
+		submissionData.append("size", formData["size-sqcm"]);
 		submissionData.append("implantName", formData["implant-name"]);
 		submissionData.append("implantSize", formData["implant-size"]);
 

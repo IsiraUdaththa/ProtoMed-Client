@@ -3,13 +3,15 @@
 import React, { useState } from "react";
 import { Button, Typography, Layout, Row, Col, Card, Steps, Input, Select, DatePicker, TimePicker, Result } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
 const { Step } = Steps;
 const { Option } = Select;
 
-export default function PLAFlapPrint() {
+const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
+
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState({
 		color: "",
@@ -25,21 +27,14 @@ export default function PLAFlapPrint() {
 	const handlePrint = async () => {
 		console.log("Processing Print...");
 		try {
-			await fakePrintApiCall();
+			const response = await api.post(`/orders/${orderId}/pla-flap-print`, formData);
+			console.log("File uploaded successfully:", response.data);
 			setPrintStatus("success");
 		} catch (error) {
 			console.error("Print failed:", error);
 			setPrintStatus("error");
 		}
 		next();
-	};
-
-	const fakePrintApiCall = () => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				Math.random() > 0.5 ? resolve() : reject("Print failed");
-			}, 1500);
-		});
 	};
 
 	return (
@@ -135,3 +130,5 @@ export default function PLAFlapPrint() {
 		</Card>
 	);
 }
+
+export default PLAFlapPrint;

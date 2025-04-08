@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Button, Upload, message, Card, Steps, Typography, Result } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
+import api from "@/lib/axiosInstance";
 
 const { Dragger } = Upload;
 const { Step } = Steps;
 const { Title, Text } = Typography;
 
-const DesignUploader: React.FC = () => {
+const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [userName, setUserName] = useState("Fetching...");
 	const [dateTime, setDateTime] = useState("");
@@ -49,22 +50,23 @@ const DesignUploader: React.FC = () => {
 			return;
 		}
 
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.append("designDate", dateTime);
+
 		try {
-			await fakeApiCall(file);
+			const response = await api.post(`/orders/${orderId}/design-submit`, formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
 			setIsSuccess(false);
 		}
 		next(); // Move to success/error step
-	};
-
-	const fakeApiCall = (file: File) => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				file ? resolve() : reject("File upload failed");
-			}, 1000);
-		});
 	};
 
 	return (

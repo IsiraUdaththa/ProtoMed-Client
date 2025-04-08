@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Form, Upload, Button, Space, Steps, Card, Typography, Result } from "antd";
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -15,7 +16,7 @@ const normFile = (e: any) => {
 	return e?.fileList;
 };
 
-const App: React.FC = () => {
+const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [formValues, setFormValues] = useState<any>({});
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -29,9 +30,11 @@ const App: React.FC = () => {
 	};
 
 	const handleSubmit = async () => {
+		const formData = new FormData;
+		
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			const response = await api.post(`/orders/${orderId}/payment-advance`, formData);
+			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			setIsSuccess(false);
@@ -138,4 +141,4 @@ const App: React.FC = () => {
 	);
 };
 
-export default App;
+export default PackingStepForm;

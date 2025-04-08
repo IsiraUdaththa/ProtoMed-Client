@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Card, Steps, Typography, Result } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { Step } = Steps;
 const { Title, Text } = Typography;
 
-const InvoicePage: React.FC = () => {
+const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -38,22 +39,19 @@ const InvoicePage: React.FC = () => {
 	const handleConfirm = async () => {
 		console.log("Submitting Invoice:", { invoiceNumber, userName, dateTime });
 
+		const formData = {
+			invoiceNumber: invoiceNumber,
+			sentDate: dateTime,
+		};
+
 		try {
-			await fakeApiCall(invoiceNumber);
+			const response = await api.post(`/orders/${orderId}/invoice`, formData);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
 			setIsSuccess(false);
 		}
 		next(); // Move to success/error step
-	};
-
-	const fakeApiCall = (invoice: string) => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				invoice ? resolve() : reject("Invalid Invoice Number");
-			}, 1000);
-		});
 	};
 
 	return (

@@ -8,14 +8,15 @@ import {
 	SolutionOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 const { Step } = Steps;
 const { Option } = Select;
 const { Text } = Typography;
 
-export default function PaymentStepForm() {
+const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
-	const [currency, setCurrency] = useState("LKR");
+	const [currency, setCurrency] = useState("lkr");
 	const [amount, setAmount] = useState("");
 	const [userName, setUserName] = useState("Fetching...");
 	const [dateTime, setDateTime] = useState("");
@@ -40,21 +41,19 @@ export default function PaymentStepForm() {
 		const paymentData = { userName, currency, amount, dateTime };
 		console.log("Payment data confirmed:", paymentData);
 
+		const formData = {
+			currency: currency,
+			value: amount,
+		};
+
 		try {
-			await fakeApiCall(paymentData);
+			const response = await api.post(`/orders/${orderId}/payment-advance`, formData);
+			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			setIsSuccess(false);
 		}
 		setCurrent(3);
-	};
-
-	const fakeApiCall = (data: any) => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				parseFloat(data.amount) > 0 ? resolve() : reject("Invalid amount");
-			}, 1000);
-		});
 	};
 
 	return (
@@ -69,8 +68,8 @@ export default function PaymentStepForm() {
 				<Card style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
 					<Flex gap={10} align="center">
 						<Select value={currency} onChange={setCurrency} style={{ width: 100 }}>
-							<Option value="LKR">Rs</Option>
-							<Option value="USD">$</Option>
+							<Option value="lkr">Rs</Option>
+							<Option value="usd">$</Option>
 						</Select>
 						<Input
 							type="number"
@@ -139,4 +138,6 @@ export default function PaymentStepForm() {
 			)}
 		</Card>
 	);
-}
+};
+
+export default PaymentStepForm;

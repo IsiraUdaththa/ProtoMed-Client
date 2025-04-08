@@ -9,6 +9,7 @@ import {
 	SmileOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import api from "@/lib/axiosInstance";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
@@ -18,7 +19,7 @@ interface DesignApproval {
 	comment?: string;
 }
 
-const DesignApprovalForm: React.FC = () => {
+const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState<number>(0); // Track the current step
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
@@ -53,8 +54,8 @@ const DesignApprovalForm: React.FC = () => {
 		if (!approvalData) return;
 
 		setLoading(true);
-		axios
-			.post("/api/design-approvals", approvalData)
+		api
+			.post(`orders/${orderId}/design-approval`, approvalData)
 			.then(() => {
 				setLoading(false);
 				setIsSuccess(true);

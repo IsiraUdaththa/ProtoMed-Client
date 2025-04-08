@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { Button, Typography, Layout, Row, Col, Card, Steps, Result } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
-const { Content } = Layout;
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-export default function PaymentProcess() {
+const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [paymentStatus, setPaymentStatus] = useState<"success" | "error" | null>(null);
 
@@ -17,22 +17,16 @@ export default function PaymentProcess() {
 
 	const handlePayment = async () => {
 		console.log("Processing Payment...");
+
 		try {
-			await fakePaymentApiCall();
+			const response = await api.post(`/orders/${orderId}/payment-completion`);
+			console.log("File uploaded successfully:", response.data);
 			setPaymentStatus("success");
 		} catch (error) {
 			console.error("Payment failed:", error);
 			setPaymentStatus("error");
 		}
 		next();
-	};
-
-	const fakePaymentApiCall = () => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				Math.random() > 0.5 ? resolve() : reject("Payment failed");
-			}, 1500);
-		});
 	};
 
 	return (
@@ -90,4 +84,6 @@ export default function PaymentProcess() {
 			)}
 		</Card>
 	);
-}
+};
+
+export default PaymentProcess;
