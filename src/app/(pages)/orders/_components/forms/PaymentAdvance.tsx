@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Steps, Button, Select, Input, Card, Typography, message, Result, Flex } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
+import {
+	CheckCircleOutlined,
+	CloseCircleOutlined,
+	SmileOutlined,
+	SolutionOutlined,
+	UserOutlined,
+} from "@ant-design/icons";
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -60,7 +66,7 @@ export default function PaymentStepForm() {
 			</Steps>
 
 			{current === 0 && (
-				<Card  style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
+				<Card style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
 					<Flex gap={10} align="center">
 						<Select value={currency} onChange={setCurrency} style={{ width: 100 }}>
 							<Option value="LKR">Rs</Option>
@@ -83,12 +89,23 @@ export default function PaymentStepForm() {
 
 			{current === 1 && (
 				<Card title="Confirm Payment" style={{ width: "100%", maxWidth: 500, marginTop: 20 }}>
-					<Text><strong>Name:</strong> {userName}</Text><br />
-					<Text><strong>Date & Time:</strong> {dateTime}</Text><br />
-					<Text><strong>Amount:</strong> {currency} {amount}</Text><br />
+					<Text>
+						<strong>Name:</strong> {userName}
+					</Text>
+					<br />
+					<Text>
+						<strong>Date & Time:</strong> {dateTime}
+					</Text>
+					<br />
+					<Text>
+						<strong>Amount:</strong> {currency} {amount}
+					</Text>
+					<br />
 					<Flex justify="space-between" style={{ marginTop: 20 }}>
 						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>Confirm</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
 					</Flex>
 				</Card>
 			)}

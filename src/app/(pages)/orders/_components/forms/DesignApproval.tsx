@@ -1,7 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, Steps, Result, message } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+import {
+	CheckCircleOutlined,
+	CloseCircleOutlined,
+	FileTextOutlined,
+	SolutionOutlined,
+	SmileOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 
 const { Title, Text } = Typography;
@@ -68,7 +74,7 @@ const DesignApprovalForm: React.FC = () => {
 	};
 
 	return (
-		<Card title="Design Approval"  style={{ maxWidth: 600, margin: "auto" }}>
+		<Card title="Design Approval" style={{ maxWidth: 600, margin: "auto" }}>
 			<Steps current={current}>
 				<Step title="Approval" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
@@ -92,7 +98,7 @@ const DesignApprovalForm: React.FC = () => {
 								borderColor: "green",
 								color: "green",
 								padding: "16px",
-                                margin:'16px' // Reduced padding
+								margin: "16px", // Reduced padding
 							}}
 						>
 							Approve
@@ -108,7 +114,7 @@ const DesignApprovalForm: React.FC = () => {
 								borderColor: "red",
 								color: "red",
 								padding: "16px",
-                                margin:'16px' // Reduced padding
+								margin: "16px", // Reduced padding
 							}}
 						>
 							Not Approve
@@ -142,11 +148,7 @@ const DesignApprovalForm: React.FC = () => {
 						<Button onClick={goBack} style={{ marginRight: 10 }}>
 							Back
 						</Button>
-						<Button
-							type="primary"
-							onClick={submitApproval}
-							loading={loading}
-						>
+						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
 					</Form.Item>

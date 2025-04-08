@@ -62,8 +62,7 @@ const InvoicePage: React.FC = () => {
 			style={{
 				textAlign: "center",
 				maxWidth: "600px",
-				margin: "0 auto"// Centers the card horizontally
-				
+				margin: "0 auto", // Centers the card horizontally
 			}}
 		>
 			<Steps current={current} direction="horizontal">
