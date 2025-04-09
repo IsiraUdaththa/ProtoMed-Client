@@ -26,11 +26,7 @@ import { login } from "@/services/authService";
 
 login("admin@example.com", "password");
 
-interface JobsProps {
-	orderId: string;
-}
-
-const Jobs: React.FC<JobsProps> = ({ orderId }) => {
+const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 	const { hasRole } = useRole();
 
 	const onChange = (key: string | string[]) => {

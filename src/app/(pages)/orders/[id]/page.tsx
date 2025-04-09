@@ -11,16 +11,7 @@ import { useState, useEffect } from "react";
 
 export default function OrderDetailsPage() {
 	const params = useParams();
-	const [orderId, setOrderId] = useState<string | null>(null);
-
-	useEffect(() => {
-		const urlOrderId = params?.id;
-
-		// Directly set the orderId from the URL
-		if (urlOrderId) {
-			setOrderId(urlOrderId);
-		}
-	}, [params?.id]); // Dependency array to track changes in URL params
+	const orderId = params.id as string;
 
 	if (!orderId) {
 		return <Alert message="Error" description="Order ID is missing." type="error" showIcon />;
