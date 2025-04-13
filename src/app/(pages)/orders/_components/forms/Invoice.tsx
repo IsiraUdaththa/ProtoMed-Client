@@ -85,18 +85,16 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>User:</strong> {userName}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Date & Time:</strong> {dateTime}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Invoice Number:</strong> {invoiceNumber}
 					</Text>
 					<>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>

@@ -10,7 +10,6 @@ const { Step } = Steps;
 const { Option } = Select;
 
 const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
-
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState({
 		color: "",
@@ -47,33 +46,21 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 1: Input Details */}
 			{current === 0 && (
 				<>
-					
-					<Input
-						placeholder="Color"
-						onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-						style={{ marginBottom: 10 }}
-					/>
-					<Input
-						placeholder="Weight"
-						onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-						style={{ marginBottom: 10 }}
-					/>
+					<Input placeholder="Color" onChange={(e) => setFormData({ ...formData, color: e.target.value })} />
+					<Input placeholder="Weight" onChange={(e) => setFormData({ ...formData, weight: e.target.value })} />
 					<Select
 						placeholder="Select Print Machine"
 						onChange={(value) => setFormData({ ...formData, printMachine: value })}
-						style={{ width: "100%", marginBottom: 10 }}
 					>
 						<Option value="Machine A">Machine A</Option>
 						<Option value="Machine B">Machine B</Option>
 					</Select>
 					<DatePicker
-						style={{ width: "100%", marginBottom: 10 }}
 						onChange={(date, dateString) =>
 							setFormData({ ...formData, printTime: typeof dateString === "string" ? dateString : "" })
 						}
 					/>
 					<TimePicker
-						style={{ width: "100%" }}
 						onChange={(time, timeString) =>
 							setFormData({ ...formData, printTime: Array.isArray(timeString) ? timeString.join(", ") : timeString })
 						}
@@ -89,26 +76,23 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 2: Confirm*/}
 			{current === 1 && (
 				<>
-					
 					<Text>
 						<strong>Color:</strong> {formData.color}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Weight:</strong> {formData.weight}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Print Machine:</strong> {formData.printMachine}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Print Time:</strong> {formData.printTime}
 					</Text>
 					<>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handlePrint}>
 							Print
 						</Button>
@@ -128,6 +112,6 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			)}
 		</>
 	);
-}
+};
 
 export default PLAFlapPrint;

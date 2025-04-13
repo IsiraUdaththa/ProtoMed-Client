@@ -53,8 +53,8 @@ const PEEKRoughPolishing: React.FC<{ orderId: string }> = ({ orderId }) => {
 				</Steps>
 
 				{current === 0 && (
-					<Form onFinish={next} style={{ marginTop: 20 }}>
-						<Form.Item >
+					<Form onFinish={next}>
+						<Form.Item>
 							<Button type="primary" htmlType="submit">
 								Get Started
 							</Button>
@@ -64,18 +64,15 @@ const PEEKRoughPolishing: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 				{current === 1 && (
 					<>
-						
 						<Text>
 							<strong>User:</strong> {userName}
 						</Text>
-						<br />
+
 						<Text>
 							<strong>Date & Time:</strong> {dateTime}
 						</Text>
 						<>
-							<Button onClick={prev} style={{ marginRight: 10 }}>
-								Back
-							</Button>
+							<Button onClick={prev}>Back</Button>
 							<Button type="primary" onClick={handleSubmit}>
 								Confirm
 							</Button>
@@ -99,6 +96,6 @@ const PEEKRoughPolishing: React.FC<{ orderId: string }> = ({ orderId }) => {
 			</>
 		</>
 	);
-}
+};
 
 export default PEEKRoughPolishing;

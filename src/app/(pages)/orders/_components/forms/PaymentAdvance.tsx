@@ -71,11 +71,10 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							value={amount}
 							onChange={(e) => setAmount(e.target.value)}
 							placeholder="Enter amount"
-							style={{ flex: 1 }}
 							step="0.01"
 						/>
 					</Flex>
-					<Button type="primary" onClick={next} style={{ marginTop: 20, width: "100%" }}>
+					<Button type="primary" onClick={next}>
 						Next
 					</Button>
 				</>
@@ -86,15 +85,15 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>Name:</strong> {userName}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Date & Time:</strong> {dateTime}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Amount:</strong> {currency} {amount}
 					</Text>
-					<br />
+
 					<Button onClick={prev}>Back</Button>
 					<Button type="primary" onClick={handleConfirm}>
 						Confirm
@@ -115,15 +114,7 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							status="error"
 							title="Payment Failed"
 							subTitle="There was an issue with your payment. Please check the details."
-						>
-							<Text strong style={{ fontSize: 16 }}>
-								Error details:
-							</Text>
-							<br />
-							<Text>
-								<CloseCircleOutlined style={{ fontSize: 16 }} /> The amount is invalid.
-							</Text>
-						</Result>
+						/>
 					)}
 				</>
 			)}

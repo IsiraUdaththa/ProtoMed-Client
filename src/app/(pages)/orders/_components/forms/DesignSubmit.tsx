@@ -71,7 +71,7 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			<Steps current={current} direction="horizontal" style={{ marginBottom: 20 }}>
+			<Steps current={current} direction="horizontal">
 				<Step title="Upload File" icon={<FileTextOutlined />} />
 				<Step title="Confirm" icon={<SolutionOutlined />} />
 				<Step title="Status" icon={<SmileOutlined />} />
@@ -86,7 +86,7 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<p className="ant-upload-text">Click or drag file to upload</p>
 						<p className="ant-upload-hint">Only one file is supported.</p>
 					</Dragger>
-					<Button type="primary" block onClick={next} style={{ marginTop: 16 }} disabled={!file}>
+					<Button type="primary" block onClick={next} disabled={!file}>
 						Next
 					</Button>
 				</>
@@ -94,22 +94,19 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && (
 				<>
-					
 					<Text>
 						<strong>User:</strong> {userName}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Date & Time:</strong> {dateTime}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>File Name:</strong> {file?.name || "No file selected"}
 					</Text>
 					<>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm} disabled={!file}>
 							Confirm
 						</Button>

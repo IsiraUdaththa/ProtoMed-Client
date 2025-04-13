@@ -31,7 +31,6 @@ export default function OrderDetailsPage() {
 			/>
 			<h2>Order number: {orderId}</h2>
 
-			<OrderInfo orderId={orderId} />
 
 			<Steps />
 			<Tabs

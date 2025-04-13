@@ -15,11 +15,7 @@ import Peek from "./Peek";
 import Packing from "./Packing";
 import Invoice from "./Payment";
 
-interface DetailsProps {
-	orderId: string;
-}
-
-const Details: React.FC<DetailsProps> = ({ orderId }) => {
+const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const genExtra = () => (
 		<Space>
 			<EditOutlined onClick={(event) => event.stopPropagation()} />

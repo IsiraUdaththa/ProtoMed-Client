@@ -7,11 +7,7 @@ const { TextArea } = Input;
 const { Step } = Steps;
 const { Title, Text } = Typography;
 
-interface CTScanFormProps {
-	orderId: string;
-}
-
-const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
+const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -36,7 +32,7 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 		console.log("Submitting Data:", formData);
 
 		try {
-			const response = await api.post(`http://localhost:5000/api/orders/${orderId}/ct-scan`, {
+			const response = await api.post(`orders/${orderId}/ct-scan`, {
 				ctScanLink: formData.ctScanLink,
 				ctNumber: formData.ctNumber,
 				ctDate: formData.ctDate?.toISOString(), // Convert date to ISO string
@@ -65,7 +61,7 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical" style={{ marginTop: 20 }}>
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<Form.Item
 						label="CT Scan Link/DVD Number"
 						name="ctScanLink"
@@ -75,7 +71,7 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="CT Date" name="ctDate" rules={[{ required: true, message: "Please select CT scan date" }]}>
-						<DatePicker style={{ width: "100%" }} />
+						<DatePicker />
 					</Form.Item>
 
 					<Form.Item label="CT Number" name="ctNumber" rules={[{ required: true, message: "Please enter CT number" }]}>
@@ -96,26 +92,23 @@ const CTScanForm: React.FC<CTScanFormProps> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					
 					<Text>
 						<strong>CT Scan Link/DVD:</strong> {formData.ctScanLink}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>CT Date:</strong> {formData.ctDate?.format("YYYY-MM-DD")}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>CT Number:</strong> {formData.ctNumber}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Comment:</strong> {formData.comment || "No comment"}
 					</Text>
 
-					<Button onClick={prev} style={{ marginRight: 10 }}>
-						Back
-					</Button>
+					<Button onClick={prev}>Back</Button>
 					<Button type="primary" onClick={handleConfirm}>
 						Confirm
 					</Button>

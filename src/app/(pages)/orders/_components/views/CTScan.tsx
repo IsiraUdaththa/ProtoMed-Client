@@ -3,11 +3,7 @@ import { Button, Descriptions, Divider, Image, Spin, Alert } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-interface CTScanProps {
-	orderId: string;
-}
-
-const CTScan: React.FC<CTScanProps> = ({ orderId }) => {
+const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -64,14 +60,12 @@ const CTScan: React.FC<CTScanProps> = ({ orderId }) => {
 			<Button icon={<DownloadOutlined />} href={data?.ctScan?.ctScanLink}>
 				Download Model
 			</Button>
-			<br />
-			<br />
+
 			<Descriptions items={items} />
 
-			<br />
 			<Divider />
 			<Descriptions items={items2} />
-			<br />
+
 			<Divider />
 			<>
 				<Image.PreviewGroup>

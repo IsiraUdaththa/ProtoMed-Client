@@ -20,13 +20,12 @@ import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
-
 import useRole from "../forms/hooks/userole"; // Import role hook
 import { login } from "@/services/authService";
 
 login("admin@example.com", "password");
 
-const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
+const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const { hasRole } = useRole();
 
 	const onChange = (key: string | string[]) => {
@@ -41,7 +40,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 	);
 
 	const items = [
-		hasRole(["admin", "designer"]) && {
+		{
 			key: "1",
 			label: "Patient Details",
 			children: (
@@ -51,7 +50,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "designer"]) && {
+		{
 			key: "2",
 			label: "CT Scan Details",
 			children: (
@@ -67,7 +66,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "finance"]) && {
+		{
 			key: "4",
 			label: "Quotation & Payment",
 			children: (
@@ -83,7 +82,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "designer"]) && {
+		{
 			key: "5",
 			label: "Design Attempts",
 			children: (
@@ -99,7 +98,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "designer"]) && {
+		{
 			key: "6",
 			label: "PLA Print Details",
 			children: (
@@ -109,7 +108,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "designer"]) && {
+		{
 			key: "7",
 			label: "Peek Print Details",
 			children: (
@@ -137,7 +136,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "packing"]) && {
+		{
 			key: "8",
 			label: "Packing Details",
 			children: (
@@ -147,7 +146,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-		hasRole(["admin", "finance"]) && {
+		{
 			key: "9",
 			label: "Final Payment and Invoice",
 			children: (
@@ -163,7 +162,7 @@ const Jobs: React.FC<{orderId:string}> = ({ orderId }) => {
 			),
 			extra: genExtra(),
 		},
-	].filter(Boolean);
+	];
 
 	return <Collapse ghost onChange={onChange} items={items} defaultActiveKey={[1, 2, 3, 4, 5, 6, 7, 8, 9]} />;
 };

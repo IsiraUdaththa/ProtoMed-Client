@@ -61,12 +61,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						}}
 					>
 						<Form.Item name="ct-image-2d" valuePropName="fileList" getValueFromEvent={normFile}>
-							<Upload.Dragger
-								name="ct-image-2d"
-								action="/upload.do"
-								multiple={false}
-								style={{ width: "80%", height: "150px", margin: "0 auto" }} // Set your desired size here
-							>
+							<Upload.Dragger name="ct-image-2d" action="/upload.do" multiple={false}>
 								<p className="ant-upload-drag-icon">
 									<VideoCameraAddOutlined />
 								</p>
@@ -75,12 +70,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Form.Item>
 
 						<Form.Item name="ct-image-2d-picture" valuePropName="fileList" getValueFromEvent={normFile}>
-							<Upload.Dragger
-								name="ct-image-2d-picture"
-								action="/upload.do"
-								multiple={false}
-								style={{ width: "80%", height: "150px", margin: "0 auto" }} // Set your desired size here
-							>
+							<Upload.Dragger name="ct-image-2d-picture" action="/upload.do" multiple={false}>
 								<p className="ant-upload-drag-icon">
 									<FileImageOutlined />
 								</p>
@@ -89,12 +79,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Form.Item>
 
 						<Form.Item name="ct-image-3d" valuePropName="fileList" getValueFromEvent={normFile}>
-							<Upload.Dragger
-								name="ct-image-3d"
-								action="/upload.do"
-								multiple={false}
-								style={{ width: "80%", height: "150px", margin: "0 auto" }} // Set your desired size here
-							>
+							<Upload.Dragger name="ct-image-3d" action="/upload.do" multiple={false}>
 								<p className="ant-upload-drag-icon">
 									<FileImageOutlined />
 								</p>
@@ -114,13 +99,11 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				{current === 1 && (
 					<>
 						<Text strong>User: {formValues?.userName || "Not Provided"}</Text>
-						<br />
+
 						<Text strong>Date & Time: {new Date().toLocaleString()}</Text>
-						<br />
+
 						{/* <> */}
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>

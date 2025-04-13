@@ -1,6 +1,19 @@
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import { Button, Card, DatePicker, Form, Input, Radio, Select, Steps, Typography, Result } from "antd";
+import {
+	Button,
+	Card,
+	DatePicker,
+	Form,
+	Input,
+	Radio,
+	Select,
+	Steps,
+	Typography,
+	Result,
+	Divider,
+	Descriptions,
+} from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
@@ -10,11 +23,7 @@ const { Step } = Steps;
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
-interface PatientProps {
-	orderId?: string; // Optional orderId prop
-}
-
-const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
+const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -37,7 +46,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 		if (orderId) {
 			const fetchOrderData = async () => {
 				try {
-					const response = await api.get(`http://localhost:5000/api/orders/${orderId}`);
+					const response = await api.get(`orders/${orderId}`);
 					console.log(response);
 
 					const order = response.data.patientDetails;
@@ -128,27 +137,23 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} layout="vertical" onFinish={handleNext} style={{ marginTop: 20 }}>
-					<Form.Item label="Name" name="name" rules={[{ required: true, message: "Please enter your name" }]}>
+				<Form form={form} layout="vertical" onFinish={handleNext}>
+					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]}>
 						<Input />
 					</Form.Item>
 
-					<Form.Item label="Gender" name="gender" rules={[{ required: true, message: "Please select your gender" }]}>
+					<Form.Item label="Gender" name="gender" rules={[{ message: "Please select your gender" }]}>
 						<Radio.Group>
 							<Radio value="Male">Male</Radio>
 							<Radio value="Female">Female</Radio>
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item
-						label="Date of Birth"
-						name="dob"
-						rules={[{ required: true, message: "Please select your birth date" }]}
-					>
-						<DatePicker style={{ width: "100%" }} />
+					<Form.Item label="Date of Birth" name="dob" rules={[{ message: "Please select your birth date" }]}>
+						<DatePicker />
 					</Form.Item>
 
-					<Form.Item label="Category" name="category" rules={[{ required: true, message: "Please select a category" }]}>
+					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]}>
 						<Select>
 							{[
 								"Accuplasty",
@@ -171,7 +176,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 					<Form.Item
 						label="CT Scan Collecting Method"
 						name="collectingMethod"
-						rules={[{ required: true, message: "Please select a method" }]}
+						rules={[{ message: "Please select a method" }]}
 					>
 						<Select>
 							{[
@@ -203,7 +208,7 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Planned Date" name="plannedDate">
-						<DatePicker style={{ width: "100%" }} />
+						<DatePicker />
 					</Form.Item>
 
 					<Form.Item label="Comment" name="comment">
@@ -220,34 +225,26 @@ const RegistrationForm: React.FC<PatientProps> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					
-					<Text strong>User:</Text> <Text>{userName}</Text>
-					<br />
-					<Text strong>Date & Time:</Text> <Text>{dateTime}</Text>
-					<br />
-					<Text strong>Name:</Text> <Text>{formData.name}</Text>
-					<br />
-					<Text strong>Gender:</Text> <Text>{formData.gender}</Text>
-					<br />
-					<Text strong>Date of Birth:</Text> <Text>{formData.dob?.format("YYYY-MM-DD")}</Text>
-					<br />
-					<Text strong>Category:</Text> <Text>{formData.category}</Text>
-					<br />
-					<Text strong>CT Scan Collecting Method:</Text> <Text>{formData.collectingMethod}</Text>
-					<br />
-					<Text strong>Phone Number:</Text> <Text>{formData.contactNumber}</Text>
-					<br />
-					<Text strong>Doctor&apos;s Name:</Text> <Text>{formData.doctor || "N/A"}</Text>
-					<br />
-					<Text strong>Hospital Name:</Text> <Text>{formData.hospital || "N/A"}</Text>
-					<br />
-					<Text strong>Planned Date:</Text> <Text>{formData.plannedDate?.format("YYYY-MM-DD") || "N/A"}</Text>
-					<br />
-					<Text strong>Comment:</Text> <Text>{formData.comment || "N/A"}</Text>
-					<br />
-					<Button onClick={prev} style={{ marginRight: 10 }}>
-						Back
-					</Button>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date & Time", children: dateTime },
+							{ label: "Name", children: formData.name },
+							{ label: "Gender", children: formData.gender },
+							{ label: "Date of Birth", children: formData.dob?.format("YYYY-MM-DD") },
+							{ label: "Category", children: formData.category },
+							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+							{ label: "Phone Number", children: formData.contactNumber },
+							{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
+							{ label: "Hospital Name", children: formData.hospital || "N/A" },
+							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
+							{ label: "Comment", children: formData.comment || "N/A" },
+						]}
+					></Descriptions>
+					<Button onClick={prev}>Back</Button>
 					<Button type="primary" onClick={handleConfirm}>
 						Submit
 					</Button>

@@ -43,7 +43,7 @@ const items2: DescriptionsProps["items"] = [
 const App: React.FC = () => (
 	<>
 		<Descriptions title="Design Attempt No. 1" items={items} />
-		<br />
+
 		<Button icon={<DownloadOutlined />} href="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
 			Download Design
 		</Button>

@@ -62,11 +62,9 @@ const items2: DescriptionsProps["items"] = [
 
 const App: React.FC = () => (
 	<>
-		<Descriptions items={items} />
-		<br />
-		- [ ] - [ ] Implant Fit and Finish Checked by **auth** #ask - [ ] Date #ask - [ ] - [ ] Dimensional Accuracy Checked
-		By #ask - [ ] QC design doc Flap #ask - [ ] QC messure values doc Flap #ask - [ ] comment **string**
-		<br />
+		<Descriptions items={items} />- [ ] - [ ] Implant Fit and Finish Checked by **auth** #ask - [ ] Date #ask - [ ] - [
+		] Dimensional Accuracy Checked By #ask - [ ] QC design doc Flap #ask - [ ] QC messure values doc Flap #ask - [ ]
+		comment **string**
 		<Button icon={<DownloadOutlined />} href="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
 			Download QC Docs????
 		</Button>

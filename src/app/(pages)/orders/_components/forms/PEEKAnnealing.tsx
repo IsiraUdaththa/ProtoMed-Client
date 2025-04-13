@@ -43,57 +43,53 @@ const PEEKAnnealingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 		next();
 	};
 
-
 	return (
-			<>
-				<Steps current={current} direction="horizontal">
-					<Step title="Start" icon={<UserOutlined />} />
-					<Step title="Confirm" icon={<SolutionOutlined />} />
-					<Step title="Status" icon={<CheckCircleOutlined />} />
-				</Steps>
+		<>
+			<Steps current={current} direction="horizontal">
+				<Step title="Start" icon={<UserOutlined />} />
+				<Step title="Confirm" icon={<SolutionOutlined />} />
+				<Step title="Status" icon={<CheckCircleOutlined />} />
+			</Steps>
 
-				{current === 0 && (
-					<Form onFinish={next} style={{ marginTop: 20 }}>
-						<Form.Item >
-							<Button type="primary" htmlType="submit">
-								Get Started
-							</Button>
-						</Form.Item>
-					</Form>
-				)}
+			{current === 0 && (
+				<Form onFinish={next}>
+					<Form.Item>
+						<Button type="primary" htmlType="submit">
+							Get Started
+						</Button>
+					</Form.Item>
+				</Form>
+			)}
 
-				{current === 1 && (
+			{current === 1 && (
+				<>
+					<Text>
+						<strong>User:</strong> {userName}
+					</Text>
+
+					<Text>
+						<strong>Date & Time:</strong> {dateTime}
+					</Text>
 					<>
-						
-						<Text>
-							<strong>User:</strong> {userName}
-						</Text>
-						<br />
-						<Text>
-							<strong>Date & Time:</strong> {dateTime}
-						</Text>
-						<>
-							<Button onClick={prev} style={{ marginRight: 10 }}>
-								Back
-							</Button>
-							<Button type="primary" onClick={handleSubmit}>
-								Confirm
-							</Button>
-						</>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleSubmit}>
+							Confirm
+						</Button>
 					</>
-				)}
+				</>
+			)}
 
-				{current === 2 && (
-					<>
-						{isSuccess ? (
-							<Result status="success" title="PEEK Annealing Process Confirmed Successfully" />
-						) : (
-							<Result status="error" title="PEEK Annealing Process Submission Failed" subTitle="Please try again." />
-						)}
-					</>
-				)}
-			</>
+			{current === 2 && (
+				<>
+					{isSuccess ? (
+						<Result status="success" title="PEEK Annealing Process Confirmed Successfully" />
+					) : (
+						<Result status="error" title="PEEK Annealing Process Submission Failed" subTitle="Please try again." />
+					)}
+				</>
+			)}
+		</>
 	);
-}
+};
 
 export default PEEKAnnealingProcess;

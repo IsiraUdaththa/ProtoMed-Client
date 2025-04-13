@@ -16,7 +16,6 @@ const App: React.FC = () => {
 		<Card title="Process progress">
 			<>
 				<Steps
-					style={{ minWidth: "1000px" }} // Ensures it doesn't collapse too much
 					items={[
 						{
 							// title: "Registration",

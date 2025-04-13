@@ -77,24 +77,17 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} layout="vertical" style={{ marginTop: 20 }}>
+				<Form form={form} layout="vertical">
 					<Form.Item name="comment" label="Comment (optional)">
 						<Input.TextArea rows={4} placeholder="Add an optional comment" />
 					</Form.Item>
 
 					<Form.Item>
 						<Button
-							type="primary"
+							type="default"
 							icon={<CheckCircleOutlined />}
 							loading={loading}
 							onClick={() => handleApproval(true)}
-							style={{
-								backgroundColor: "white",
-								borderColor: "green",
-								color: "green",
-								padding: "16px",
-								margin: "16px", // Reduced padding
-							}}
 						>
 							Approve
 						</Button>
@@ -104,13 +97,6 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							loading={loading}
 							danger
 							onClick={() => handleApproval(false)}
-							style={{
-								backgroundColor: "white",
-								borderColor: "red",
-								color: "red",
-								padding: "16px",
-								margin: "16px", // Reduced padding
-							}}
 						>
 							Not Approve
 						</Button>
@@ -120,29 +106,26 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && approvalData && (
 				<>
-					
-					<Card style={{ marginBottom: 20 }}>
+					<Card>
 						<Text>
 							<strong>Approval Status:</strong> {approvalData.isApproved ? "Approved" : "Not Approved"}
 						</Text>
-						<br />
+
 						<Text>
 							<strong>Comment:</strong> {approvalData.comment || "No comment provided"}
 						</Text>
-						<br />
+
 						<Text>
 							<strong>Username:</strong> {username}
 						</Text>
-						<br />
+
 						<Text>
 							<strong>Date/Time:</strong> {currentDate}
 						</Text>
 					</Card>
 
 					<Form.Item>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>

@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { FloatButton, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import Registration from "../orders/_components/forms/Patient"; // Import the registration page
+import RegistrationForm from "../orders/_components/forms/Patient";
+// import Registration from "../orders/_components/forms/Patient"; // Import the registration page
 
 export default function DashboardPage() {
   const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function DashboardPage() {
         onCancel={handleClose}
         footer={null} // No footer buttons
       >
-        <Registration key={modalKey} /> {/* Reset on reopen */}
+        <RegistrationForm key={modalKey} orderId="" /> {/* Reset on reopen */}
       </Modal>
     </div>
   );

@@ -63,9 +63,7 @@ const items2: DescriptionsProps["items"] = [
 const App: React.FC = () => (
 	<>
 		<Descriptions items={items} />
-		<br />
 		TODO: - [ ] QC Docs - [ ] QC design doc outer #ask - [ ] QC measure values doc outer #ask
-		<br />
 		<Button icon={<DownloadOutlined />} href="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
 			Download QC Docs????
 		</Button>

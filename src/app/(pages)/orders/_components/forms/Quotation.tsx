@@ -7,11 +7,7 @@ import api from "@/lib/axiosInstance";
 const { Step } = Steps;
 const { Text } = Typography;
 
-interface QuotationProps {
-	orderId: string;
-}
-
-const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
+const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [currency, setCurrency] = useState<string>("USD");
@@ -119,19 +115,18 @@ const QuotationPage: React.FC<QuotationProps> = ({ orderId }) => {
 					<Text>
 						<strong>Username:</strong> {dummyUsername}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Date and Time:</strong> {dateTime}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Currency:</strong> {formData.currency}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Quotation Value:</strong> {formData.quotationValue}
 					</Text>
-					<br />
 
 					<Space>
 						<Button onClick={prev}>Back</Button>

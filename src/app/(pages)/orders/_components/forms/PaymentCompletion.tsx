@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Card, Steps, Result } from "antd";
+import { Button, Typography, Card, Steps, Result, Space } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -43,27 +43,26 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Text>
 						<strong>Amount:</strong> $100
 					</Text>
-					<br />
+
 					<Text>
 						<strong>User:</strong> John Doe
 					</Text>
-					<>
+
+					<Space>
 						<Button type="primary" onClick={next}>
 							Next
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 
 			{/* Step 2: Confirm*/}
 			{current === 1 && (
 				<>
-					
 					<Text>Click below to complete your payment.</Text>
+
 					<>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handlePayment}>
 							Pay Now
 						</Button>

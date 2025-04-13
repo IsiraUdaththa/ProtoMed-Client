@@ -5,11 +5,7 @@ import { Descriptions, Spin, Alert } from "antd";
 import type { DescriptionsProps } from "antd";
 import api from "@/lib/axiosInstance";
 
-interface OrderInfoProps {
-	orderId?: string; // Make orderId optional in props to support fallback from localStorage
-}
-
-const OrderInfo: React.FC<OrderInfoProps> = ({ orderId: propOrderId }) => {
+const OrderInfo: React.FC<{ orderId: string }> = ({ orderId: propOrderId }) => {
 	const [orderId, setOrderId] = useState<string | null>(null);
 	const [data, setData] = useState<DescriptionsProps["items"] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -86,8 +82,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ orderId: propOrderId }) => {
 
 	return (
 		<>
-			<p>Order ID: {orderId}</p> {/* Display Order ID */}
-			<Descriptions bordered items={data} />
+			<Descriptions items={data} />
 		</>
 	);
 };

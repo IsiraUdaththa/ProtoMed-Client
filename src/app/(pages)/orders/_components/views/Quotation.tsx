@@ -41,7 +41,7 @@ const items2: DescriptionsProps["items"] = [
 const App: React.FC = () => (
 	<>
 		<Descriptions title="Quotation" items={items} />
-		<br />
+
 		<Descriptions title="Advance" items={items2} />
 	</>
 );

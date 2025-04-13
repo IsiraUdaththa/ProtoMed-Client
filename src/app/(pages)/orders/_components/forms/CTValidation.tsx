@@ -9,11 +9,7 @@ const { Text } = Typography;
 
 const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
 
-interface CTValidationProp {
-	orderId: string;
-}
-
-const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
+const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -80,7 +76,7 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical" >
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<Form.Item label="CT Image 2D" name="ct-image-2d" valuePropName="fileList" getValueFromEvent={normFile}>
 						<Upload.Dragger name="ct-image-2d" beforeUpload={() => false}>
 							<p className="ant-upload-drag-icon">
@@ -100,7 +96,7 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ required: true, message: "Please enter size" }]}>
-						<InputNumber min={1} max={1000} style={{ width: "100%" }} />
+						<InputNumber min={1} max={1000} />
 					</Form.Item>
 
 					<Form.Item
@@ -132,31 +128,30 @@ const MultiStepForm: React.FC<CTValidationProp> = ({ orderId }) => {
 					<Text>
 						<strong>Username:</strong> {dummyUsername}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Date and Time:</strong> {dateTime}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>CT Image 2D:</strong> {formData["ct-image-2d"]?.[0]?.name || "No file uploaded"}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>CT Image 3D:</strong> {formData["ct-image-3d"]?.[0]?.name || "No file uploaded"}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Size (sqcm):</strong> {formData["size-sqcm"]}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Implant Name:</strong> {formData["implant-name"]}
 					</Text>
-					<br />
+
 					<Text>
 						<strong>Size of Implant:</strong> {formData["implant-size"]}
 					</Text>
-					<br />
 
 					<Space>
 						<Button onClick={prev}>Back</Button>
