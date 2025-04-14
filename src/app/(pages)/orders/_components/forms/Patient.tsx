@@ -1,27 +1,9 @@
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import {
-	Button,
-	Card,
-	DatePicker,
-	Form,
-	Input,
-	Radio,
-	Select,
-	Steps,
-	Typography,
-	Result,
-	Divider,
-	Descriptions,
-} from "antd";
+import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, InputNumber, Space } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-// import moment from "moment"; // Make sure you have moment imported if you're dealing with date objects.
-
-const { Step } = Steps;
-const { TextArea } = Input;
-const { Title, Text } = Typography;
 
 const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
@@ -56,13 +38,13 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					form.setFieldsValue({
 						name: order.name,
 						gender: order.gender,
-						// dob: order.dob ? moment(order.dob) : null,
+						age: order.age,
 						category: order.category,
 						collectingMethod: order.collectingMethod,
 						contactNumber: order.contactNumber,
 						doctor: order.doctor,
 						hospital: order.hospital,
-						// plannedDate: order.plannedDate ? moment(order.plannedDate) : null,
+						plannedDate: order.plannedDate,
 						comment: order.comment,
 					});
 				} catch (error) {
@@ -127,13 +109,12 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 		next(); // Move to success/error step
 	};
-
 	return (
 		<>
-			<Steps current={current} direction="horizontal">
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+			<Steps current={current}>
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -149,8 +130,8 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item label="Date of Birth" name="dob" rules={[{ message: "Please select your birth date" }]}>
-						<DatePicker />
+					<Form.Item label="Age" name="age" rules={[{ type: "number", message: "Please enter your age" }]}>
+						<InputNumber min={1} max={100} />
 					</Form.Item>
 
 					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]}>
@@ -212,7 +193,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Comment" name="comment">
-						<TextArea rows={4} />
+						<Input.TextArea rows={4} />
 					</Form.Item>
 
 					<Form.Item>
@@ -225,29 +206,32 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "User", children: userName },
-							{ label: "Date & Time", children: dateTime },
-							{ label: "Name", children: formData.name },
-							{ label: "Gender", children: formData.gender },
-							{ label: "Date of Birth", children: formData.dob?.format("YYYY-MM-DD") },
-							{ label: "Category", children: formData.category },
-							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
-							{ label: "Phone Number", children: formData.contactNumber },
-							{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
-							{ label: "Hospital Name", children: formData.hospital || "N/A" },
-							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
-							{ label: "Comment", children: formData.comment || "N/A" },
-						]}
-					></Descriptions>
-					<Button onClick={prev}>Back</Button>
-					<Button type="primary" onClick={handleConfirm}>
-						Submit
-					</Button>
+						<Descriptions
+							bordered
+							size="small"
+							column={1}
+							items={[
+								{ label: "User", children: userName },
+								{ label: "Date & Time", children: dateTime },
+								{ label: "Name", children: formData.name },
+								{ label: "Gender", children: formData.gender },
+								{ label: "Age", children: formData.age },
+								{ label: "Category", children: formData.category },
+								{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+								{ label: "Phone Number", children: formData.contactNumber },
+								{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
+								{ label: "Hospital Name", children: formData.hospital || "N/A" },
+								{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
+								{ label: "Comment", children: formData.comment || "N/A" },
+							]}
+						></Descriptions>
+						<Space>
+							<Button onClick={prev}>Back</Button>
+							<Button type="primary" onClick={handleConfirm}>
+								Submit
+							</Button>
+						</Space>
+
 				</>
 			)}
 
