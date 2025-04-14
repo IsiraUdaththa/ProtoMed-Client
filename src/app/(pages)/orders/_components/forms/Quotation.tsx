@@ -4,9 +4,6 @@ import { Form, InputNumber, Button, Space, Dropdown, Menu, Steps, Typography, Re
 import { DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const { Step } = Steps;
-const { Text } = Typography;
-
 const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
@@ -60,27 +57,29 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 		next();
 	};
 
-	// Currency selection menu
-	const currencyMenu = (
-		<Menu>
-			<Menu.Item key="USD" onClick={() => setCurrency("USD")}>
-				USD
-			</Menu.Item>
-			<Menu.Item key="LKR" onClick={() => setCurrency("LKR")}>
-				LKR
-			</Menu.Item>
-			<Menu.Item key="SRD" onClick={() => setCurrency("SRD")}>
-				SRD
-			</Menu.Item>
-		</Menu>
-	);
+	const menuProps = {
+		items: [
+			{
+				key: "USD",
+				label: <span onClick={() => setCurrency("USD")}>USD</span>,
+			},
+			{
+				key: "LKR",
+				label: <span onClick={() => setCurrency("LKR")}>LKR</span>,
+			},
+			{
+				key: "SRD",
+				label: <span onClick={() => setCurrency("SRD")}>SRD</span>,
+			},
+		],
+	};
 
 	return (
 		<>
 			<Steps current={current}>
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{/* Step 1: Enter Quotation Details */}
@@ -92,12 +91,12 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: "Please enter a value!" }]}
 					>
 						<Space>
-							<Dropdown overlay={currencyMenu} trigger={["click"]}>
+							<Dropdown menu={menuProps} trigger={["click"]}>
 								<Button>
 									{currency} <DownOutlined />
 								</Button>
 							</Dropdown>
-							<InputNumber placeholder="Enter value" min={0} />
+							<InputNumber placeholder="Enter value" min={0} type="number" />
 						</Space>
 					</Form.Item>
 
@@ -112,21 +111,21 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 2: Confirm Data */}
 			{current === 1 && formData.quotationValue !== undefined && (
 				<>
-					<Text>
+					<Typography.Text>
 						<strong>Username:</strong> {dummyUsername}
-					</Text>
+					</Typography.Text>
 
-					<Text>
+					<Typography.Text>
 						<strong>Date and Time:</strong> {dateTime}
-					</Text>
+					</Typography.Text>
 
-					<Text>
+					<Typography.Text>
 						<strong>Currency:</strong> {formData.currency}
-					</Text>
+					</Typography.Text>
 
-					<Text>
+					<Typography.Text>
 						<strong>Quotation Value:</strong> {formData.quotationValue}
-					</Text>
+					</Typography.Text>
 
 					<Space>
 						<Button onClick={prev}>Back</Button>
