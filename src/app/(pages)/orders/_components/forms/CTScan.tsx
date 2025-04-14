@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Form, Input, Steps, Typography, Result } from "antd";
+import { Button, DatePicker, Form, Input, Steps, Typography, Result, Descriptions, Space } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -92,26 +92,23 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Text>
-						<strong>CT Scan Link/DVD:</strong> {formData.ctScanLink}
-					</Text>
-
-					<Text>
-						<strong>CT Date:</strong> {formData.ctDate?.format("YYYY-MM-DD")}
-					</Text>
-
-					<Text>
-						<strong>CT Number:</strong> {formData.ctNumber}
-					</Text>
-
-					<Text>
-						<strong>Comment:</strong> {formData.comment || "No comment"}
-					</Text>
-
-					<Button onClick={prev}>Back</Button>
-					<Button type="primary" onClick={handleConfirm}>
-						Confirm
-					</Button>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "CT Scan Link/DVD:", children: formData.ctScanLink },
+							{ label: "CT Date:", children: formData.ctDate?.format("YYYY-MM-DD") },
+							{ label: "CT Number:", children: formData.ctNumber },
+							{ label: "Comment:", children: formData.comment },
+						]}
+					></Descriptions>
+					<Space>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
+					</Space>
 				</>
 			)}
 
