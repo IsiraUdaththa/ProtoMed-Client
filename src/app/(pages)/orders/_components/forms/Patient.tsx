@@ -44,6 +44,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						contactNumber: order.contactNumber,
 						doctor: order.doctor,
 						hospital: order.hospital,
+						ward: order.ward,
 						plannedDate: order.plannedDate,
 						comment: order.comment,
 					});
@@ -188,6 +189,10 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Input />
 					</Form.Item>
 
+					<Form.Item label="Ward" name="ward">
+						<Input />
+					</Form.Item>
+
 					<Form.Item label="Planned Date" name="plannedDate">
 						<DatePicker />
 					</Form.Item>
@@ -206,32 +211,32 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-						<Descriptions
-							bordered
-							size="small"
-							column={1}
-							items={[
-								{ label: "User", children: userName },
-								{ label: "Date & Time", children: dateTime },
-								{ label: "Name", children: formData.name },
-								{ label: "Gender", children: formData.gender },
-								{ label: "Age", children: formData.age },
-								{ label: "Category", children: formData.category },
-								{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
-								{ label: "Phone Number", children: formData.contactNumber },
-								{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
-								{ label: "Hospital Name", children: formData.hospital || "N/A" },
-								{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
-								{ label: "Comment", children: formData.comment || "N/A" },
-							]}
-						></Descriptions>
-						<Space>
-							<Button onClick={prev}>Back</Button>
-							<Button type="primary" onClick={handleConfirm}>
-								Submit
-							</Button>
-						</Space>
-
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date & Time", children: dateTime },
+							{ label: "Name", children: formData.name },
+							{ label: "Gender", children: formData.gender },
+							{ label: "Age", children: formData.age },
+							{ label: "Category", children: formData.category },
+							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+							{ label: "Phone Number", children: formData.contactNumber },
+							{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
+							{ label: "Hospital Name", children: formData.hospital || "N/A" },
+							{ label: "Ward", children: formData.ward || "N/A" },
+							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
+							{ label: "Comment", children: formData.comment || "N/A" },
+						]}
+					></Descriptions>
+					<Space>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Submit
+						</Button>
+					</Space>
 				</>
 			)}
 
