@@ -36,6 +36,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					// Populate form fields with the fetched data
 					form.setFieldsValue({
+						country: order.country,
 						name: order.name,
 						gender: order.gender,
 						age: order.age,
@@ -120,6 +121,22 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} layout="vertical" onFinish={handleNext}>
+					<Form.Item
+						label="Country"
+						name="country"
+						initialValue={"Sri Lanka"}
+						rules={[{ message: "Please select a country" }]}
+						required
+					>
+						<Select>
+							{["Sri Lanka", "India", "Singapore"].map((method) => (
+								<Select.Option key={method} value={method}>
+									{method}
+								</Select.Option>
+							))}
+						</Select>
+					</Form.Item>
+
 					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]}>
 						<Input />
 					</Form.Item>
