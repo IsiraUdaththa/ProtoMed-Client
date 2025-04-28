@@ -25,7 +25,9 @@ interface PatientDetails {
 	updatedAt: string;
 }
 interface OrderId {
-	id: string;
+	country: string;
+	year: number;
+	orderNo: number;
 }
 
 interface DataType {
@@ -53,7 +55,9 @@ const columns: ColumnsType<DataType> = [
 					<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
 				</Link>
 				<Typography.Text type="secondary" style={{ fontSize: 12 }}>
-					({record.orderId.id})
+					({record.orderId.country}
+					{record.orderId.year}
+					{record.orderId.orderNo.toString().padStart(4, "0")})
 				</Typography.Text>
 			</Space>
 		),
