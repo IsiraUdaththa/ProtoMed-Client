@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
-import { Table } from "antd";
+import { Space, Table, Typography } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
 import type { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
@@ -24,10 +24,14 @@ interface PatientDetails {
 	createdAt: string;
 	updatedAt: string;
 }
+interface OrderId {
+	id: string;
+}
 
 interface DataType {
 	_id: string;
 	key: string;
+	orderId: OrderId;
 	patientDetails: PatientDetails;
 }
 
@@ -44,9 +48,14 @@ const columns: ColumnsType<DataType> = [
 		dataIndex: ["patientDetails", "name"],
 		sorter: true,
 		render: (_, record) => (
-			<Link href={`/orders/${record._id}`} passHref>
-				<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
-			</Link>
+			<Space>
+				<Link href={`/orders/${record._id}`} passHref>
+					<span className="text-blue-500 cursor-pointer">{record.patientDetails.name}</span>
+				</Link>
+				<Typography.Text type="secondary" style={{ fontSize: 12 }}>
+					({record.orderId.id})
+				</Typography.Text>
+			</Space>
 		),
 	},
 	{
@@ -127,7 +136,6 @@ const App: React.FC = () => {
 		const params = toURLSearchParams(getRandomuserParams(tableParams));
 		const fetchData = () => {
 			setLoading(true);
-
 
 			api
 				.get(`/orders?${params.toString()}`)
