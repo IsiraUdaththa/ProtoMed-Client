@@ -68,6 +68,7 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							onChange={(e) => setAmount(e.target.value)}
 							placeholder="Enter amount"
 							step="0.01"
+							min={0}
 						/>
 					</Flex>
 					<Button type="primary" onClick={next}>

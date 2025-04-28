@@ -1,6 +1,6 @@
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, InputNumber, Space } from "antd";
+import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
@@ -149,7 +149,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Age" name="age" rules={[{ type: "number", message: "Please enter your age" }]}>
-						<InputNumber min={1} max={100} />
+						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
 					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]}>

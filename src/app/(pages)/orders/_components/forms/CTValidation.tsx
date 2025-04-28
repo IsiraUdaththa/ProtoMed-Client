@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Input, Upload, Button, Space, Steps, Result, Descriptions } from "antd";
+import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -93,7 +93,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ required: true, message: "Please enter size" }]}>
-						<InputNumber min={1} max={1000} />
+						<Input min={1} max={1000}  type="number"/>
 					</Form.Item>
 
 					<Form.Item

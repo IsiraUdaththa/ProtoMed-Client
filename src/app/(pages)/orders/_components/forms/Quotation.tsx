@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Button, Space, Dropdown, Steps, Result, Descriptions } from "antd";
+import { Form, Button, Space, Dropdown, Steps, Result, Descriptions, Input } from "antd";
 import { DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -96,7 +96,7 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 									{currency} <DownOutlined />
 								</Button>
 							</Dropdown>
-							<InputNumber placeholder="Enter value" min={0} type="number" />
+							<Input placeholder="Enter value" min={0} type="number" />
 						</Space>
 					</Form.Item>
 
