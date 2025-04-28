@@ -11,6 +11,8 @@ import PaymentAdvance from "./PaymentAdvance";
 import DesignSubmit from "./DesignSubmit";
 import DesignApproval from "./DesignApproval";
 import PLAFlapPrint from "./PLAFlapPrint";
+import PLAOuterPrint from "./PLAOuterPrint";
+import PEEKPrint from "./PEEKPrint";	
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
 import PEEKApprove from "./PEEKApprove";
@@ -20,13 +22,11 @@ import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
-import useRole from "../forms/hooks/userole"; // Import role hook
 import { login } from "@/services/authService";
 
 login("admin@example.com", "password");
 
 const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const { hasRole } = useRole();
 
 	const onChange = (key: string | string[]) => {
 		console.log(key);
@@ -102,9 +102,17 @@ const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 			key: "6",
 			label: "PLA Print Details",
 			children: (
-				<Card>
-					<PLAFlapPrint orderId={orderId} />
-				</Card>
+				<>
+					<Card>
+						<PLAFlapPrint orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<PLAOuterPrint orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>{/* <PLAFlapApproval orderId={orderId} /> */}</Card>
+				</>
 			),
 			extra: genExtra(),
 		},
@@ -113,6 +121,9 @@ const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Peek Print Details",
 			children: (
 				<>
+					<Card>
+						<PEEKPrint orderId={orderId} />
+					</Card>
 					<Card>
 						<PEEKAnnealing orderId={orderId} />
 					</Card>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Button, Space, Dropdown, Menu, Steps, Typography, Result, Card } from "antd";
+import { Form, InputNumber, Button, Space, Dropdown, Steps, Result, Descriptions } from "antd";
 import { DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -111,21 +111,23 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 2: Confirm Data */}
 			{current === 1 && formData.quotationValue !== undefined && (
 				<>
-					<Typography.Text>
-						<strong>Username:</strong> {dummyUsername}
-					</Typography.Text>
-
-					<Typography.Text>
-						<strong>Date and Time:</strong> {dateTime}
-					</Typography.Text>
-
-					<Typography.Text>
-						<strong>Currency:</strong> {formData.currency}
-					</Typography.Text>
-
-					<Typography.Text>
-						<strong>Quotation Value:</strong> {formData.quotationValue}
-					</Typography.Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: dummyUsername },
+							{ label: "Date and Time:", children: dateTime },
+							{
+								label: "Amount",
+								children: (
+									<>
+										{formData.currency} {formData.quotationValue}
+									</>
+								),
+							},
+						]}
+					></Descriptions>
 
 					<Space>
 						<Button onClick={prev}>Back</Button>

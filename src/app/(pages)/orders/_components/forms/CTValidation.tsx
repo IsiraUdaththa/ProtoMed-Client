@@ -1,11 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Input, Upload, Button, Space, Steps, Typography, Result, Card } from "antd";
+import { Form, InputNumber, Input, Upload, Button, Space, Steps, Result, Descriptions } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { Step } = Steps;
-const { Text } = Typography;
 
 const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
 
@@ -70,9 +67,9 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current}>
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -125,33 +122,22 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Text>
-						<strong>Username:</strong> {dummyUsername}
-					</Text>
-
-					<Text>
-						<strong>Date and Time:</strong> {dateTime}
-					</Text>
-
-					<Text>
-						<strong>CT Image 2D:</strong> {formData["ct-image-2d"]?.[0]?.name || "No file uploaded"}
-					</Text>
-
-					<Text>
-						<strong>CT Image 3D:</strong> {formData["ct-image-3d"]?.[0]?.name || "No file uploaded"}
-					</Text>
-
-					<Text>
-						<strong>Size (sqcm):</strong> {formData["size-sqcm"]}
-					</Text>
-
-					<Text>
-						<strong>Implant Name:</strong> {formData["implant-name"]}
-					</Text>
-
-					<Text>
-						<strong>Size of Implant:</strong> {formData["implant-size"]}
-					</Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: dummyUsername },
+							{ label: "Date and Time:", children: dateTime },
+							{ label: "CT Image 2D:", children: dummyUsername },
+							{ label: "Date and Time", children: dateTime },
+							{ label: "CT Image 2D", children: formData["ct-image-2d"]?.[0]?.name || "No file uploaded" },
+							{ label: "CT Image 3D", children: formData["ct-image-3d"]?.[0]?.name || "No file uploaded" },
+							{ label: "Size (sqcm)", children: formData["size-sqcm"] },
+							{ label: "Implant Name", children: formData["implant-name"] },
+							{ label: "Size of Implant", children: formData["implant-size"] },
+						]}
+					></Descriptions>
 
 					<Space>
 						<Button onClick={prev}>Back</Button>

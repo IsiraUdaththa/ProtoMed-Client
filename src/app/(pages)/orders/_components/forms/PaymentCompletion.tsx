@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Card, Steps, Result, Space } from "antd";
+import { Button, Typography, Steps, Result, Space } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { Title, Text } = Typography;
-const { Step } = Steps;
 
 const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -32,21 +29,21 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current} direction="horizontal">
-				<Step title="Details" icon={<SolutionOutlined />} />
-				<Step title="Confirm" icon={<CreditCardOutlined />} />
-				<Step title="Status" icon={<CheckCircleOutlined />} />
+				<Steps.Step title="Details" icon={<SolutionOutlined />} />
+				<Steps.Step title="Confirm" icon={<CreditCardOutlined />} />
+				<Steps.Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{/* Step 1: Payment Details */}
 			{current === 0 && (
 				<>
-					<Text>
+					<Typography.Text>
 						<strong>Amount:</strong> $100
-					</Text>
+					</Typography.Text>
 
-					<Text>
+					<Typography.Text>
 						<strong>User:</strong> John Doe
-					</Text>
+					</Typography.Text>
 
 					<Space>
 						<Button type="primary" onClick={next}>
@@ -59,7 +56,7 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 2: Confirm*/}
 			{current === 1 && (
 				<>
-					<Text>Click below to complete your payment.</Text>
+					<Typography.Text>Click below to complete your payment.</Typography.Text>
 
 					<>
 						<Button onClick={prev}>Back</Button>

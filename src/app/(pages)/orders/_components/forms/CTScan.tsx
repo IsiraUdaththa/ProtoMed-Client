@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Form, Input, Steps, Typography, Result, Descriptions, Space } from "antd";
+import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { TextArea } = Input;
-const { Step } = Steps;
-const { Title, Text } = Typography;
 
 const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
@@ -55,9 +51,9 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current}>
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -79,7 +75,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Comment" name="comment">
-						<TextArea rows={4} />
+						<Input.TextArea rows={4} />
 					</Form.Item>
 
 					<Form.Item>

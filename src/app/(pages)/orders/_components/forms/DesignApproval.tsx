@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Typography, Steps, Result, message } from "antd";
+import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -9,9 +9,6 @@ import {
 	SmileOutlined,
 } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { Title, Text } = Typography;
-const { Step } = Steps;
 
 interface DesignApproval {
 	isApproved: boolean;
@@ -71,9 +68,9 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current}>
-				<Step title="Approval" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Approval" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -106,23 +103,18 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && approvalData && (
 				<>
-					<Card>
-						<Text>
-							<strong>Approval Status:</strong> {approvalData.isApproved ? "Approved" : "Not Approved"}
-						</Text>
-
-						<Text>
-							<strong>Comment:</strong> {approvalData.comment || "No comment provided"}
-						</Text>
-
-						<Text>
-							<strong>Username:</strong> {username}
-						</Text>
-
-						<Text>
-							<strong>Date/Time:</strong> {currentDate}
-						</Text>
-					</Card>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "Approval Status", children: approvalData.isApproved ? "Approved" : "Not Approved" },
+							{ label: "Comment", children: approvalData.comment || "No comment provided" },
+							{ label: "Username", children: username },
+							{ label: "Date/Time", children: currentDate },
+						]}
+					></Descriptions>
+					<Card></Card>
 
 					<Form.Item>
 						<Button onClick={prev}>Back</Button>

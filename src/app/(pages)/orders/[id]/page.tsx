@@ -6,8 +6,6 @@ import { Breadcrumb, Tabs, Alert } from "antd";
 import Details from "../_components/views/All";
 import Jobs from "../_components/forms/All";
 import Link from "next/link";
-import OrderInfo from "../_components/views/Patient"; // Fetch order details
-import { useState, useEffect } from "react";
 
 export default function OrderDetailsPage() {
 	const params = useParams();

@@ -69,8 +69,8 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Divider />
 			<>
 				<Image.PreviewGroup>
-					<Image width={200} src={data?.image1} />
-					<Image width={200} src={data?.image2} />
+					<Image width={200} src={data?.image1} alt="" />
+					<Image width={200} src={data?.image2} alt="" />
 				</Image.PreviewGroup>
 			</>
 		</>

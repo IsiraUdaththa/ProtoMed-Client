@@ -1,12 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Steps, Button, Select, Input, Card, Typography, message, Result, Flex } from "antd";
-import { CloseCircleOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
+import { Steps, Button, Select, Input, message, Result, Flex, Descriptions } from "antd";
+import { SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { Step } = Steps;
-const { Option } = Select;
-const { Text } = Typography;
 
 const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -54,17 +50,17 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current}>
-				<Step title="Enter Details" icon={<UserOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Enter Details" icon={<UserOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
 				<>
 					<Flex gap={10} align="center">
 						<Select value={currency} onChange={setCurrency}>
-							<Option value="lkr">Rs</Option>
-							<Option value="usd">$</Option>
+							<Select.Option value="lkr">Rs</Select.Option>
+							<Select.Option value="usd">$</Select.Option>
 						</Select>
 						<Input
 							type="number"
@@ -82,17 +78,23 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && (
 				<>
-					<Text>
-						<strong>Name:</strong> {userName}
-					</Text>
-
-					<Text>
-						<strong>Date & Time:</strong> {dateTime}
-					</Text>
-
-					<Text>
-						<strong>Amount:</strong> {currency} {amount}
-					</Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date and Time:", children: dateTime },
+							{
+								label: "Amount",
+								children: (
+									<>
+										{currency} {amount}
+									</>
+								),
+							},
+						]}
+					></Descriptions>
 
 					<Button onClick={prev}>Back</Button>
 					<Button type="primary" onClick={handleConfirm}>

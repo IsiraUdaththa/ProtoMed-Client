@@ -6,7 +6,6 @@ import SidebarMenu from "../_components/Sidebar";
 import Header from "../_components/Navbar";
 import Footer from "../_components/Footer";
 import Loading from "../loading";
-import { login } from "@/services/authService";
 
 const { Sider, Content } = Layout;
 

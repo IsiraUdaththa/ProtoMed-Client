@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Upload, message, Card, Steps, Typography, Result } from "antd";
+import { Button, Upload, message, Steps, Result, Descriptions } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import api from "@/lib/axiosInstance";
-
-const { Dragger } = Upload;
-const { Step } = Steps;
-const { Title, Text } = Typography;
 
 const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -72,20 +68,20 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Steps current={current} direction="horizontal">
-				<Step title="Upload File" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Upload File" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
 				<>
-					<Dragger {...uploadProps}>
+					<Upload.Dragger {...uploadProps}>
 						<p className="ant-upload-drag-icon">
 							<InboxOutlined />
 						</p>
 						<p className="ant-upload-text">Click or drag file to upload</p>
 						<p className="ant-upload-hint">Only one file is supported.</p>
-					</Dragger>
+					</Upload.Dragger>
 					<Button type="primary" block onClick={next} disabled={!file}>
 						Next
 					</Button>
@@ -94,17 +90,16 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && (
 				<>
-					<Text>
-						<strong>User:</strong> {userName}
-					</Text>
-
-					<Text>
-						<strong>Date & Time:</strong> {dateTime}
-					</Text>
-
-					<Text>
-						<strong>File Name:</strong> {file?.name || "No file selected"}
-					</Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date and Time", children: dateTime },
+							{ label: "File Name", children: file?.name || "No file selected" },
+						]}
+					></Descriptions>
 					<>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm} disabled={!file}>

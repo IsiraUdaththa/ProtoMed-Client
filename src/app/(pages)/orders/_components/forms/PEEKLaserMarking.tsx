@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Card, Steps, Result, Form } from "antd";
+import { Button, Steps, Result, Form, Descriptions } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-
-const { Title, Text } = Typography;
-const { Step } = Steps;
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -46,9 +43,9 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	return (
 		<>
 			<Steps current={current} direction="horizontal">
-				<Step title="Start" icon={<UserOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<CheckCircleOutlined />} />
+				<Steps.Step title="Start" icon={<UserOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -63,13 +60,15 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 
 			{current === 1 && (
 				<>
-					<Text>
-						<strong>User:</strong> {userName}
-					</Text>
-
-					<Text>
-						<strong>Date & Time:</strong> {dateTime}
-					</Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date and Time:", children: dateTime },
+						]}
+					></Descriptions>
 					<>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
