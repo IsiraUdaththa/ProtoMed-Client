@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Descriptions, Spin, Alert } from "antd";
 import type { DescriptionsProps } from "antd";
 import api from "@/lib/axiosInstance";
+import UserTag from "@/app/_components/UserTag";
 
 const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<DescriptionsProps["items"] | null>(null);
@@ -26,6 +27,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 				const order = response.data;
 				const patient = order?.patientDetails || {};
+				console.log(patient.registeredBy)
 
 				const items: DescriptionsProps["items"] = [
 					{ key: "1", label: "Customer Name", children: patient.name || "N/A" },
@@ -39,7 +41,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ key: "9", label: "Ward", children: patient.ward || "N/A" },
 					{ key: "10", label: "Planned Surgery Date", children: patient.surgeryDate || "N/A" },
 					{ key: "11", label: "Comment", children: patient.comment || "N/A" },
-					{ key: "12", label: "Registered By", children: patient.registeredBy || "N/A" },
+					{ key: "12", label: "Registered By", children: patient.registeredBy ? <UserTag userId={patient.registeredBy} /> : "N/A" },
 					{ key: "13", label: "Order Status", children: order?.status || "N/A" },
 					{ key: "14", label: "Total Price", children: order?.totalPrice ? `$${order.totalPrice}` : "N/A" },
 					{ key: "15", label: "Order Date", children: order?.orderDate || "N/A" },
