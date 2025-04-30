@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space } from "antd";
+import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -8,6 +8,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+	const [isUploaded, setIsUploaded] = useState(false);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -63,7 +64,30 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="ctScanLink"
 						rules={[{ required: true, message: "Please enter CT scan link/DVD number" }]}
 					>
-						<Input />
+						<Upload.Dragger
+							action="http://localhost:5000/api/upload"
+							accept="video/*"
+							multiple={false}
+							maxCount={1}
+							onChange={(info) => {
+								if (info.file.status === "done") {
+									const fileUrl = info.file.response?.url;
+									if (fileUrl) {
+										form.setFieldsValue({
+											ctScanLink: fileUrl,
+										});
+									}
+									setIsUploaded(true);
+								} else if (info.file.status === "removed") {
+									setIsUploaded(false);
+								}
+							}}
+						>
+							<p className="ant-upload-drag-icon">
+								<FileTextOutlined />
+							</p>
+						</Upload.Dragger>
+						<Input disabled={isUploaded} />
 					</Form.Item>
 
 					<Form.Item label="CT Date" name="ctDate" rules={[{ required: true, message: "Please select CT scan date" }]}>
