@@ -129,9 +129,14 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						required
 					>
 						<Select>
-							{["Sri Lanka", "India", "Singapore"].map((method) => (
-								<Select.Option key={method} value={method}>
-									{method}
+							{[
+								{ label: "Sri Lanka", value: "SL" },
+								{ label: "India", value: "IN" },
+								{ label: "Malaysia", value: "MY" },
+								{ label: "Thailand", value: "TH" },
+							].map(({ label, value }) => (
+								<Select.Option key={label} value={value}>
+									{label}
 								</Select.Option>
 							))}
 						</Select>
