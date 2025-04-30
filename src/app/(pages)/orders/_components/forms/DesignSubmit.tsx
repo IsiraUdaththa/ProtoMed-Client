@@ -28,16 +28,6 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const uploadProps: UploadProps = {
-		name: "file",
-		multiple: false,
-		beforeUpload: (file) => {
-			setFile(file);
-			message.success(`${file.name} file selected.`);
-			return false; // Prevent automatic upload
-		},
-	};
-
 	const handleConfirm = async () => {
 		console.log("Submitting File:", { file, userName, dateTime });
 
@@ -46,23 +36,20 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 			return;
 		}
 
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("designDate", dateTime);
+		const formData = {
+			designFile: file,
+			designDate: dateTime,
+		};
 
 		try {
-			const response = await api.post(`/orders/${orderId}/design-submit`, formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
+			const response = await api.post(`/orders/${orderId}/design-submit`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
 			setIsSuccess(false);
 		}
-		next(); // Move to success/error step
+		next();
 	};
 
 	return (
@@ -75,7 +62,17 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<>
-					<Upload.Dragger {...uploadProps}>
+					<Upload.Dragger
+						action="http://localhost:5000/api/upload"
+						onChange={(info) => {
+							if (info.file.status === "done") {
+								const fileUrl = info.file.response?.url;
+								if (fileUrl) {
+									setFile(fileUrl);
+								}
+							}
+						}}
+					>
 						<p className="ant-upload-drag-icon">
 							<InboxOutlined />
 						</p>
