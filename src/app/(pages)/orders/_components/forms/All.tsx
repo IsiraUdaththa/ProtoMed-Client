@@ -12,7 +12,8 @@ import DesignSubmit from "./DesignSubmit";
 import DesignApproval from "./DesignApproval";
 import PLAFlapPrint from "./PLAFlapPrint";
 import PLAOuterPrint from "./PLAOuterPrint";
-import PEEKPrint from "./PEEKPrint";	
+import PLAApproval from "./PLAApproval";
+import PEEKPrint from "./PEEKPrint";
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
 import PEEKApprove from "./PEEKApprove";
@@ -27,7 +28,6 @@ import { login } from "@/services/authService";
 login("admin@example.com", "password");
 
 const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
-
 	const onChange = (key: string | string[]) => {
 		console.log(key);
 	};
@@ -111,7 +111,7 @@ const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<PLAOuterPrint orderId={orderId} />
 					</Card>
 					<Divider />
-					<Card>{/* <PLAFlapApproval orderId={orderId} /> */}</Card>
+					<Card><PLAApproval orderId={orderId} /></Card>
 				</>
 			),
 			extra: genExtra(),
