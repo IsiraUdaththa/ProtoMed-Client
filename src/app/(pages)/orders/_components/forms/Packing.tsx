@@ -7,6 +7,7 @@ import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
+	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formValues, setFormValues] = useState<any>({});
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -20,18 +21,14 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	const handleSubmit = async () => {
-		const formData = new FormData();
-
-		formData.append("ct-image-2d", formValues["ct-image-2d"]);
-		formData.append("ct-image-2d-picture", formValues["ct-image-2d"]);
-		formData.append("ct-image-3d", formValues["ct-image-2d"]);
+		const formData = {
+			finalImplantVideo: formValues["implant-video"],
+			finalImplantPicture: formValues["implant-image"],
+			finalPackPicture: formValues["packing-image"],
+		};
 
 		try {
-			const response = await api.post(`/orders/${orderId}/packing`, formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
+			const response = await api.post(`/orders/${orderId}/packing`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
@@ -49,35 +46,81 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Steps.Step title="Confirm" icon={<FileImageOutlined />} />
 					<Steps.Step title="Status" icon={<FileImageOutlined />} />
 				</Steps>
-				
+
 				{current === 0 && (
-					<Form onFinish={onFinish}>
-						<Form.Item name="implant-image" valuePropName="fileList">
-							<Upload.Dragger accept="video/*" action="/upload.do" multiple={false} maxCount={1}>
+					<Form form={form} onFinish={onFinish}>
+						<Form.Item name="implant-video">
+							<Upload.Dragger
+								action="http://localhost:5000/api/upload"
+								accept="video/*"
+								multiple={false}
+								maxCount={1}
+								onChange={(info) => {
+									if (info.file.status === "done") {
+										const fileUrl = info.file.response?.url;
+										if (fileUrl) {
+											form.setFieldsValue({
+												"implant-video": fileUrl,
+											});
+										}
+									}
+								}}
+							>
 								<p className="ant-upload-drag-icon">
 									<VideoCameraAddOutlined />
 								</p>
-								<p className="ant-upload-hint">Click or drag Video of Final Implant to this area to upload</p>
+								<p className="ant-upload-hint">Upload Implant Video</p>
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item name="implant-video">
-							<Upload.Dragger accept="image/*" action="/upload.do" multiple={false} maxCount={1}>
+						<Form.Item name="implant-image">
+							<Upload.Dragger
+								action="http://localhost:5000/api/upload"
+								accept="image/*"
+								multiple={false}
+								maxCount={1}
+								onChange={(info) => {
+									if (info.file.status === "done") {
+										const fileUrl = info.file.response?.url;
+										if (fileUrl) {
+											form.setFieldsValue({
+												"implant-image": fileUrl,
+											});
+										}
+									}
+								}}
+							>
 								<p className="ant-upload-drag-icon">
-									<FileImageOutlined />
+									<VideoCameraAddOutlined />
 								</p>
-								<p className="ant-upload-hint">Click or drag Picture of Final Implant to this area to upload</p>
-							</Upload.Dragger>
-						</Form.Item>	
-
-						<Form.Item name="packing-image" valuePropName="fileList">
-							<Upload.Dragger accept="image/*" action="/upload.do" multiple={false} maxCount={1}>
-								<p className="ant-upload-drag-icon">
-									<FileImageOutlined />
-								</p>
-								<p className="ant-upload-hint">Click or drag Picture of Packaging to this area to upload</p>
+								<p className="ant-upload-hint">Upload Implant Image</p>
 							</Upload.Dragger>
 						</Form.Item>
+
+						<Form.Item name="packing-image">
+							<Upload.Dragger
+								accept="image/*"
+								action="http://localhost:5000/api/upload"
+								multiple={false}
+								maxCount={1}
+								onChange={(info) => {
+									if (info.file.status === "done") {
+										const fileUrl = info.file.response?.url;
+										if (fileUrl) {
+											form.setFieldsValue({
+												"packing-image": fileUrl,
+											});
+										}
+									}
+								}}
+							>
+								<p className="ant-upload-drag-icon">
+									<FileImageOutlined />
+								</p>
+								<p className="ant-upload-hint">Upload Packaged Implant Image</p>
+							</Upload.Dragger>
+						</Form.Item>
+
 						<Form.Item>
 							<Space>
 								<Button type="primary" htmlType="submit">
