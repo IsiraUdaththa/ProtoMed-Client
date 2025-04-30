@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions } from "antd";
+import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
@@ -33,25 +33,19 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			return;
 		}
 
-		const submissionData = new FormData();
-		submissionData.append("orderId", orderId);
-		submissionData.append("username", dummyUsername);
-		submissionData.append("dateTime", dateTime);
-		submissionData.append("size", formData["size-sqcm"]);
-		submissionData.append("implantName", formData["implant-name"]);
-		submissionData.append("implantSize", formData["implant-size"]);
-
-		if (formData["ct-image-2d"]?.[0]?.originFileObj) {
-			submissionData.append("ctImage2D", formData["ct-image-2d"][0].originFileObj);
-		}
-		if (formData["ct-image-3d"]?.[0]?.originFileObj) {
-			submissionData.append("ctImage3D", formData["ct-image-3d"][0].originFileObj);
-		}
+		const submissionData = {
+			orderId: orderId,
+			username: dummyUsername,
+			dateTime: dateTime,
+			size: formData["size-sqcm"],
+			implantName: formData["implant-name"],
+			implantSize: formData["implant-size"],
+			ctImage2D: formData["ct-image-2d"],
+			ctImage3D: formData["ct-image-3d"],
+		};
 
 		try {
-			const response = await api.post(`/orders/${orderId}/ct-validation`, submissionData, {
-				headers: { "Content-Type": "multipart/form-data" },
-			});
+			const response = await api.post(`/orders/${orderId}/ct-validation`, submissionData);
 
 			if (response.status !== 200) throw new Error("Failed to submit data");
 
@@ -74,8 +68,23 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} onFinish={handleSubmit} layout="vertical">
-					<Form.Item label="CT Image 2D" name="ct-image-2d" valuePropName="fileList" getValueFromEvent={normFile}>
-						<Upload.Dragger name="ct-image-2d" beforeUpload={() => false}>
+					<Form.Item label="CT Image 2D" name="ct-image-2d">
+						<Upload.Dragger
+							action="http://localhost:5000/api/upload"
+							accept="image/*"
+							multiple={false}
+							maxCount={1}
+							onChange={(info) => {
+								if (info.file.status === "done") {
+									const fileUrl = info.file.response?.url;
+									if (fileUrl) {
+										form.setFieldsValue({
+											"ct-image-2d": fileUrl,
+										});
+									}
+								}
+							}}
+						>
 							<p className="ant-upload-drag-icon">
 								<InboxOutlined />
 							</p>
@@ -83,8 +92,23 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Upload.Dragger>
 					</Form.Item>
 
-					<Form.Item label="CT Image 3D" name="ct-image-3d" valuePropName="fileList" getValueFromEvent={normFile}>
-						<Upload.Dragger name="ct-image-3d" beforeUpload={() => false}>
+					<Form.Item label="CT Image 3D" name="ct-image-3d">
+						<Upload.Dragger
+							action="http://localhost:5000/api/upload"
+							accept="image/*"
+							multiple={false}
+							maxCount={1}
+							onChange={(info) => {
+								if (info.file.status === "done") {
+									const fileUrl = info.file.response?.url;
+									if (fileUrl) {
+										form.setFieldsValue({
+											"ct-image-3d": fileUrl,
+										});
+									}
+								}
+							}}
+						>
 							<p className="ant-upload-drag-icon">
 								<InboxOutlined />
 							</p>
@@ -93,7 +117,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ required: true, message: "Please enter size" }]}>
-						<Input min={1} max={1000}  type="number"/>
+						<Input min={1} max={1000} type="number" />
 					</Form.Item>
 
 					<Form.Item
@@ -109,7 +133,13 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="implant-size"
 						rules={[{ required: true, message: "Please enter size" }]}
 					>
-						<Input />
+						<Select>
+							{["S", "M", "L", "XL"].map((item) => (
+								<Select.Option key={item} value={item}>
+									{item}
+								</Select.Option>
+							))}
+						</Select>
 					</Form.Item>
 
 					<Form.Item>
