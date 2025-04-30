@@ -1,49 +1,77 @@
-import React from "react";
-import { Descriptions } from "antd";
-import type { DescriptionsProps } from "antd";
+"use client";
 
-const items: DescriptionsProps["items"] = [
-	{
-		key: "1",
-		label: "Value",
-		children: "$ 1600",
-	},
-	{
-		key: "2",
-		label: "Date",
-		children: "2025-05-02",
-	},
-	{
-		key: "3",
-		label: "Valued By",
-		children: "Abcd",
-	},
-];
+import React, { useEffect, useState } from "react";
+import { Descriptions, Spin, Alert } from "antd";
+import api from "@/lib/axiosInstance";
 
-const items2: DescriptionsProps["items"] = [
-	{
-		key: "1",
-		label: "Value",
-		children: "$ 800",
-	},
-	{
-		key: "2",
-		label: "Date",
-		children: "2025-05-02",
-	},
-	{
-		key: "3",
-		label: "Valued By",
-		children: "Abcd",
-	},
-];
+const PaymentInfo = ({ orderId }: { orderId: string }) => {
+	const [quotation, setQuotation] = useState<any>(null);
+	const [advance, setAdvance] = useState<any>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-const App: React.FC = () => (
-	<>
-		<Descriptions title="Quotation" items={items} />
+	useEffect(() => {
+		const fetchPaymentInfo = async () => {
+			if (!orderId) {
+				setError("Order ID is missing.");
+				setLoading(false);
+				return;
+			}
 
-		<Descriptions title="Advance" items={items2} />
-	</>
-);
+			try {
+				setLoading(true);
+				setError(null);
 
-export default App;
+				const [quotationRes, advanceRes] = await Promise.all([
+					api.get(`/orders/${orderId}/quotation`),
+					api.get(`/orders/${orderId}/payment-advance`),
+				]);
+
+				setQuotation(quotationRes.data?.quotation || null);
+				setAdvance(advanceRes.data?.advancePayment || null);
+			} catch (err) {
+				console.error("Error fetching payment info:", err);
+				setError("Failed to fetch payment information. Please try again.");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchPaymentInfo();
+	}, [orderId]);
+
+	if (loading) return <Spin size="large" />;
+	if (error) return <Alert message="Error" description={error} type="error" showIcon />;
+
+	return (
+		<>
+			<p>Order ID: {orderId}</p>
+
+			<Descriptions title="Quotation" bordered>
+				{quotation ? (
+					<>
+						<Descriptions.Item label="Value">{quotation.value ? `$${quotation.value}` : "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Date">{quotation.createdAt || "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Valued By">{quotation.createdBy || "N/A"}</Descriptions.Item>
+					</>
+				) : (
+					<Descriptions.Item label="Info">No Quotation Data</Descriptions.Item>
+				)}
+			</Descriptions>
+
+			<Descriptions title="Advance Payment" bordered>
+				{advance ? (
+					<>
+						<Descriptions.Item label="Value">{advance.value ? `$${advance.value}` : "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Date">{advance.createdAt || "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Received By">{advance.validatedBy || "N/A"}</Descriptions.Item>
+					</>
+				) : (
+					<Descriptions.Item label="Info">No Advance Payment Data</Descriptions.Item>
+				)}
+			</Descriptions>
+		</>
+	);
+};
+
+export default PaymentInfo;
