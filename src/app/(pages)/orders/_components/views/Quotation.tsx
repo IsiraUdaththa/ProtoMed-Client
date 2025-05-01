@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Descriptions, Spin, Alert } from "antd";
 import api from "@/lib/axiosInstance";
+import UserTag from "@/app/_components/UserTag";
 
 const PaymentInfo = ({ orderId }: { orderId: string }) => {
 	const [quotation, setQuotation] = useState<any>(null);
@@ -45,26 +46,28 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 
 	return (
 		<>
-			<p>Order ID: {orderId}</p>
-
-			<Descriptions title="Quotation" bordered>
+			<Descriptions title="Quotation">
 				{quotation ? (
 					<>
 						<Descriptions.Item label="Value">{quotation.value ? `$${quotation.value}` : "N/A"}</Descriptions.Item>
 						<Descriptions.Item label="Date">{quotation.createdAt || "N/A"}</Descriptions.Item>
-						<Descriptions.Item label="Valued By">{quotation.createdBy || "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Valued By">
+							<UserTag userId={quotation.createdBy} />
+						</Descriptions.Item>
 					</>
 				) : (
 					<Descriptions.Item label="Info">No Quotation Data</Descriptions.Item>
 				)}
 			</Descriptions>
 
-			<Descriptions title="Advance Payment" bordered>
+			<Descriptions title="Advance Payment">
 				{advance ? (
 					<>
 						<Descriptions.Item label="Value">{advance.value ? `$${advance.value}` : "N/A"}</Descriptions.Item>
 						<Descriptions.Item label="Date">{advance.createdAt || "N/A"}</Descriptions.Item>
-						<Descriptions.Item label="Received By">{advance.validatedBy || "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Received By">
+							<UserTag userId={advance.validatedBy} />
+						</Descriptions.Item>
 					</>
 				) : (
 					<Descriptions.Item label="Info">No Advance Payment Data</Descriptions.Item>
