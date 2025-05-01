@@ -49,8 +49,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Quotation & Payment",
 			children: (
 				<Card>
-					<Advance //orderId={orderId}
-					/>
+					<Advance orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -71,10 +70,8 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "PLA Print Details",
 			children: (
 				<Card>
-					<PLAOuter //orderId={orderId}
-					/>
-					<PLAFlap //orderId={orderId}
-					/>
+					<PLAOuter orderId={orderId} />
+					<PLAFlap orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -84,8 +81,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Peek Print Details",
 			children: (
 				<Card>
-					<Peek //orderId={orderId}
-					/>
+					<Peek orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -95,7 +91,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Packing Details",
 			children: (
 				<Card>
-					<Packing //orderId={orderId}
+					<Packing orderId={orderId}
 					/>
 				</Card>
 			),
@@ -106,8 +102,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Final Payment and Invoice",
 			children: (
 				<Card>
-					<Invoice //orderId={orderId}
-					/>
+					<Invoice orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
