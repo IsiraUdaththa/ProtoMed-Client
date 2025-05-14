@@ -104,11 +104,11 @@ const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 			children: (
 				<>
 					<Card>
-						<PLAFlapPrint orderId={orderId} />
+						<PLAOuterPrint orderId={orderId} />
 					</Card>
 					<Divider />
 					<Card>
-						<PLAOuterPrint orderId={orderId} />
+						<PLAFlapPrint orderId={orderId} />
 					</Card>
 					<Divider />
 					<Card><PLAApproval orderId={orderId} /></Card>

@@ -124,7 +124,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Form.Item
 						label="Country"
 						name="country"
-						initialValue={"Sri Lanka"}
+						initialValue={"SL"}
 						rules={[{ message: "Please select a country" }]}
 						required
 					>
@@ -153,7 +153,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item label="Age" name="age" rules={[{ type: "number", message: "Please enter your age" }]}>
+					<Form.Item label="Age" name="age" rules={[{ message: "Please enter your age" }]}>
 						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
