@@ -3,6 +3,7 @@ import { Alert, Card, Descriptions, Divider, Spin } from "antd";
 import { Image } from "antd";
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
+import DateDisplay from "@/app/_components/DateDisplay";
 
 interface PackingData {
 	packedBy: string;
@@ -39,7 +40,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Descriptions
 				items={[
 					{ label: "Packed By", children: <UserTag userId={data.packedBy} /> },
-					{ label: "Packed Date", children: data.packedDate },
+					{ label: "Packed Date", children: <DateDisplay isoDate={data.packedDate } />},
 				]}
 			/>
 			<Divider />

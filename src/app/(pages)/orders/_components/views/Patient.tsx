@@ -30,7 +30,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 				console.log(patient.registeredBy)
 
 				const items: DescriptionsProps["items"] = [
-					{ key: "1", label: "Customer Name", children: patient.name || "N/A" },
+					{ key: "1", label: "Name", children: patient.name || "N/A" },
 					{ key: "2", label: "Age", children: patient.age || "N/A" },
 					{ key: "3", label: "Gender", children: patient.gender || "N/A" },
 					{ key: "4", label: "Contact Number", children: patient.contactNumber || "N/A" },

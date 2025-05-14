@@ -3,6 +3,8 @@ import { Badge, Descriptions, Divider } from "antd";
 import type { DescriptionsProps } from "antd";
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
+import DateDisplay from "@/app/_components/DateDisplay";
+
 
 const PaymentCompletion: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [paymentItems, setPaymentItems] = useState<DescriptionsProps["items"]>([]);
@@ -30,7 +32,7 @@ const PaymentCompletion: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{
 						key: "2",
 						label: "Payment Date",
-						children: paymentResponse.data.fullPayment.updatedAt,
+						children: <DateDisplay isoDate={paymentResponse.data.fullPayment.updatedAt} />,
 					},
 				]);
 
@@ -42,8 +44,8 @@ const PaymentCompletion: React.FC<{ orderId: string }> = ({ orderId }) => {
 					},
 					{
 						key: "2",
-						label: "Issue Date",
-						children: invoiceResponse.data.invoice.updatedAt,
+						label: "Issued At",
+						children: <DateDisplay isoDate={invoiceResponse.data.invoice.updatedAt} />,
 					},
 					{
 						key: "3",

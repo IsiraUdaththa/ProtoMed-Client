@@ -8,12 +8,13 @@ import { Card, Collapse, Space } from "antd";
 import Patient from "./Patient";
 import CTScan from "./CTScan";
 import Design from "./Design";
-import Advance from "./Quotation";
-import PLAOuter from "./PLAOuter";
-import PLAFlap from "./PLAFlap";
+import Quotation from "./Quotation";
+import Advance from "./PaymentAdvance";
+import PLA from "./PLA";
 import Peek from "./Peek";
 import Packing from "./Packing";
 import Invoice from "./Payment";
+import CTValidation from "./CTValidation";
 
 const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const genExtra = () => (
@@ -40,6 +41,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			children: (
 				<Card>
 					<CTScan orderId={orderId} />
+					<CTValidation orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -49,6 +51,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Quotation & Payment",
 			children: (
 				<Card>
+					<Quotation orderId={orderId} />
 					<Advance orderId={orderId} />
 				</Card>
 			),
@@ -59,8 +62,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Design Attempts",
 			children: (
 				<Card>
-					<Design //orderId={orderId}
-					/>
+					<Design orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -70,8 +72,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "PLA Print Details",
 			children: (
 				<Card>
-					<PLAOuter orderId={orderId} />
-					<PLAFlap orderId={orderId} />
+					<PLA orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),
@@ -91,8 +92,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Packing Details",
 			children: (
 				<Card>
-					<Packing orderId={orderId}
-					/>
+					<Packing orderId={orderId} />
 				</Card>
 			),
 			extra: genExtra(),

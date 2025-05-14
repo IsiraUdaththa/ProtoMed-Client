@@ -9,13 +9,10 @@ const UserTag: React.FC<{ userId: string }> = ({ userId }) => {
 	const [user, setUser] = useState<{ name: string } | null>(null);
 	const [loading, setLoading] = useState(true);
 
-	console.log(userId);
-
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
 				const response = await api.get(`/users/${userId}`);
-				console.log(response.data);
 				setUser(response.data);
 			} catch (error) {
 				console.error("Failed to fetch user", error);

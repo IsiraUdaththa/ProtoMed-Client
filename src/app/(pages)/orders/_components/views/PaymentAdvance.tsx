@@ -6,14 +6,14 @@ import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
 
-type Quotation = {
+type AdvancePayment = {
 	value: number;
 	createdAt: string;
-	createdBy: string;
+	validatedBy: string;
 };
 
 const PaymentInfo = ({ orderId }: { orderId: string }) => {
-	const [quotation, setQuotation] = useState<Quotation>();
+	const [advance, setAdvance] = useState<AdvancePayment>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -29,9 +29,8 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 				setLoading(true);
 				setError(null);
 
-				const quotationRes = await api.get(`/orders/${orderId}/quotation`);
-
-				setQuotation(quotationRes.data?.quotation || null);
+				const advanceRes = await api.get(`/orders/${orderId}/quotation`);
+				setAdvance(advanceRes.data?.advancePayment || null);
 			} catch (err) {
 				console.error("Error fetching payment info:", err);
 				setError("Failed to fetch payment information. Please try again.");
@@ -45,23 +44,23 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 
 	if (loading) return <Spin size="large" />;
 	if (error) return <Alert message="Error" description={error} type="error" showIcon />;
-	if (!quotation) return <Alert message="No CT Scan details available." type="info" showIcon />;
+	if (!advance) return <Alert message="No details available." type="info" showIcon />;
 
 	return (
 		<>
-			<Descriptions title="Quotation">
-				{quotation ? (
+			<Descriptions title="Advance Payment">
+				{advance ? (
 					<>
-						<Descriptions.Item label="Value">{quotation.value ? `$${quotation.value}` : "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Value">{advance.value ? `$${advance.value}` : "N/A"}</Descriptions.Item>
 						<Descriptions.Item label="Date">
-							<DateDisplay isoDate={quotation.createdAt || "N/A"} />
+							<DateDisplay isoDate={advance.createdAt || "N/A"} />
 						</Descriptions.Item>
-						<Descriptions.Item label="Valued By">
-							<UserTag userId={quotation.createdBy} />
+						<Descriptions.Item label="Received By">
+							<UserTag userId={advance.validatedBy} />
 						</Descriptions.Item>
 					</>
 				) : (
-					<Descriptions.Item label="Info">No Quotation Data</Descriptions.Item>
+					<Descriptions.Item label="Info">No Advance Payment Data</Descriptions.Item>
 				)}
 			</Descriptions>
 		</>
