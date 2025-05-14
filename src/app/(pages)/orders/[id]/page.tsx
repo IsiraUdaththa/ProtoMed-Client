@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Steps from "../_components/ProgressBar";
 import { Breadcrumb, Tabs, Alert } from "antd";
 import Details from "../_components/views/All";
 import Jobs from "../_components/forms/All";
@@ -30,7 +29,6 @@ export default function OrderDetailsPage() {
 			<h2>Order number: {orderId}</h2>
 
 
-			<Steps />
 			<Tabs
 				defaultActiveKey="1"
 				items={[
