@@ -4,7 +4,7 @@ import "@ant-design/v5-patch-for-react-19";
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Card, Image, Flex, message } from "antd";
-import { login } from "@/services/authService";
+import { login } from "@/services/auth.service";
 
 import { useRouter } from "next/navigation";
 const Apsdap: React.FC = () => {
@@ -12,7 +12,7 @@ const Apsdap: React.FC = () => {
 
 	const onFinish = async (values: { email: string; password: string }) => {
 		try {
-			login(values.email, values.password);
+			await login(values.email, values.password);
 			router.push("/dashboard");
 		} catch (error) {
 			message.error("Login failed. Please check your credentials.");

@@ -23,7 +23,7 @@ import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
-import { login } from "@/services/authService";
+import { login } from "@/services/auth.service";
 
 login("admin@example.com", "password");
 

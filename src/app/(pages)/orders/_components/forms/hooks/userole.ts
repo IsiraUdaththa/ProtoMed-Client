@@ -1,4 +1,4 @@
-import { getMe } from "@/services/authService";
+import { getMe } from "@/services/auth.service";
 import { useState, useEffect } from "react";
 
 type Role = "admin" | "designer" | "finance" | "packing" | "guest";

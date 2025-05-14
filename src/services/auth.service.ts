@@ -1,11 +1,13 @@
-// services/authService.ts
+// services/auth.service.ts
 import api, { getAccessToken, setAccessToken } from '@/lib/axiosInstance';
 import { message } from 'antd';
 import axios from 'axios';
+import { getSSRToken } from './auth.server';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const login = async (email: string, password: string) => {
+    // Frist, Get access token from REST API
     const response = await axios.post(
         `${apiUrl}/auth/login`,
         { email, password },
@@ -15,8 +17,11 @@ export const login = async (email: string, password: string) => {
                 "Content-Type": "application/json",
             },
         });
-    setAccessToken(response.data.accessToken);
-    console.log(getAccessToken())
+    const accessToken = response.data.accessToken;
+    setAccessToken(accessToken);
+
+    // Then call a Next.js Server to set SSR token
+    getSSRToken(accessToken);
     message.success("Login successful!");
 
     return response.data;
