@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { Form, Upload, Button, Space, Steps, Typography, Result } from "antd";
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
@@ -51,7 +53,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Form form={form} onFinish={onFinish}>
 						<Form.Item name="implant-video">
 							<Upload.Dragger
-								action="http://localhost:5000/api/upload"
+								action={`${apiUrl}/upload`}
 								accept="video/*"
 								multiple={false}
 								maxCount={1}
@@ -75,7 +77,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 						<Form.Item name="implant-image">
 							<Upload.Dragger
-								action="http://localhost:5000/api/upload"
+								action={`${apiUrl}/upload`}
 								accept="image/*"
 								multiple={false}
 								maxCount={1}
@@ -100,7 +102,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item name="packing-image">
 							<Upload.Dragger
 								accept="image/*"
-								action="http://localhost:5000/api/upload"
+								action={`${apiUrl}/upload`}
 								multiple={false}
 								maxCount={1}
 								onChange={(info) => {

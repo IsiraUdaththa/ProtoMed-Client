@@ -6,6 +6,9 @@ import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from
 import type { UploadProps } from "antd";
 import api from "@/lib/axiosInstance";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+
 const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [userName, setUserName] = useState("Fetching...");
@@ -63,7 +66,7 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 0 && (
 				<>
 					<Upload.Dragger
-						action="http://localhost:5000/api/upload"
+						action={`${apiUrl}/upload`}
 						onChange={(info) => {
 							if (info.file.status === "done") {
 								const fileUrl = info.file.response?.url;

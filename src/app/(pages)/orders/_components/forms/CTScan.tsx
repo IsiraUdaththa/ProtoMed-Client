@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
@@ -65,8 +66,8 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: "Please enter CT scan link/DVD number" }]}
 					>
 						<Upload.Dragger
-							action="http://localhost:5000/api/upload"
-							accept="video/*"
+							action={`${apiUrl}/upload`}
+							// accept="file/*"
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => {
@@ -87,7 +88,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								<FileTextOutlined />
 							</p>
 						</Upload.Dragger>
-						<Input disabled={isUploaded} />
+						<Input disabled={isUploaded} value={form.getFieldValue("ctScanLink")} />
 					</Form.Item>
 
 					<Form.Item label="CT Date" name="ctDate" rules={[{ required: true, message: "Please select CT scan date" }]}>

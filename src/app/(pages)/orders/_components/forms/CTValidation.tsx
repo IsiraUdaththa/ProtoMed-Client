@@ -5,6 +5,8 @@ import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from
 import api from "@/lib/axiosInstance";
 
 const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
@@ -70,7 +72,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<Form.Item label="CT Image 2D" name="ct-image-2d">
 						<Upload.Dragger
-							action="http://localhost:5000/api/upload"
+							action={`${apiUrl}/upload`}
 							accept="image/*"
 							multiple={false}
 							maxCount={1}
@@ -94,7 +96,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					<Form.Item label="CT Image 3D" name="ct-image-3d">
 						<Upload.Dragger
-							action="http://localhost:5000/api/upload"
+							action={`${apiUrl}/upload`}
 							accept="image/*"
 							multiple={false}
 							maxCount={1}
