@@ -1,3 +1,5 @@
+"use client";
+
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
 import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space } from "antd";
@@ -43,7 +45,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						category: order.category,
 						collectingMethod: order.collectingMethod,
 						contactNumber: order.contactNumber,
-						doctor: order.doctor,
+						surgeonName: order.surgeonName,
 						hospital: order.hospital,
 						ward: order.ward,
 						plannedDate: order.plannedDate,
@@ -157,7 +159,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
-					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]}>
+					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]} required>
 						<Select>
 							{[
 								"Accuplasty",
@@ -203,7 +205,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<PhoneInput distinct enableSearch onlyCountries={["us", "lk", "in", "sg"]} />
 					</Form.Item>
 
-					<Form.Item label="Doctor's Name" name="doctor">
+					<Form.Item label="Doctor's Name" name="surgeonName">
 						<Input />
 					</Form.Item>
 
@@ -246,7 +248,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Category", children: formData.category },
 							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
 							{ label: "Phone Number", children: formData.contactNumber },
-							{ label: "Doctor&apos;s Name", children: formData.doctor || "N/A" },
+							{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
 							{ label: "Hospital Name", children: formData.hospital || "N/A" },
 							{ label: "Ward", children: formData.ward || "N/A" },
 							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
@@ -273,11 +275,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 									? "Your order has been submitted successfully."
 									: "There was an issue submitting your order. Please try again."
 							}
-							extra={[
-								<Button key="back" type="primary" onClick={() => setCurrent(0)}>
-									Go Back
-								</Button>,
-							]}
+
 						/>
 					)}
 				</>
