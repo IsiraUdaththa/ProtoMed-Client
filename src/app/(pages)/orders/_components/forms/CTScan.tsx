@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
@@ -10,6 +12,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [formData, setFormData] = useState<any>(null);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [isUploaded, setIsUploaded] = useState(false);
+	const [manualEntry, setManualEntry] = useState(false);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -67,7 +70,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					>
 						<Upload.Dragger
 							action={`${apiUrl}/upload`}
-							// accept="file/*"
+							disabled={manualEntry}
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => {
@@ -79,6 +82,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										});
 									}
 									setIsUploaded(true);
+									setManualEntry(false);
 								} else if (info.file.status === "removed") {
 									setIsUploaded(false);
 								}
@@ -88,7 +92,16 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								<FileTextOutlined />
 							</p>
 						</Upload.Dragger>
-						<Input disabled={isUploaded} value={form.getFieldValue("ctScanLink")} />
+						<Input
+							disabled={isUploaded}
+							value={form.getFieldValue("ctScanLink")}
+							onChange={(e) => {
+								const value = e.target.value;
+								form.setFieldsValue({ ctScanLink: value });
+								setManualEntry(!!value);
+								setIsUploaded(false);
+							}}
+						/>
 					</Form.Item>
 
 					<Form.Item label="CT Date" name="ctDate" rules={[{ required: true, message: "Please select CT scan date" }]}>
