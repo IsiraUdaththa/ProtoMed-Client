@@ -4,9 +4,7 @@ import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const normFile = (e: any) => (Array.isArray(e) ? e : e?.fileList);
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
 
 const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
