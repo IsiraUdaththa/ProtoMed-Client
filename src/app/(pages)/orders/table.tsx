@@ -8,6 +8,8 @@ import api from "@/lib/axiosInstance";
 import AssignOrderButton from "./_components/AssignOrder";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import UserTag from "@/app/_components/UserTag";
+import AssignOrder from "./_components/AssignOrder";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
@@ -247,7 +249,8 @@ const App: React.FC = () => {
 		},
 		{
 			title: "Assigned to",
-			// render: (record) => <AssignOrderButton orderId={record._id} />,
+			fixed: "right",
+			render: (record) => <AssignOrder currentAssignee={record.currentAssignee} orderId={record._id} />,
 		},
 	];
 
@@ -315,6 +318,7 @@ const App: React.FC = () => {
 			pagination={tableParams.pagination}
 			loading={loading}
 			onChange={handleTableChange}
+			scroll={{ x: 'max-content' }}
 		/>
 	);
 };
