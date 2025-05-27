@@ -8,9 +8,12 @@ import { Avatar, Modal, Flex, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 import Image from "next/image";
 import Link from "next/link";
+import { getUser } from "@/services/auth.service";
 
 const Navbar: React.FC = () => {
 	const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
+
+	const user = getUser();
 
 	return (
 		<>
@@ -23,9 +26,11 @@ const Navbar: React.FC = () => {
 				}}
 			>
 				<Flex align="center" justify="space-between" style={{ height: "100%" }}>
-					<Link href='/dashboard'><Image src="/logo.png" alt="Logo" width={121} height={30} /></Link>
+					<Link href="/dashboard">
+						<Image src="/logo.png" alt="Logo" width={121} height={30} />
+					</Link>
 					<Space>
-						<span>John Doe</span>
+						<span>{user?.name}</span>
 						<Avatar icon={<UserOutlined />} onClick={() => setIsProfileModalVisible(true)} />
 					</Space>
 				</Flex>
@@ -38,13 +43,13 @@ const Navbar: React.FC = () => {
 				footer={null}
 			>
 				<p>
-					<strong>Name:</strong> John Doe
+					<strong>Name:</strong> {user?.name}
 				</p>
 				<p>
-					<strong>Email:</strong> johndoe@example.com
+					<strong>Email:</strong> {user?.email}
 				</p>
 				<p>
-					<strong>Role:</strong> Administrator
+					<strong>Role:</strong> {user?.roles}
 				</p>
 			</Modal>
 		</>

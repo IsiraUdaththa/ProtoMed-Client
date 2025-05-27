@@ -24,6 +24,8 @@ export const login = async (email: string, password: string) => {
     getSSRToken(accessToken);
     message.success("Login successful!");
 
+    setUser()
+
     return response.data;
 };
 
@@ -40,8 +42,23 @@ export const refreshAccessToken = async () => {
 export const getMe = async () => {
     try {
         const response = await api.get('/auth/me');
-        return response.data;
+        return response.data._id;
     } catch (error) {
         console.error('Error fetching data', error);
     }
 };
+
+
+let user: any = null;
+
+export const setUser = async () => {
+    try {
+        const res = await getMe();
+        const response = await api.get(`/users/${res}`);
+        user = response.data;
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+
+export const getUser = () => user;
