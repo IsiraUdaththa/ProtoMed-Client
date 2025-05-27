@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 
 // Define which paths are public (e.g., login, signup, static assets)
 const PUBLIC_FILE = /\.(.*)$/;
-const publicRoutes = ['/', '/login', '/signup'];
+const publicRoutes = ['/login', '/signup'];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -23,6 +23,10 @@ export function middleware(request: NextRequest) {
 
 	// ❌ No token? Redirect to login
 	if (!token) {
+		return NextResponse.redirect(new URL('/login', request.url));
+	}
+
+	if (pathname === '/') {
 		return NextResponse.redirect(new URL('/login', request.url));
 	}
 
