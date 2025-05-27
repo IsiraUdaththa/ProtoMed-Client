@@ -103,9 +103,9 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{isSuccess === true ? (
-						<Result status="success" title="Print Successful" />
+						<Result status="success" title="Submit Successful" />
 					) : (
-						<Result status="error" title="Print Failed" subTitle="Please try again." />
+						<Result status="error" title="Submit Failed" subTitle="Please try again." />
 					)}
 				</>
 			)}
