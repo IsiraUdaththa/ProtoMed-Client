@@ -74,7 +74,7 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Weight" name="weight">
 							<Input type="number" />
 						</Form.Item>
-						<Form.Item label="Weight" name="wasteWeight">
+						<Form.Item label="Waste Weight" name="wasteWeight">
 							<Input type="number" />
 						</Form.Item>
 					</Form>
