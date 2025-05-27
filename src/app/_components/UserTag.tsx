@@ -26,14 +26,14 @@ const UserTag: React.FC<{ userId: string }> = ({ userId }) => {
 		}
 	}, [userId]);
 
-	if (loading) return <span>Loading...</span>;
-
 	if (!user)
 		return (
 			<Tag icon={<WarningOutlined />} bordered={false} color="red">
 				Invalid User
 			</Tag>
 		);
+
+	if (loading) return <span>Loading...</span>;
 
 	return (
 		<Tag icon={<UserOutlined />} bordered={false} color="cyan">
