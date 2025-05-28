@@ -1,15 +1,13 @@
 "use client";
+
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import { Button, Card, DatePicker, Form, Input, Radio, Select, Steps, Typography, Result } from "antd";
+import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
-const { Step } = Steps;
-const { TextArea } = Input;
-const { Title, Text } = Typography;
-
-const RegistrationForm: React.FC = () => {
+const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [formData, setFormData] = useState<any>(null);
@@ -18,10 +16,8 @@ const RegistrationForm: React.FC = () => {
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	useEffect(() => {
-		// Simulating a user fetch
 		setTimeout(() => setUserName("John Doe"), 1000);
 
-		// Update date & time every second
 		const interval = setInterval(() => {
 			setDateTime(new Date().toLocaleString());
 		}, 1000);
@@ -29,8 +25,45 @@ const RegistrationForm: React.FC = () => {
 		return () => clearInterval(interval);
 	}, []);
 
+	// Fetch data if orderId is provided
+	useEffect(() => {
+		if (orderId) {
+			const fetchOrderData = async () => {
+				try {
+					const response = await api.get(`orders/${orderId}`);
+					console.log(response);
+
+					const order = response.data.patientDetails;
+					setFormData(order);
+
+					// Populate form fields with the fetched data
+					form.setFieldsValue({
+						country: order.country,
+						name: order.name,
+						gender: order.gender,
+						age: order.age,
+						category: order.category,
+						collectingMethod: order.collectingMethod,
+						contactNumber: order.contactNumber,
+						surgeonName: order.surgeonName,
+						hospital: order.hospital,
+						ward: order.ward,
+						plannedDate: order.plannedDate,
+						comment: order.comment,
+					});
+				} catch (error) {
+					console.error("Error fetching order data:", error);
+				}
+			};
+			fetchOrderData();
+		} else {
+			// If no orderId, initialize form with empty data for a new order
+			form.resetFields();
+		}
+	}, [orderId, form]);
+
 	// Phone number validator
-	const phoneValidator = (_: any, value: { valid: () => any; }) => {
+	const phoneValidator = (_: any, value: { valid: () => any }) => {
 		if (value?.valid()) return Promise.resolve();
 		return Promise.reject("Invalid phone number");
 	};
@@ -41,39 +74,37 @@ const RegistrationForm: React.FC = () => {
 
 	// Handle Form Submission (First Step)
 	const handleNext = async (values: any) => {
-		// Store full phone number: "+{countryCode} {phoneNumber}"
-		values.contactNumber = `+${values.contactNumber.countryCode} ${values.contactNumber.phoneNumber}`;
-
+		values.contactNumber = `${values.contactNumber.countryCode} ${values.contactNumber?.areaCode}${values.contactNumber.phoneNumber}`;
 		setFormData(values);
 		next(); // Move to confirmation step
 	};
 
-	// Handle Final Confirmation & Send POST request
+	// Handle Final Confirmation & Send POST or PUT request
 	const handleConfirm = async () => {
 		const submissionData = {
 			...formData,
 			userName,
 			dateTime,
-			dob: formData.dob?.format("YYYY-MM-DD"),
 			plannedDate: formData.plannedDate?.format("YYYY-MM-DD"),
 		};
 
-		console.log("Submitting Data:", submissionData);
-
 		try {
-			const response = await fetch("https://your-api-endpoint.com/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(submissionData),
-			});
-
-			if (response.ok) {
-				setIsSuccess(true);
+			if (orderId) {
+				// Update existing order (PUT request)
+				const response = await api.post(`/orders/${orderId}`, submissionData);
+				if (response.status === 200) {
+					setIsSuccess(true);
+				} else {
+					setIsSuccess(false);
+				}
 			} else {
-				console.error("Submission failed:", await response.text());
-				setIsSuccess(false);
+				// Create new order (POST request)
+				const response = await api.post("/orders", submissionData);
+				if (response.status === 201) {
+					setIsSuccess(true);
+				} else {
+					setIsSuccess(false);
+				}
 			}
 		} catch (error) {
 			console.error("Error during submission:", error);
@@ -82,35 +113,65 @@ const RegistrationForm: React.FC = () => {
 
 		next(); // Move to success/error step
 	};
-
 	return (
-		<Card title="Patient Registration" style={{ maxWidth: 600, margin: "auto" }}>
-			<Steps current={current} direction="horizontal">
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+		<>
+			<Steps current={current}>
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} layout="vertical" onFinish={handleNext} style={{ marginTop: 20 }}>
-					<Form.Item label="Name" name="name" rules={[{ required: true, message: "Please enter your name" }]}>
+				<Form form={form} layout="vertical" onFinish={handleNext}>
+					<Form.Item
+						label="Country"
+						name="country"
+						initialValue={"SL"}
+						rules={[{ message: "Please select a country" }]}
+						required
+					>
+						<Select>
+							{[
+								{ label: "Sri Lanka", value: "SL" },
+								{ label: "India", value: "IN" },
+								{ label: "Malaysia", value: "MY" },
+								{ label: "Thailand", value: "TH" },
+							].map(({ label, value }) => (
+								<Select.Option key={label} value={value}>
+									{label}
+								</Select.Option>
+							))}
+						</Select>
+					</Form.Item>
+
+					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]}>
 						<Input />
 					</Form.Item>
 
-					<Form.Item label="Gender" name="gender" rules={[{ required: true, message: "Please select your gender" }]}>
+					<Form.Item label="Gender" name="gender" rules={[{ message: "Please select your gender" }]}>
 						<Radio.Group>
 							<Radio value="Male">Male</Radio>
 							<Radio value="Female">Female</Radio>
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: "Please select your birth date" }]}>
-						<DatePicker style={{ width: "100%" }} />
+					<Form.Item label="Age" name="age" rules={[{ message: "Please enter your age" }]}>
+						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
-					<Form.Item label="Category" name="category" rules={[{ required: true, message: "Please select a category" }]}>
+					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]} required>
 						<Select>
-							{["Accuplasty", "Accupectomy", "Accufacial", "Accuortho", "Lamifix", "Screws", "Accumesh", "Screws And Plates", "Other"].map((item) => (
+							{[
+								"Accuplasty",
+								"Accupectomy",
+								"Accufacial",
+								"Accuortho",
+								"Lamifix",
+								"Screws",
+								"Accumesh",
+								"Screws and Plates",
+								"Other",
+							].map((item) => (
 								<Select.Option key={item} value={item}>
 									{item}
 								</Select.Option>
@@ -118,9 +179,21 @@ const RegistrationForm: React.FC = () => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="CT Scan Collecting Method" name="collectingMethod" rules={[{ required: true, message: "Please select a method" }]}>
+					<Form.Item
+						label="CT Scan Collecting Method"
+						name="collectingMethod"
+						rules={[{ message: "Please select a method" }]}
+					>
 						<Select>
-							{["DVD - Courrier by patient", "DVD - Collect by company", "Google Drive Upload", "Website Upload", "WeTransfer", "Screws", "Clay Model", "None"].map((method) => (
+							{[
+								"DVD - Courrier by patient",
+								"DVD - Collect by company",
+								"Google Drive Upload",
+								"Website Upload",
+								"WeTransfer",
+								"Clay Model",
+								"None",
+							].map((method) => (
 								<Select.Option key={method} value={method}>
 									{method}
 								</Select.Option>
@@ -132,7 +205,7 @@ const RegistrationForm: React.FC = () => {
 						<PhoneInput distinct enableSearch onlyCountries={["us", "lk", "in", "sg"]} />
 					</Form.Item>
 
-					<Form.Item label="Doctor's Name" name="doctor">
+					<Form.Item label="Doctor's Name" name="surgeonName">
 						<Input />
 					</Form.Item>
 
@@ -140,12 +213,16 @@ const RegistrationForm: React.FC = () => {
 						<Input />
 					</Form.Item>
 
+					<Form.Item label="Ward" name="ward">
+						<Input />
+					</Form.Item>
+
 					<Form.Item label="Planned Date" name="plannedDate">
-						<DatePicker style={{ width: "100%" }} />
+						<DatePicker />
 					</Form.Item>
 
 					<Form.Item label="Comment" name="comment">
-						<TextArea rows={4} />
+						<Input.TextArea rows={4} />
 					</Form.Item>
 
 					<Form.Item>
@@ -157,43 +234,53 @@ const RegistrationForm: React.FC = () => {
 			)}
 
 			{current === 1 && formData && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Your Details</Title>
-					<Text strong>User:</Text> <Text>{userName}</Text>
-					<br />
-					<Text strong>Date & Time:</Text> <Text>{dateTime}</Text>
-					<br />
-					<Text strong>Name:</Text> <Text>{formData.name}</Text>
-					<br />
-					<Text strong>Gender:</Text> <Text>{formData.gender}</Text>
-					<br />
-					<Text strong>Date of Birth:</Text> <Text>{formData.dob?.format("YYYY-MM-DD")}</Text>
-					<br />
-					<Text strong>Category:</Text> <Text>{formData.category}</Text>
-					<br />
-					<Text strong>CT Scan Collecting Method:</Text> <Text>{formData.collectingMethod}</Text>
-					<br />
-					<Text strong>Phone Number:</Text> <Text>{formData.contactNumber}</Text>
-					<br />
-					<Text strong>Doctor's Name:</Text> <Text>{formData.doctor || "N/A"}</Text>
-					<br />
-					<Text strong>Hospital Name:</Text> <Text>{formData.hospital || "N/A"}</Text>
-					<br />
-					<Text strong>Planned Date:</Text> <Text>{formData.plannedDate?.format("YYYY-MM-DD") || "N/A"}</Text>
-					<br />
-					<Text strong>Comment:</Text> <Text>{formData.comment || "N/A"}</Text>
-					<br />
-					<Button onClick={prev} style={{ marginRight: 10 }}>
-						Back
-					</Button>
-					<Button type="primary" onClick={handleConfirm}>
-						Confirm & Submit
-					</Button>
-				</div>
+				<>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date & Time", children: dateTime },
+							{ label: "Name", children: formData.name },
+							{ label: "Gender", children: formData.gender },
+							{ label: "Age", children: formData.age },
+							{ label: "Category", children: formData.category },
+							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+							{ label: "Phone Number", children: formData.contactNumber },
+							{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
+							{ label: "Hospital Name", children: formData.hospital || "N/A" },
+							{ label: "Ward", children: formData.ward || "N/A" },
+							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
+							{ label: "Comment", children: formData.comment || "N/A" },
+						]}
+					></Descriptions>
+					<Space>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Submit
+						</Button>
+					</Space>
+				</>
 			)}
 
-			{current === 2 && <Result status={isSuccess ? "success" : "error"} title={isSuccess ? "Registration Successful" : "Registration Failed"} />}
-		</Card>
+			{current === 2 && (
+				<>
+					{isSuccess !== null && (
+						<Result
+							status={isSuccess ? "success" : "error"}
+							title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
+							subTitle={
+								isSuccess
+									? "Your order has been submitted successfully."
+									: "There was an issue submitting your order. Please try again."
+							}
+
+						/>
+					)}
+				</>
+			)}
+		</>
 	);
 };
 

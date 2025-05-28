@@ -5,6 +5,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Setup the .env file. 
 ```.env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api/
+NODE_ENV=dev 
+JWT_SECRET=<secret_key>
 ```
 
 

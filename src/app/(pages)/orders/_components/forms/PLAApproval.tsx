@@ -1,4 +1,5 @@
 "use client";
+"use client";
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
 import {
@@ -15,7 +16,7 @@ interface DesignApproval {
 	comment?: string;
 }
 
-const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
+const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState<number>(0); // Track the current step
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
@@ -51,11 +52,11 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 		setLoading(true);
 		api
-			.post(`orders/${orderId}/design-approval`, approvalData)
+			.post(`orders/${orderId}/pla-approval`, approvalData)
 			.then(() => {
 				setLoading(false);
 				setIsSuccess(true);
-				message.success("Design approval successfully submitted.");
+				message.success("PLA approval successfully submitted.");
 			})
 			.catch(() => {
 				setLoading(false);
@@ -128,7 +129,7 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{isSuccess ? (
-						<Result status="success" title="Design Approval Submitted Successfully" />
+						<Result status="success" title="PLA Approval Submitted Successfully" />
 					) : (
 						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
 					)}
@@ -138,4 +139,4 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	);
 };
 
-export default DesignApprovalForm;
+export default PLAApproval;

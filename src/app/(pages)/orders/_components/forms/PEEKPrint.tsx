@@ -5,7 +5,7 @@ import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } 
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
+const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [FormData] = Form.useForm();
 	const [Values, setValues] = useState({});
@@ -27,7 +27,7 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await api.post(`/orders/${orderId}/pla-flap-print`, Values);
+			const response = await api.post(`/orders/${orderId}/peek-print`, Values);
 			if (response.status === 201) {
 				setIsSuccess(true);
 			} else {
@@ -52,25 +52,33 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 0 && (
 				<>
 					<Form layout="vertical" form={FormData}>
-						<Form.Item label="Color" name="color">
-							<Input />
-						</Form.Item>
-						<Form.Item label="Weight" name="weight">
-							<Input type="number" />
-						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">
 								<Select.Option value="PM 300">PM 300</Select.Option>
-								<Select.Option value="Cubic M3 Max">Cubic M3 Max</Select.Option>
+								<Select.Option value="F160">F160</Select.Option>
 							</Select>
 						</Form.Item>
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item label="Print Time (min)" name="printTime">
+						<Form.Item label="Material" name="material">
+							<Select placeholder="Select Print Material">
+								<Select.Option value="PEEK">PEEK</Select.Option>
+								<Select.Option value="PMMA">PMMA</Select.Option>
+								<Select.Option value="Bonlecule">Bonlecule</Select.Option>
+							</Select>
+						</Form.Item>
+						<Form.Item label="Batch Number" name="batchNumber">
+							<Input />
+						</Form.Item>
+						<Form.Item label="Weight" name="weight">
+							<Input type="number" />
+						</Form.Item>
+						<Form.Item label="Waste Weight" name="wasteWeight">
 							<Input type="number" />
 						</Form.Item>
 					</Form>
+
 					<Button type="primary" onClick={handleNext} block>
 						Next
 					</Button>
@@ -113,4 +121,4 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	);
 };
 
-export default PLAPrint;
+export default PLAFlapPrint;

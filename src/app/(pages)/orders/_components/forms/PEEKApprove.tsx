@@ -1,18 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Typography, Steps, Result, message } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
-import axios from "axios";
-
-const { Title, Text } = Typography;
-const { Step } = Steps;
+import { Form, Input, Button, Steps, Result, message, Descriptions } from "antd";
+import {
+	CheckCircleOutlined,
+	CloseCircleOutlined,
+	FileTextOutlined,
+	SolutionOutlined,
+	SmileOutlined,
+} from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
 interface DesignApproval {
 	isApproved: boolean;
 	comment?: string;
 }
 
-const DesignApprovalForm: React.FC = () => {
+const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState<number>(0); // Track the current step
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
@@ -47,8 +50,8 @@ const DesignApprovalForm: React.FC = () => {
 		if (!approvalData) return;
 
 		setLoading(true);
-		axios
-			.post("/api/design-approvals", approvalData)
+		api
+			.post(`orders/${orderId}/peek-approval`, approvalData)
 			.then(() => {
 				setLoading(false);
 				setIsSuccess(true);
@@ -62,38 +65,26 @@ const DesignApprovalForm: React.FC = () => {
 		next(); // Move to Step 3 (Success/Error)
 	};
 
-	// Handle going back to Step 1 from Step 2
-	const goBack = () => {
-		setCurrent(0);
-	};
-
 	return (
-		<Card title="PEEK Approval"  style={{ maxWidth: 600, margin: "auto" }}>
+		<>
 			<Steps current={current}>
-				<Step title="Approval" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Approval" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} layout="vertical" style={{ marginTop: 20 }}>
+				<Form form={form} layout="vertical">
 					<Form.Item name="comment" label="Comment (optional)">
 						<Input.TextArea rows={4} placeholder="Add an optional comment" />
 					</Form.Item>
 
 					<Form.Item>
 						<Button
-							type="primary"
+							type="default"
 							icon={<CheckCircleOutlined />}
 							loading={loading}
 							onClick={() => handleApproval(true)}
-							style={{
-								backgroundColor: "white",
-								borderColor: "green",
-								color: "green",
-								padding: "16px",
-                                margin:'16px' // Reduced padding
-							}}
 						>
 							Approve
 						</Button>
@@ -103,13 +94,6 @@ const DesignApprovalForm: React.FC = () => {
 							loading={loading}
 							danger
 							onClick={() => handleApproval(false)}
-							style={{
-								backgroundColor: "white",
-								borderColor: "red",
-								color: "red",
-								padding: "16px",
-                                margin:'16px' // Reduced padding
-							}}
 						>
 							Not Approve
 						</Button>
@@ -118,51 +102,38 @@ const DesignApprovalForm: React.FC = () => {
 			)}
 
 			{current === 1 && approvalData && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Approval</Title>
-					<Card style={{ marginBottom: 20 }}>
-						<Text>
-							<strong>Approval Status:</strong> {approvalData.isApproved ? "Approved" : "Not Approved"}
-						</Text>
-						<br />
-						<Text>
-							<strong>Comment:</strong> {approvalData.comment || "No comment provided"}
-						</Text>
-						<br />
-						<Text>
-							<strong>Username:</strong> {username}
-						</Text>
-						<br />
-						<Text>
-							<strong>Date/Time:</strong> {currentDate}
-						</Text>
-					</Card>
+				<>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "Approval Status ", children: approvalData.isApproved },
+							{ label: "Comment", children: approvalData.comment },
+							{ label: "User", children: username },
+							{ label: "Date and Time:", children: currentDate },
+						]}
+					></Descriptions>
 
 					<Form.Item>
-						<Button onClick={goBack} style={{ marginRight: 10 }}>
-							Back
-						</Button>
-						<Button
-							type="primary"
-							onClick={submitApproval}
-							loading={loading}
-						>
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
 					</Form.Item>
-				</div>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="PEEK Approval Submitted Successfully" />
 					) : (
 						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

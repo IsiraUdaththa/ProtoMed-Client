@@ -1,51 +1,73 @@
-import React from "react";
-import { Badge, Button, Descriptions, Divider } from "antd";
+import React, { useEffect, useState } from "react";
+import { Badge, Descriptions, Divider } from "antd";
 import type { DescriptionsProps } from "antd";
-import { Image } from "antd";
-import { DownloadOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
+import UserTag from "@/app/_components/UserTag";
+import DateDisplay from "@/app/_components/DateDisplay";
 
-const items: DescriptionsProps["items"] = [
-	{
-		key: "1",
-		label: "Status",
-		children: <Badge count="Received" style={{ backgroundColor: "#52c41a" }} />,
-	},
-	{
-		key: "2",
-		label: "Date",
-		children: "2024-08-12",
-	},
-	{
-		key: "3",
-		label: "Verified By",
-		children: "Name",
-	},
-];
 
-const items2: DescriptionsProps["items"] = [
-	{
-		key: "1",
-		label: "Invoice No",
-		children: "654654",
-	},
-	{
-		key: "2",
-		label: "Date",
-		children: "2024-08-12",
-	},
-	{
-		key: "3",
-		label: "Send By",
-		children: "ADSADD",
-	},
-];
+const PaymentCompletion: React.FC<{ orderId: string }> = ({ orderId }) => {
+	const [paymentItems, setPaymentItems] = useState<DescriptionsProps["items"]>([]);
+	const [invoiceItems, setInvoiceItems] = useState<DescriptionsProps["items"]>([]);
 
-const App: React.FC = () => (
-	<>
-		<Descriptions items={items} />
-		<Divider />
-		<Descriptions items={items2} />
-	</>
-);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const paymentResponse = await api.get(`/orders/${orderId}/payment-completion`);
+				if (!paymentResponse.data) {
+					throw new Error("Empty Payment response.");
+				}
 
-export default App;
+				const invoiceResponse = await api.get(`/orders/${orderId}/invoice`);
+				if (!invoiceResponse.data) {
+					throw new Error("Empty Invoice response.");
+				}
+
+				setPaymentItems([
+					{
+						key: "1",
+						label: "Verified By",
+						children: <UserTag userId={paymentResponse.data.fullPayment.verifiedBy} />,
+					},
+					{
+						key: "2",
+						label: "Payment Date",
+						children: <DateDisplay isoDate={paymentResponse.data.fullPayment.updatedAt} />,
+					},
+				]);
+
+				setInvoiceItems([
+					{
+						key: "1",
+						label: "Invoice No",
+						children: invoiceResponse.data.invoice.invoiceNumber,
+					},
+					{
+						key: "2",
+						label: "Issued At",
+						children: <DateDisplay isoDate={invoiceResponse.data.invoice.updatedAt} />,
+					},
+					{
+						key: "3",
+						label: "Sent By",
+						children: <UserTag userId={invoiceResponse.data.invoice.doneBy} />,
+					},
+				]);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchData();
+	}, [orderId]);
+
+	return (
+		<>
+			<Descriptions title="Payment Information" items={paymentItems} />
+			<Divider />
+			<Descriptions title="Invoice Information" items={invoiceItems} />
+		</>
+	);
+};
+
+export default PaymentCompletion;

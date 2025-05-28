@@ -15,7 +15,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 			try {
 				setLoading(true);
 				setError(null);
-				const response = await api.get(`orders/${orderId}/ct-scan`);
+				const response = await api.get(`orders/${orderId}/ct-validation`);
 
 				// Log the response to see the structure
 				console.log("CT Scan data:", response.data);
@@ -24,7 +24,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 					throw new Error("Failed to fetch CT scan data");
 				}
 
-				const result = response.data.ctScan;
+				const result = response.data.ctValidation;
 				setData(result);
 			} catch (err: any) {
 				setError(err.message);
@@ -40,21 +40,27 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	if (!data) return <Alert message="No details available." type="info" showIcon />;
 	if (error) return <Alert message="Error" description={error} type="error" showIcon />;
 
-	// Access data from the ctScan object
-	const items = [
-		{ key: "1", label: "CT Number", children: data?.ctNumber },
-		{ key: "2", label: "Date", children: <DateDisplay isoDate={data?.ctDate} /> },
-		{ key: "3", label: "Checked By", children: <UserTag userId={data?.checkedBy} /> },
-		{ key: "4", label: "Comment", children: data?.comment },
+	// Verify data structure here by logging
+	console.log("State data:", data);
+
+	const items2 = [
+		{ key: "1", label: "Name", children: data?.implantName },
+		{ key: "2", label: "Size", children: data?.size },
+		{ key: "3", label: "Validated By", children: <UserTag userId={data?.validatedBy} /> },
 	];
 
 	return (
 		<>
-			<Button icon={<DownloadOutlined />} href={data?.ctScanLink}>
-				Download Model
-			</Button>
+			<Divider />
+			<Descriptions items={items2} />
 
-			<Descriptions items={items} />
+			<Divider />
+			<>
+				<Image.PreviewGroup>
+					<Image width={200} src={data?.ctImage2D} alt="" />
+					<Image width={200} src={data?.ctImage3D} alt="" />
+				</Image.PreviewGroup>
+			</>
 		</>
 	);
 };

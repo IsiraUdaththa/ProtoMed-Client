@@ -14,15 +14,19 @@
     "antd": "^5.21.3",
     "antd-phone-input": "^0.3.10",
     "axios": "^1.8.4",
+    "jsonwebtoken": "^9.0.2",
     "next": "^15.2.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-highlight-words": "^0.21.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-highlight-words": "^0.20.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
     "prettier": "3.5.3",

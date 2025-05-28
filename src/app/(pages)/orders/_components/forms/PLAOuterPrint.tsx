@@ -5,7 +5,7 @@ import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } 
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
+const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [FormData] = Form.useForm();
 	const [Values, setValues] = useState({});
@@ -27,7 +27,7 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await api.post(`/orders/${orderId}/pla-flap-print`, Values);
+			const response = await api.post(`/orders/${orderId}/pla-outer-print`, Values);
 			if (response.status === 201) {
 				setIsSuccess(true);
 			} else {
@@ -103,9 +103,9 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{isSuccess === true ? (
-						<Result status="success" title="Print Successful" />
+						<Result status="success" title="Submit Successful" />
 					) : (
-						<Result status="error" title="Print Failed" subTitle="Please try again." />
+						<Result status="error" title="Submit Failed" subTitle="Please try again." />
 					)}
 				</>
 			)}
@@ -113,4 +113,4 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	);
 };
 
-export default PLAPrint;
+export default PLAFlapPrint;

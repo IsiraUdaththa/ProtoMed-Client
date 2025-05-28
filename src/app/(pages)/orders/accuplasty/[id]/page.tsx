@@ -41,12 +41,12 @@ export default function OrderDetailsPage() {
 					{
 						key: "1",
 						label: "My Jobs",
-						children: <Jobs />,
+						// children: <Jobs />,
 					},
 					{
 						key: "Orders",
 						label: "Details",
-						children: <Details />,
+						// children: <Details />,
 					},
 				]}
 			/>

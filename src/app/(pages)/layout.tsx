@@ -32,7 +32,7 @@ export default function PagesLayout({ children }: { children: React.ReactNode })
 				>
 					<SidebarMenu />
 				</Sider>
-				<Content style={{ padding: "40px", overflow: "auto" }}>
+				<Content style={{ padding: "1%", overflow: "auto" }}>
 					{children}
 					<Footer />
 				</Content>

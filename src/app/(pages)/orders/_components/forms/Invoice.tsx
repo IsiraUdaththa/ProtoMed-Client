@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, message, Card, Steps, Typography, Result } from "antd";
+import { Form, Input, Button, Steps, Result, Descriptions } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
-const { Step } = Steps;
-const { Title, Text } = Typography;
-
-const InvoicePage: React.FC = () => {
+const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [invoiceNumber, setInvoiceNumber] = useState("");
@@ -38,8 +36,14 @@ const InvoicePage: React.FC = () => {
 	const handleConfirm = async () => {
 		console.log("Submitting Invoice:", { invoiceNumber, userName, dateTime });
 
+		const formData = {
+			invoiceNumber: invoiceNumber,
+			sentDate: dateTime,
+		};
+
 		try {
-			await fakeApiCall(invoiceNumber);
+			const response = await api.post(`/orders/${orderId}/invoice`, formData);
+			console.log(response.data);
 			setIsSuccess(true);
 		} catch (error) {
 			console.error("Submission failed:", error);
@@ -48,28 +52,12 @@ const InvoicePage: React.FC = () => {
 		next(); // Move to success/error step
 	};
 
-	const fakeApiCall = (invoice: string) => {
-		return new Promise<void>((resolve, reject) => {
-			setTimeout(() => {
-				invoice ? resolve() : reject("Invalid Invoice Number");
-			}, 1000);
-		});
-	};
-
 	return (
-		<Card
-			title="Invoice Submission"
-			style={{
-				textAlign: "center",
-				maxWidth: "600px",
-				margin: "0 auto"// Centers the card horizontally
-				
-			}}
-		>
+		<>
 			<Steps current={current} direction="horizontal">
-				<Step title="Enter Invoice" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+				<Steps.Step title="Enter Invoice" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{current === 0 && (
@@ -90,40 +78,37 @@ const InvoicePage: React.FC = () => {
 			)}
 
 			{current === 1 && (
-				<div style={{ marginTop: 20 }}>
-					<Title level={4}>Confirm Invoice</Title>
-					<Text>
-						<strong>User:</strong> {userName}
-					</Text>
-					<br />
-					<Text>
-						<strong>Date & Time:</strong> {dateTime}
-					</Text>
-					<br />
-					<Text>
-						<strong>Invoice Number:</strong> {invoiceNumber}
-					</Text>
-					<div style={{ marginTop: 20 }}>
-						<Button onClick={prev} style={{ marginRight: 10 }}>
-							Back
-						</Button>
+				<>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: userName },
+							{ label: "Date and Time:", children: dateTime },
+							{ label: "Invoice Number", children: invoiceNumber },
+						]}
+					></Descriptions>
+
+					<>
+						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</div>
-				</div>
+					</>
+				</>
 			)}
 
 			{current === 2 && (
-				<div style={{ marginTop: 20 }}>
+				<>
 					{isSuccess ? (
 						<Result status="success" title="Invoice Submitted Successfully" />
 					) : (
 						<Result status="error" title="Invoice Submission Failed" subTitle="Please check the invoice details." />
 					)}
-				</div>
+				</>
 			)}
-		</Card>
+		</>
 	);
 };
 

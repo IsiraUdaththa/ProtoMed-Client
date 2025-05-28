@@ -1,131 +1,149 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Button, Upload, message, Card, Steps, Typography, Result } from "antd";
-import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
+import React, { useState } from 'react';
+import { Button, Upload, message, Steps, Result, Form, Card, Space, Typography, UploadFile } from 'antd';
+import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } from '@ant-design/icons';
+import api from '@/lib/axiosInstance';
+import { UploadChangeParam } from 'antd/es/upload';
 
-const { Dragger } = Upload;
-const { Step } = Steps;
-const { Title, Text } = Typography;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const DesignUploader: React.FC = () => {
-  const [current, setCurrent] = useState(0);
-  const [userName, setUserName] = useState("Fetching...");
-  const [dateTime, setDateTime] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
+	const [form] = Form.useForm();
+	const [current, setCurrent] = useState(0);
+	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+	const [formData, setFormData] = useState({});
 
-  useEffect(() => {
-    // Simulating user fetch
-    setTimeout(() => setUserName("John Doe"), 1000);
+	const next = () => setCurrent(current + 1);
+	const prev = () => setCurrent(current - 1);
 
-    // Update date & time every second
-    const interval = setInterval(() => {
-      setDateTime(new Date().toLocaleString());
-    }, 1000);
+	// List of all required image fields
+	const imageFields = [
+		{ name: 'damageFront', label: 'Damage Front' },
+		{ name: 'damageSide', label: 'Damage Side' },
+		{ name: 'damageTop', label: 'Damage Top' },
+		{ name: 'damageBack', label: 'Damage Back' },
+		{ name: 'designFront', label: 'Design Front' },
+		{ name: 'designSide', label: 'Design Side' },
+		{ name: 'designTop', label: 'Design Top' },
+		{ name: 'designBack', label: 'Design Back' },
+		{ name: 'damageFrontWithSoftTissues', label: 'Damage Front With Soft Tissues (Isometric)' },
+		{ name: 'damageSideWithSoftTissues', label: 'Damage Side With Soft Tissues (Isometric)' },
+		{ name: 'designFrontWithSoftTissues', label: 'Design Front With Soft Tissues (Isometric)' },
+		{ name: 'designSideWithSoftTissues', label: 'Design Side With Soft Tissues (Isometric)' },
+		{ name: 'designWithDimensions', label: 'Design With Dimensions' },
+	];
 
-    return () => clearInterval(interval);
-  }, []);
+	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
+		if (info.file.status === 'done') {
+			const fileUrl = info.file.response?.url;
+			if (fileUrl) {
+				form.setFieldsValue({
+					[fieldName]: fileUrl,
+				});
+				message.success(`${info.file.name} uploaded successfully`);
 
-  const next = () => setCurrent(current + 1);
-  const prev = () => setCurrent(current - 1);
+				// Update form data state
+				setFormData({
+					...formData,
+					[fieldName]: fileUrl,
+				});
+			}
+		} else if (info.file.status === 'error') {
+			message.error(`${info.file.name} upload failed.`);
+		}
+	};
 
-  const uploadProps: UploadProps = {
-    name: "file",
-    multiple: false,
-    beforeUpload: (file) => {
-      setFile(file);
-      message.success(`${file.name} file selected.`);
-      return false; // Prevent automatic upload
-    },
-  };
+	const handleSubmit = (values: any) => {
+		setFormData(values);
+		next();
+	};
 
-  const handleConfirm = async () => {
-    console.log("Submitting File:", { file, userName, dateTime });
+	const handleConfirm = async () => {
+		try {
+			const response = await api.post(`/orders/${orderId}/design-submit`, formData);
+			console.log('Files uploaded successfully:', response.data);
+			setIsSuccess(true);
+		} catch (error) {
+			console.error('Submission failed:', error);
+			setIsSuccess(false);
+		}
+		next();
+	};
 
-    if (!file) {
-      message.error("No file selected!");
-      return;
-    }
+	return (
+		<div className="p-6">
+			<Steps current={current} direction="horizontal" className="mb-8">
+				<Steps.Step title="Upload Files" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
+			</Steps>
 
-    try {
-      await fakeApiCall(file);
-      setIsSuccess(true);
-    } catch (error) {
-      console.error("Submission failed:", error);
-      setIsSuccess(false);
-    }
-    next(); // Move to success/error step
-  };
+			{current === 0 && (
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						{imageFields.map((field) => (
+							<Form.Item
+								key={field.name}
+								label={field.label}
+								name={field.name}
+								rules={[{ required: true, message: `Please upload ${field.label}` }]}
+							>
+								<Upload
+									action={`${apiUrl}/upload`}
+									onChange={(info) => handleChange(info, field.name)}
+									listType="picture"
+									maxCount={1}
+								>
+									<Button icon={<UploadOutlined />}>Upload {field.label}</Button>
+								</Upload>
+							</Form.Item>
+						))}
+					</div>
 
-  const fakeApiCall = (file: File) => {
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        file ? resolve() : reject("File upload failed");
-      }, 1000);
-    });
-  };
+					<Form.Item className="mt-6">
+						<Button type="primary" htmlType="submit" size="large">
+							Next
+						</Button>
+					</Form.Item>
+				</Form>
+			)}
 
-  return (
-    <Card style={{ maxWidth: 600, margin: "20px auto", padding: "20px" }} title="Design Uploader">
-      <Steps current={current} direction="horizontal" style={{ marginBottom: 20 }}>
-        <Step title="Upload File" icon={<FileTextOutlined />} />
-        <Step title="Confirm Details" icon={<SolutionOutlined />} />
-        <Step title="Status" icon={<SmileOutlined />} />
-      </Steps>
+			{current === 1 && (
+				<Card className="mt-4">
+					<Typography.Title level={4}>Confirm Uploads</Typography.Title>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+						{imageFields.map((field) => (
+							<div key={field.name} className="mb-2">
+								<Typography.Text strong>{field.label}:</Typography.Text>{' '}
+								{formData[field.name] ? 'Uploaded' : 'Not uploaded'}
+							</div>
+						))}
+					</div>
+					<Space className="mt-4">
+						<Button onClick={prev}>Back</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
+					</Space>
+				</Card>
+			)}
 
-      {current === 0 && (
-        <div style={{ marginTop: 20 }}>
-          <Dragger {...uploadProps}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click or drag file to upload</p>
-            <p className="ant-upload-hint">Only one file is supported.</p>
-          </Dragger>
-          <Button type="primary" block onClick={next} style={{ marginTop: 16 }} disabled={!file}>
-            Next
-          </Button>
-        </div>
-      )}
-
-      {current === 1 && (
-        <div style={{ marginTop: 20 }}>
-          <Title level={4}>Confirm Details</Title>
-          <Text>
-            <strong>User:</strong> {userName}
-          </Text>
-          <br />
-          <Text>
-            <strong>Date & Time:</strong> {dateTime}
-          </Text>
-          <br />
-          <Text>
-            <strong>File Name:</strong> {file?.name || "No file selected"}
-          </Text>
-          <div style={{ marginTop: 20 }}>
-            <Button onClick={prev} style={{ marginRight: 10 }}>
-              Back
-            </Button>
-            <Button type="primary" onClick={handleConfirm} disabled={!file}>
-              Confirm
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {current === 2 && (
-        <div style={{ marginTop: 20 }}>
-          {isSuccess ? (
-            <Result status="success" title="File Uploaded Successfully" />
-          ) : (
-            <Result status="error" title="File Upload Failed" subTitle="Please try again." />
-          )}
-        </div>
-      )}
-    </Card>
-  );
+			{current === 2 && (
+				<Card className="mt-4">
+					{isSuccess ? (
+						<Result
+							status="success"
+							title="All Files Uploaded Successfully"
+							subTitle="Your design files have been submitted."
+						/>
+					) : (
+						<Result status="error" title="Upload Failed" subTitle="Please try again or contact support." />
+					)}
+				</Card>
+			)}
+		</div>
+	);
 };
 
 export default DesignUploader;

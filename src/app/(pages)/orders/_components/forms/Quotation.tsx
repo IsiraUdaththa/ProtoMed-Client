@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Form, InputNumber, Button, Space, Dropdown, Menu, message, Steps, Typography, Flex, Result, Card } from "antd";
-import { SaveOutlined, DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+import { Form, Button, Space, Dropdown, Steps, Result, Descriptions, Input } from "antd";
+import { DownOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
 
-const { Step } = Steps;
-const { Text } = Typography;
-
-const QuotationPage: React.FC = () => {
+const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [currency, setCurrency] = useState<string>("USD");
@@ -29,53 +27,81 @@ const QuotationPage: React.FC = () => {
 		next();
 	};
 
-	// Handle confirmation
-	const handleConfirm = () => {
-		console.log("Confirmed data:", formData);
-		setIsSuccess(true); // Simulating success
+	// Handle confirmation and API request
+	const handleConfirm = async () => {
+		if (!orderId) {
+			console.error("Order ID is missing!");
+			setIsSuccess(false);
+			next();
+			return;
+		}
+
+		console.log("Submitting Data:", formData);
+
+		try {
+			const response = await api.post(`/orders/${orderId}/quotation`, {
+				value: formData.quotationValue,
+				currency: formData.currency,
+			});
+
+			if (response.status !== 200) {
+				throw new Error("Failed to submit data");
+			}
+
+			setIsSuccess(true);
+		} catch (error) {
+			console.error("Submission failed:", error);
+			setIsSuccess(false);
+		}
+
 		next();
 	};
 
-	// Currency selection menu
-	const currencyMenu = (
-		<Menu>
-			<Menu.Item key="USD" onClick={() => setCurrency("USD")}>USD</Menu.Item>
-			<Menu.Item key="LKR" onClick={() => setCurrency("LKR")}>LKR</Menu.Item>
-			<Menu.Item key="SRD" onClick={() => setCurrency("SRD")}>SRD</Menu.Item>
-		</Menu>
-	);
+	const menuProps = {
+		items: [
+			{
+				key: "USD",
+				label: <span onClick={() => setCurrency("USD")}>USD</span>,
+			},
+			{
+				key: "LKR",
+				label: <span onClick={() => setCurrency("LKR")}>LKR</span>,
+			},
+			{
+				key: "SRD",
+				label: <span onClick={() => setCurrency("SRD")}>SRD</span>,
+			},
+		],
+	};
 
 	return (
-		<Card title="Quotation Value" style={{ maxWidth: 600, margin: "0 auto", paddingTop: "30px" }}>
-			<Steps current={current} style={{ width: "100%", maxWidth: 500 }}>
-				<Step title="Enter Details" icon={<FileTextOutlined />} />
-				<Step title="Confirm" icon={<SolutionOutlined />} />
-				<Step title="Status" icon={<SmileOutlined />} />
+		<>
+			<Steps current={current}>
+				<Steps.Step title="Enter Details" icon={<FileTextOutlined />} />
+				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
+				<Steps.Step title="Status" icon={<SmileOutlined />} />
 			</Steps>
 
 			{/* Step 1: Enter Quotation Details */}
 			{current === 0 && (
-				<Form
-					form={form}
-					onFinish={handleSubmit}
-					layout="vertical"
-					style={{ width: "100%", maxWidth: 500 }}
-				>
-					<Form.Item label="Quotation Value" name="quotationValue" rules={[{ required: true, message: "Please enter a value!" }]}>
+				<Form form={form} onFinish={handleSubmit} layout="vertical">
+					<Form.Item
+						label="Quotation Value"
+						name="quotationValue"
+						rules={[{ required: true, message: "Please enter a value!" }]}
+					>
 						<Space>
-							<Dropdown overlay={currencyMenu} trigger={["click"]}>
-								<Button>{currency} <DownOutlined /></Button>
+							<Dropdown menu={menuProps} trigger={["click"]}>
+								<Button>
+									{currency} <DownOutlined />
+								</Button>
 							</Dropdown>
-							<InputNumber
-								style={{ width: "100%" }}
-								placeholder="Enter value"
-								min={0}
-							/>
+							<Input placeholder="Enter value" min={0} type="number" />
 						</Space>
 					</Form.Item>
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit" >
+						<Button type="primary" htmlType="submit">
 							Next
 						</Button>
 					</Form.Item>
@@ -85,14 +111,29 @@ const QuotationPage: React.FC = () => {
 			{/* Step 2: Confirm Data */}
 			{current === 1 && formData.quotationValue !== undefined && (
 				<>
-					<Text><strong>Username:</strong> {dummyUsername}</Text><br />
-					<Text><strong>Date and Time:</strong> {dateTime}</Text><br />
-					<Text><strong>Currency:</strong> {formData.currency}</Text><br />
-					<Text><strong>Quotation Value:</strong> {formData.quotationValue}</Text><br />
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{ label: "User", children: dummyUsername },
+							{ label: "Date and Time:", children: dateTime },
+							{
+								label: "Amount",
+								children: (
+									<>
+										{formData.currency} {formData.quotationValue}
+									</>
+								),
+							},
+						]}
+					></Descriptions>
 
 					<Space>
 						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>Confirm</Button>
+						<Button type="primary" onClick={handleConfirm}>
+							Confirm
+						</Button>
 					</Space>
 				</>
 			)}
@@ -107,8 +148,7 @@ const QuotationPage: React.FC = () => {
 					)}
 				</>
 			)}
-		
-		</Card>
+		</>
 	);
 };
 

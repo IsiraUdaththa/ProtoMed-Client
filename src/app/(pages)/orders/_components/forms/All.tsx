@@ -1,10 +1,7 @@
-"use client";
 import "@ant-design/v5-patch-for-react-19";
-
-import React, { useState } from "react";
-import { DeleteOutlined, EditOutlined, SettingOutlined } from "@ant-design/icons";
-import type { CollapseProps } from "antd";
-import { Collapse, Divider, Select, Space } from "antd";
+import React from "react";
+import { Card, Collapse, Divider, Space } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import Patient from "./Patient";
 import CTScan from "./CTScan";
@@ -13,11 +10,10 @@ import Quotation from "./Quotation";
 import PaymentAdvance from "./PaymentAdvance";
 import DesignSubmit from "./DesignSubmit";
 import DesignApproval from "./DesignApproval";
-// import PLAOuterPrint from "./PLAOuterPrint"
-// import PLAOuterApproval from "./PLAOuterApproval"
 import PLAFlapPrint from "./PLAFlapPrint";
-// import PLAApproval from "./PLAApproval"
-// import PEEKPrint from "./PEEKPrint";
+import PLAOuterPrint from "./PLAOuterPrint";
+import PLAApproval from "./PLAApproval";
+import PEEKPrint from "./PEEKPrint";
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
 import PEEKApprove from "./PEEKApprove";
@@ -26,38 +22,32 @@ import PEEKFinalPolishing from "./PEEKFinalPolishing";
 import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
-const { Option } = Select;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
+import { login } from "@/services/auth.service";
 
-const App: React.FC = () => {
+login("admin@example.com", "password");
+
+const Jobs: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const onChange = (key: string | string[]) => {
 		console.log(key);
 	};
 
 	const genExtra = () => (
-		<>
-			<Space>
-				<EditOutlined
-					onClick={(event) => {
-						// If you don't want click extra trigger collapse, you can prevent this:
-						event.stopPropagation();
-					}}
-				/>
-				<DeleteOutlined />
-			</Space>
-		</>
+		<Space>
+			<EditOutlined onClick={(event) => event.stopPropagation()} />
+			<DeleteOutlined />
+		</Space>
 	);
 
-	const items: CollapseProps["items"] = [
+	const items = [
 		{
 			key: "1",
 			label: "Patient Details",
-			children: <Patient />,
+			children: (
+				<Card>
+					<Patient orderId={orderId} />,
+				</Card>
+			),
 			extra: genExtra(),
 		},
 		{
@@ -65,9 +55,13 @@ const App: React.FC = () => {
 			label: "CT Scan Details",
 			children: (
 				<>
-					<CTScan />
+					<Card>
+						<CTScan orderId={orderId} />
+					</Card>
 					<Divider />
-					<CTValidation />
+					<Card>
+						<CTValidation orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -77,20 +71,29 @@ const App: React.FC = () => {
 			label: "Quotation & Payment",
 			children: (
 				<>
-					<Quotation />
+					<Card>
+						<Quotation orderId={orderId} />
+					</Card>
 					<Divider />
-					<PaymentAdvance />
+					<Card>
+						<PaymentAdvance orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
 		},
 		{
 			key: "5",
-			label: "Design Attemps",
+			label: "Design Attempts",
 			children: (
 				<>
-					<DesignSubmit />
-					<DesignApproval />
+					<Card>
+						<DesignSubmit orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<DesignApproval orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -100,7 +103,15 @@ const App: React.FC = () => {
 			label: "PLA Print Details",
 			children: (
 				<>
-					<PLAFlapPrint />
+					<Card>
+						<PLAOuterPrint orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<PLAFlapPrint orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card><PLAApproval orderId={orderId} /></Card>
 				</>
 			),
 			extra: genExtra(),
@@ -110,15 +121,28 @@ const App: React.FC = () => {
 			label: "Peek Print Details",
 			children: (
 				<>
-					<PEEKAnnealing />
+					<Card>
+						<PEEKPrint orderId={orderId} />
+					</Card>
+					<Card>
+						<PEEKAnnealing orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKRoughPolishing />
+					<Card>
+						<PEEKRoughPolishing orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKApprove />
+					<Card>
+						<PEEKApprove orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKLaserMarking />
+					<Card>
+						<PEEKLaserMarking orderId={orderId} />
+					</Card>
 					<Divider />
-					<PEEKFinalPolishing />
+					<Card>
+						<PEEKFinalPolishing orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
@@ -126,7 +150,11 @@ const App: React.FC = () => {
 		{
 			key: "8",
 			label: "Packing Details",
-			children: <Packing />,
+			children: (
+				<Card>
+					<Packing orderId={orderId} />,
+				</Card>
+			),
 			extra: genExtra(),
 		},
 		{
@@ -134,19 +162,20 @@ const App: React.FC = () => {
 			label: "Final Payment and Invoice",
 			children: (
 				<>
-					<PaymentCompletion />
-					<Invoice />
+					<Card>
+						<PaymentCompletion orderId={orderId} />
+					</Card>
+					<Divider />
+					<Card>
+						<Invoice orderId={orderId} />
+					</Card>
 				</>
 			),
 			extra: genExtra(),
 		},
 	];
 
-	return (
-		<>
-			<Collapse ghost onChange={onChange} items={items} />
-		</>
-	);
+	return <Collapse ghost onChange={onChange} items={items} defaultActiveKey={[1, 2, 3, 4, 5, 6, 7, 8, 9]} />;
 };
 
-export default App;
+export default Jobs;
