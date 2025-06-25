@@ -10,7 +10,9 @@ import CTScan from "./CTScan";
 import CTValidation from "./CTValidation";
 import Quotation from "./Quotation";
 import PaymentAdvance from "./PaymentAdvance";
-import DesignSubmit from "./DesignSubmit";
+import DesignImage from "./DesignImage";
+import DesignQCDocs from "./DesignQCDocs";
+import DesignFile from "./DesignFile";
 import DesignApproval from "./DesignApproval";
 import PLAFlapPrint from "./PLAFlapPrint";
 import PLAOuterPrint from "./PLAOuterPrint";
@@ -34,7 +36,9 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			scanValidation: "CT Scan Validation",
 			quotation: "Quotation",
 			advancePayment: "Payment Advance",
-			designSubmission: "Design Submission",
+			designImages: "Design Submission",
+			designQCDocs: "Design QC Docs",
+			designFile: "Design File",
 			internalApproval: "Design Approval",
 			externalApproval: "Doctor Approval",
 			outerPrint: "PLA Outer Print",
@@ -60,7 +64,6 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 		switch (status) {
 			case "draft":
 				return <Patient orderId={orderId} />;
-				return <></>;
 
 			case "scanUpload":
 				return <CTScan orderId={orderId} />;
@@ -74,8 +77,14 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			case "advancePayment":
 				return <PaymentAdvance orderId={orderId} />;
 
-			case "designSubmission":
-				return <DesignSubmit orderId={orderId} />;
+			case "designImages":
+				return <DesignImage orderId={orderId} />;
+
+			case "designQCDocs":
+				return <DesignQCDocs orderId={orderId} />;
+				
+			case "designFile":
+				return <DesignFile orderId={orderId} />;
 
 			case "internalApproval":
 				return <DesignApproval orderId={orderId} />;
@@ -151,7 +160,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 				return (
 					<Space direction="vertical" style={{ width: "100%" }}>
 						<Card title="Design Submission">
-							<DesignSubmit orderId={orderId} />
+							<DesignImage orderId={orderId} />
 						</Card>
 						<Card title="Design Approval">
 							<DesignApproval orderId={orderId} />

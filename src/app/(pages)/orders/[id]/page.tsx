@@ -20,6 +20,10 @@ import Details from "../_components/views/All";
 import api from "@/lib/axiosInstance";
 import DateDisplay from "@/app/_components/DateDisplay";
 import ActiveForm from "../_components/forms/activeform";
+import ForumDiscussion from "../_components/ForumDiscussion";
+import OrderTimeline from "../_components/OrderTimeline";
+import { login } from "@/services/auth.service";
+login("admin@example.com", "password");
 
 // Simulated order status service
 const fetchOrderStatus = async (orderId) => {
@@ -33,7 +37,9 @@ const fetchOrderStatus = async (orderId) => {
 		"scanValidation",
 		"quotation",
 		"advancePayment",
-		"designSubmission",
+		"designImages",
+		"designQCDocs",
+		"designFile",
 		"internalApproval",
 		"externalApproval",
 		"outerPrint",
@@ -78,7 +84,9 @@ const getStepStatus = (currentStep, stepIndex) => {
 		"scanValidation",
 		"quotation",
 		"advancePayment",
-		"designSubmission",
+		"designImages",
+		"designQCDocs",
+		"designFile",
 		"internalApproval",
 		"externalApproval",
 		"outerPrint",
@@ -112,7 +120,9 @@ const getFormComponentKey = (status) => {
 		scanValidation: "2",
 		quotation: "4",
 		advancePayment: "4",
-		designSubmission: "5",
+		designImages: "5",
+		designQCDocs: "5",
+		designFile: "5",
 		internalApproval: "5",
 		externalApproval: "6",
 		outerPrint: "6",
@@ -251,12 +261,15 @@ export default function OrderStatusPage() {
 									</p>
 									<p>
 										<strong>Current Stage:</strong>{" "}
-										{orderStatus.currentStatus.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+										{orderStatus.currentStatus
+											.replace(/_/g, " ")
+											.replace(/\b\w/g, (l) => l.toUpperCase())}
 									</p>
 								</div>
 								<div>
 									<p>
-										<UserOutlined /> <strong>Created:</strong> <DateDisplay isoDate={orderStatus.createdAt} />
+										<UserOutlined /> <strong>Created:</strong>{" "}
+										<DateDisplay isoDate={orderStatus.createdAt} />
 									</p>
 									<p>
 										<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
@@ -285,6 +298,16 @@ export default function OrderStatusPage() {
 								key: "details",
 								label: "Order Details",
 								children: <Details orderId={orderId} />,
+							},
+							{
+								key: "timeline",
+								label: "Timeline",
+								children: <OrderTimeline order={orderId} />,
+							},
+							{
+								key: "forum",
+								label: "Forum",
+								children: <ForumDiscussion />,
 							},
 						]}
 					/>

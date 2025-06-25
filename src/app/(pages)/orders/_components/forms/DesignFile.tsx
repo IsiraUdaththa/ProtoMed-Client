@@ -1,41 +1,27 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Button, Upload, message, Steps, Result, Form, Card, Space, Typography, UploadFile } from 'antd';
-import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } from '@ant-design/icons';
-import api from '@/lib/axiosInstance';
-import { UploadChangeParam } from 'antd/es/upload';
+import React, { useState } from "react";
+import { Button, Upload, message, Steps, Result, Form, Card, Space, Typography, UploadFile } from "antd";
+import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } from "@ant-design/icons";
+import api from "@/lib/axiosInstance";
+import { UploadChangeParam } from "antd/es/upload";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
+const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [formData, setFormData] = useState({});
+	const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
 	// List of all required image fields
-	const imageFields = [
-		{ name: 'damageFront', label: 'Damage Front' },
-		{ name: 'damageSide', label: 'Damage Side' },
-		{ name: 'damageTop', label: 'Damage Top' },
-		{ name: 'damageBack', label: 'Damage Back' },
-		{ name: 'designFront', label: 'Design Front' },
-		{ name: 'designSide', label: 'Design Side' },
-		{ name: 'designTop', label: 'Design Top' },
-		{ name: 'designBack', label: 'Design Back' },
-		{ name: 'damageFrontWithSoftTissues', label: 'Damage Front With Soft Tissues (Isometric)' },
-		{ name: 'damageSideWithSoftTissues', label: 'Damage Side With Soft Tissues (Isometric)' },
-		{ name: 'designFrontWithSoftTissues', label: 'Design Front With Soft Tissues (Isometric)' },
-		{ name: 'designSideWithSoftTissues', label: 'Design Side With Soft Tissues (Isometric)' },
-		{ name: 'designWithDimensions', label: 'Design With Dimensions' },
-	];
+	const imageFields = [{ name: "designFile", label: "Design File" }];
 
 	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
-		if (info.file.status === 'done') {
+		if (info.file.status === "done") {
 			const fileUrl = info.file.response?.url;
 			if (fileUrl) {
 				form.setFieldsValue({
@@ -49,7 +35,7 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 					[fieldName]: fileUrl,
 				});
 			}
-		} else if (info.file.status === 'error') {
+		} else if (info.file.status === "error") {
 			message.error(`${info.file.name} upload failed.`);
 		}
 	};
@@ -61,11 +47,11 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	const handleConfirm = async () => {
 		try {
-			const response = await api.post(`/orders/${orderId}/design-submit`, formData);
-			console.log('Files uploaded successfully:', response.data);
+			const response = await api.post(`/orders/${orderId}/design-file`, formData);
+			console.log("Files uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
-			console.error('Submission failed:', error);
+			console.error("Submission failed:", error);
 			setIsSuccess(false);
 		}
 		next();
@@ -115,8 +101,8 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
 						{imageFields.map((field) => (
 							<div key={field.name} className="mb-2">
-								<Typography.Text strong>{field.label}:</Typography.Text>{' '}
-								{formData[field.name] ? 'Uploaded' : 'Not uploaded'}
+								<Typography.Text strong>{field.label}:</Typography.Text>{" "}
+								{formData[field.name] ? "Uploaded" : "Not uploaded"}
 							</div>
 						))}
 					</div>
@@ -146,4 +132,4 @@ const DesignUploader: React.FC<{ orderId: string }> = ({ orderId }) => {
 	);
 };
 
-export default DesignUploader;
+export default DesignFileForm;
