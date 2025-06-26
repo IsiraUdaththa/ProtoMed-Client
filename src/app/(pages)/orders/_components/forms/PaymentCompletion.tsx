@@ -1,22 +1,48 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Steps, Result, Space } from "antd";
-import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined } from "@ant-design/icons";
+import { Button, Typography, Steps, Result, Form, Input, message } from "antd";
+import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
+interface PaymentCompletionForm {
+	isPaid: boolean;
+	comment?: string;
+}
+
 const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
+	const [form] = Form.useForm<PaymentCompletionForm>();
+	const [approvalData, setApprovalData] = useState<PaymentCompletionForm>();
+
+	const [loading, setLoading] = useState<boolean>(false);
+
 	const [current, setCurrent] = useState(0);
 	const [paymentStatus, setPaymentStatus] = useState<"success" | "error" | null>(null);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
+	const handleApproval = (isPaid: boolean) => {
+		form.validateFields()
+			.then((values) => {
+				const data: PaymentCompletionForm = {
+					isPaid,
+					comment: values.comment,
+				};
+
+				setApprovalData(data);
+				next(); // Move to Step 2 (Confirmation)
+			})
+			.catch(() => {
+				message.error("Please add a comment before proceeding.");
+			});
+	};
+
 	const handlePayment = async () => {
 		console.log("Processing Payment...");
 
 		try {
-			const response = await api.post(`/orders/${orderId}/payment-completion`);
+			const response = await api.post(`/orders/${orderId}/payment-completion`, approvalData);
 			console.log("File uploaded successfully:", response.data);
 			setPaymentStatus("success");
 		} catch (error) {
@@ -36,21 +62,31 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{/* Step 1: Payment Details */}
 			{current === 0 && (
-				<>
-					<Typography.Text>
-						<strong>Amount:</strong> $100
-					</Typography.Text>
+				<Form form={form} layout="vertical">
+					<Form.Item name="comment" label="Comment (optional)">
+						<Input.TextArea rows={4} placeholder="Add an optional comment" />
+					</Form.Item>
 
-					<Typography.Text>
-						<strong>User:</strong> John Doe
-					</Typography.Text>
-
-					<Space>
-						<Button type="primary" onClick={next}>
-							Next
+					<Form.Item>
+						<Button
+							type="default"
+							icon={<CheckCircleOutlined />}
+							loading={loading}
+							onClick={() => handleApproval(true)}
+						>
+							Accept
 						</Button>
-					</Space>
-				</>
+						<Button
+							type="default"
+							icon={<CloseCircleOutlined />}
+							loading={loading}
+							danger
+							onClick={() => handleApproval(false)}
+						>
+							skip
+						</Button>
+					</Form.Item>
+				</Form>
 			)}
 
 			{/* Step 2: Confirm*/}
