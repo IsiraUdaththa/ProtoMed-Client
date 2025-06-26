@@ -17,6 +17,7 @@ import DesignApproval from "./DesignApproval";
 import PLAFlapPrint from "./PLAFlapPrint";
 import PLAOuterPrint from "./PLAOuterPrint";
 import PLAApproval from "./PLAApproval";
+import PLAQCDocs from "./PLAQCDocs";
 import PEEKPrint from "./PEEKPrint";
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
@@ -43,6 +44,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			externalApproval: "Doctor Approval",
 			outerPrint: "PLA Outer Print",
 			flapPrint: "PLA Flap Print",
+			plaQCDocs: "PLA QC DOCS",
 			plasticApproval: "PLA Approval",
 			implantPrint: "PEEK Print",
 			annealing: "PEEK Annealing",
@@ -94,6 +96,9 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 
 			case "flapPrint":
 				return <PLAFlapPrint orderId={orderId} />;
+
+			case "plaQCDocs":
+				return <PLAQCDocs orderId={orderId}/>;
 
 			case "plasticApproval":
 				return <PLAApproval orderId={orderId} />;
