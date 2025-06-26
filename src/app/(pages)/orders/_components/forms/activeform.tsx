@@ -21,6 +21,7 @@ import PLAQCDocs from "./PLAQCDocs";
 import PEEKPrint from "./PEEKPrint";
 import PEEKAnnealing from "./PEEKAnnealing";
 import PEEKRoughPolishing from "./PEEKRoughPolishing";
+import PEEKQCDocs from "./PEEKQCDocs";
 import PEEKApprove from "./PEEKApprove";
 import PEEKLaserMarking from "./PEEKLaserMarking";
 import PEEKFinalPolishing from "./PEEKFinalPolishing";
@@ -49,6 +50,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			implantPrint: "PEEK Print",
 			annealing: "PEEK Annealing",
 			roughPolishing: "PEEK Rough Polishing",
+			peekQCDocs: "PEEK QC Docs",
 			implantApproval: "PEEK Approval",
 			laserMarking: "PEEK Laser Marking",
 			finalPolishing: "PEEK Final Polishing",
@@ -111,6 +113,9 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 
 			case "roughPolishing":
 				return <PEEKRoughPolishing orderId={orderId} />;
+
+			case "peekQCDocs":
+				return <PEEKQCDocs orderId={orderId} />;
 
 			case "implantApproval":
 				return <PEEKApprove orderId={orderId} />;
