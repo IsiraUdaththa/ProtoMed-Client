@@ -47,7 +47,7 @@ const items: MenuItem[] = [
 const Sidebar: React.FC = () => {
 	const router = useRouter();
 
-	const handleMenuClick = (e: { key: string; }) => {
+	const handleMenuClick = (e: { key: string }) => {
 		router.push(e.key);
 	};
 

@@ -5,7 +5,8 @@ import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Upload
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
 interface QCFormValues {
 	skullDefectSpecificationA?: number;
@@ -32,12 +33,12 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: QCFormValues) => {
 		setFormData(values);
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: string) => {
 		if (info.file.status === "done") {
 			const fileUrl = info.file.response?.url;
 			if (fileUrl) {

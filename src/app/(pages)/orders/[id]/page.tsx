@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert, Badge, Breadcrumb, Button, Card, Skeleton, Space, Steps, Tabs } from "antd";
+import { Alert, Badge, Breadcrumb, Button, Card, Skeleton, Space, Tabs } from "antd";
 import Link from "next/link";
 import {
 	ArrowLeftOutlined,
 	CalendarOutlined,
 	CheckCircleOutlined,
 	ClockCircleOutlined,
-	DollarOutlined,
-	FileDoneOutlined,
 	LoadingOutlined,
-	PrinterOutlined,
 	ReloadOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
@@ -23,10 +20,11 @@ import ActiveForm from "../_components/forms/activeform";
 import ForumDiscussion from "../_components/ForumDiscussion";
 import OrderTimeline from "../_components/OrderTimeline";
 import { login } from "@/services/auth.service";
+
 login("admin@example.com", "password");
 
 // Simulated order status service
-const fetchOrderStatus = async (orderId) => {
+const fetchOrderStatus = async (orderId: string) => {
 	// Simulate API call delay
 	await new Promise((resolve) => setTimeout(resolve, 800));
 
@@ -78,44 +76,6 @@ const fetchOrderStatus = async (orderId) => {
 	};
 };
 
-// Helper function to get step status
-const getStepStatus = (currentStep, stepIndex) => {
-	const statuses = [
-		"draft",
-		"scanUpload",
-		"scanValidation",
-		"quotation",
-		"advancePayment",
-		"designImages",
-		"designQCDocs",
-		"designFile",
-		"internalApproval",
-		"externalApproval",
-		"outerPrint",
-		"flapPrint",
-		"plaQCDocs",
-		"plasticApproval",
-		"implantPrint",
-		"annealing",
-		"roughPolishing",
-		"laserMarking",
-		"finalPolishing",
-		"peekQCDocs",
-		"implantApproval",
-		"packing",
-		"finalPayment",
-		"invoice",
-		"completed",
-	];
-
-	const currentIndex = statuses.indexOf(currentStep);
-
-	if (currentIndex < 0) return "wait";
-	if (stepIndex < currentIndex) return "finish";
-	if (stepIndex === currentIndex) return "process";
-	return "wait";
-};
-
 // Helper function to map status to form component mapping
 const getFormComponentKey = (status) => {
 	const mapping = {
@@ -134,7 +94,7 @@ const getFormComponentKey = (status) => {
 		plaQCDocs: "6",
 		peek_annealed: "7",
 		peek_rough_polished: "7",
-		peek_qcdocs: "7", 
+		peek_qcdocs: "7",
 		peek_approved: "7",
 		peek_laser_marked: "7",
 		peek_final_polished: "7",
@@ -181,7 +141,7 @@ const StatusBadge = ({ status }) => {
 export default function OrderStatusPage() {
 	const params = useParams();
 	const router = useRouter();
-	const orderId = params.id || "";
+	const orderId = params["id"] || "";
 	const [activeTab, setActiveTab] = useState("status");
 	const [orderStatus, setOrderStatus] = useState(null);
 	const [loading, setLoading] = useState(true);

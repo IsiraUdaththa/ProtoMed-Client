@@ -30,7 +30,7 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const prev = () => setCurrent(current - 1);
 
 	// Handle approval or not approval on Step 1
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: QCFormRecord) => {
 		setFormData(values);
 		next();
 	};

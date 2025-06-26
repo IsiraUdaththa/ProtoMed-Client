@@ -6,7 +6,7 @@ import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } f
 import api from "@/lib/axiosInstance";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
 type FormDataType = {
   images: string[]; // array of images URLs
@@ -36,7 +36,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: FormDataType) => {
 		setFormData(values);
 		next();
 	};
@@ -57,7 +57,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: keyof FormDataType) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{url: string}>>, fieldName: keyof FormDataType) => {
 		if (info.file.status === "done") {
 			const fileList = info.fileList
 				.filter((file) => file.status === "done")

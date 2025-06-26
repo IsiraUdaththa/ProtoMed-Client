@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { GetProp, InputRef, TableProps } from "antd";
-import { Button, Flex, Input, Space, Table, Typography } from "antd";
+import { Button, Input, Space, Table } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
 import type { FilterDropdownProps, SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
 import api from "@/lib/axiosInstance";
-import AssignOrderButton from "./_components/AssignOrder";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import UserTag from "@/app/_components/UserTag";
 import AssignOrder from "./_components/AssignOrder";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
@@ -99,7 +97,7 @@ const App: React.FC = () => {
 	};
 
 	const getColumnSearchProps = (dataIndex: string): ColumnsType<DataType>[number] => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
 			<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
 				<Input
 					ref={searchInput}
@@ -217,10 +215,9 @@ const App: React.FC = () => {
 			sorter: true,
 			render: (createdAt) => {
 				const date = new Date(createdAt);
-				return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(
-					2,
-					"0",
-				)}`;
+				return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(
+					date.getDate(),
+				).padStart(2, "0")}`;
 			},
 		},
 		{
@@ -267,8 +264,7 @@ const App: React.FC = () => {
 		const fetchData = () => {
 			setLoading(true);
 
-			api
-				.get(`/orders?${params.toString()}`)
+			api.get(`/orders?${params.toString()}`)
 				.then((response) => {
 					const { results, pagination } = response.data;
 					setData(results);
@@ -318,7 +314,7 @@ const App: React.FC = () => {
 			pagination={tableParams.pagination}
 			loading={loading}
 			onChange={handleTableChange}
-			scroll={{ x: 'max-content' }}
+			scroll={{ x: "max-content" }}
 		/>
 	);
 };

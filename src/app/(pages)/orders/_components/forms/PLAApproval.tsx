@@ -1,5 +1,5 @@
 "use client";
-"use client";
+
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
 import {

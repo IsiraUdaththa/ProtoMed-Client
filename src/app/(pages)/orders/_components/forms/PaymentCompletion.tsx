@@ -5,14 +5,14 @@ import { Button, Typography, Steps, Result, Form, Input, message } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-interface PaymentCompletionForm {
+interface IFormData {
 	isPaid: boolean;
-	comment?: string;
+	comment?: string | undefined;
 }
 
 const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm<PaymentCompletionForm>();
-	const [approvalData, setApprovalData] = useState<PaymentCompletionForm>();
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setformData] = useState<IFormData>();
 
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,12 +25,12 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const handleApproval = (isPaid: boolean) => {
 		form.validateFields()
 			.then((values) => {
-				const data: PaymentCompletionForm = {
+				const data: IFormData = {
 					isPaid,
 					comment: values.comment,
 				};
 
-				setApprovalData(data);
+				setformData(data);
 				next(); // Move to Step 2 (Confirmation)
 			})
 			.catch(() => {
@@ -39,17 +39,19 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	const handlePayment = async () => {
-		console.log("Processing Payment...");
-
+		if (!formData) return;
+		setLoading(true);
 		try {
-			const response = await api.post(`/orders/${orderId}/payment-completion`, approvalData);
+			const response = await api.post(`/orders/${orderId}/payment-completion`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setPaymentStatus("success");
 		} catch (error) {
 			console.error("Payment failed:", error);
 			setPaymentStatus("error");
+		} finally {
+			setLoading(false);
+			next();
 		}
-		next();
 	};
 
 	return (

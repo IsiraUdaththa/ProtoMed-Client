@@ -12,7 +12,7 @@ const Apsdap: React.FC = () => {
 
 	const onFinish = async (values: { email: string; password: string }) => {
 		try {
-			const result = await login(values.email, values.password);
+			await login(values.email, values.password);
 			await new Promise((resolve) => setTimeout(resolve, 0));
 			router.push("/dashboard");
 		} catch (error) {

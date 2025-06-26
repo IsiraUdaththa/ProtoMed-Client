@@ -6,37 +6,35 @@ import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } f
 import api from "@/lib/axiosInstance";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+interface IFormData {
+	image?: string;
+	markingDate?: Date;
+}
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
-	const [formData, setFormData] = useState<{ [key: string]: string }>({});
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setFormData] = useState<IFormData>({});
 
 	const [current, setCurrent] = useState(0);
 	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	useEffect(() => {
 		setTimeout(() => setUserName("John Doe"), 1000);
-		const interval = setInterval(() => {
-			setDateTime(new Date().toLocaleString());
-		}, 1000);
-		return () => clearInterval(interval);
 	}, []);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: IFormData) => {
 		setFormData(values);
 		next();
 	};
 
 	const handleConfirm = async () => {
-		console.log(`Submitting PEEK Laser Marking Process:`, { userName, dateTime });
-
-		formData["markingDate"] = dateTime;
+		console.log(`Submitting PEEK Laser Marking Process:`, { userName });
 
 		try {
 			const response = await api.post(`/orders/${orderId}/peek-laser-marking`, formData);
@@ -49,7 +47,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: string) => {
 		if (info.file.status === "done") {
 			const fileUrl = info.file.response?.url;
 			if (fileUrl) {
@@ -113,7 +111,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						column={1}
 						items={[
 							{ label: "User", children: userName },
-							{ label: "Date and Time:", children: dateTime },
 						]}
 					></Descriptions>
 					<>

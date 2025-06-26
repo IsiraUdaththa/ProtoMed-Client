@@ -6,21 +6,23 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } fro
 import api from "@/lib/axiosInstance";
 import { UploadChangeParam } from "antd/es/upload";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+interface IFormData {
+	designFile?: string;
+}
 
 const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setFormData] = useState<IFormData>({});
+
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	// List of all required image fields
-	const imageFields = [{ name: "designFile", label: "Design File" }];
-
-	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: string) => {
 		if (info.file.status === "done") {
 			const fileUrl = info.file.response?.url;
 			if (fileUrl) {
@@ -40,7 +42,7 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		}
 	};
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: IFormData) => {
 		setFormData(values);
 		next();
 	};
@@ -68,23 +70,21 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 0 && (
 				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						{imageFields.map((field) => (
-							<Form.Item
-								key={field.name}
-								label={field.label}
-								name={field.name}
-								rules={[{ required: true, message: `Please upload ${field.label}` }]}
+						<Form.Item
+							key="designFile"
+							label="Design File"
+							name="designFile"
+							rules={[{ required: true, message: `Please upload Design File` }]}
+						>
+							<Upload
+								action={`${apiUrl}/upload`}
+								onChange={(info) => handleChange(info, "designFile")}
+								listType="picture"
+								maxCount={1}
 							>
-								<Upload
-									action={`${apiUrl}/upload`}
-									onChange={(info) => handleChange(info, field.name)}
-									listType="picture"
-									maxCount={1}
-								>
-									<Button icon={<UploadOutlined />}>Upload {field.label}</Button>
-								</Upload>
-							</Form.Item>
-						))}
+								<Button icon={<UploadOutlined />}>Upload Design File</Button>
+							</Upload>
+						</Form.Item>
 					</div>
 
 					<Form.Item className="mt-6">
@@ -99,12 +99,10 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<Card className="mt-4">
 					<Typography.Title level={4}>Confirm Uploads</Typography.Title>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-						{imageFields.map((field) => (
-							<div key={field.name} className="mb-2">
-								<Typography.Text strong>{field.label}:</Typography.Text>{" "}
-								{formData[field.name] ? "Uploaded" : "Not uploaded"}
-							</div>
-						))}
+						<div key="designFile" className="mb-2">
+							<Typography.Text strong>Design File:</Typography.Text>{" "}
+							{formData["designFile"] ? "Uploaded" : "Not uploaded"}
+						</div>
 					</div>
 					<Space className="mt-4">
 						<Button onClick={prev}>Back</Button>

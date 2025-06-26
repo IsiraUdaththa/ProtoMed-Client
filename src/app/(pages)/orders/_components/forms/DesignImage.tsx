@@ -6,19 +6,39 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } fro
 import api from "@/lib/axiosInstance";
 import { UploadChangeParam } from "antd/es/upload";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+type ImageFieldName =
+	| "damageFront"
+	| "damageSide"
+	| "damageTop"
+	| "damageBack"
+	| "designFront"
+	| "designSide"
+	| "designTop"
+	| "designBack"
+	| "damageFrontWithSoftTissues"
+	| "damageSideWithSoftTissues"
+	| "designFrontWithSoftTissues"
+	| "designSideWithSoftTissues"
+	| "designWithDimensions";
+
+type DesignImageFormValues = {
+	[key in ImageFieldName]: string;
+};
 
 const DesignImageForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<DesignImageFormValues>();
+	const [formData, setFormData] = useState<Partial<DesignImageFormValues>>({});
+
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
 	// List of all required image fields
-	const imageFields = [
+	const imageFields: { name: ImageFieldName; label: string }[] = [
 		{ name: "damageFront", label: "Damage Front" },
 		{ name: "damageSide", label: "Damage Side" },
 		{ name: "damageTop", label: "Damage Top" },
@@ -34,7 +54,7 @@ const DesignImageForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		{ name: "designWithDimensions", label: "Design With Dimensions" },
 	];
 
-	const handleChange = (info: UploadChangeParam<UploadFile<any>>, fieldName: string) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: ImageFieldName) => {
 		if (info.file.status === "done") {
 			const fileUrl = info.file.response?.url;
 			if (fileUrl) {
@@ -54,7 +74,7 @@ const DesignImageForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		}
 	};
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: DesignImageFormValues) => {
 		setFormData(values);
 		next();
 	};

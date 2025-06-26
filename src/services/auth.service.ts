@@ -4,7 +4,7 @@ import { message } from 'antd';
 import axios from 'axios';
 import { getSSRToken } from './auth.server';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env['NEXT_PUBLIC_API_URL'];
 
 export const login = async (email: string, password: string) => {
     // Frist, Get access token from REST API
