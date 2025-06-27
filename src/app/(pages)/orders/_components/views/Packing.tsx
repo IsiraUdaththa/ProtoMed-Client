@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { Alert, Card, Descriptions, Divider, Spin } from "antd";
+import { Alert, Descriptions, Divider, Spin } from "antd";
 import { Image } from "antd";
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
@@ -40,7 +42,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Descriptions
 				items={[
 					{ label: "Packed By", children: <UserTag userId={data.packedBy} /> },
-					{ label: "Packed Date", children: <DateDisplay isoDate={data.packedDate } />},
+					{ label: "Packed Date", children: <DateDisplay isoDate={data.packedDate} /> },
 				]}
 			/>
 			<Divider />
@@ -54,6 +56,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 				}}
 				src="Video"
 				fallback="https://placehold.co/200x200/aaf/fff?text=thumbnail"
+				alt=""
 			/>
 			<Image width={200} alt="Implant Picture" src={data.finalImplantPicture} />
 			<Image width={200} alt="Final Pack Picture" src={data.finalPackPicture} />

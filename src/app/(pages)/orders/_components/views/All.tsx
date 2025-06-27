@@ -13,7 +13,8 @@ import Advance from "./PaymentAdvance";
 import PLA from "./PLA";
 import Peek from "./Peek";
 import Packing from "./Packing";
-import Invoice from "./Payment";
+import Payment from "./Payment";
+import Invoice from "./Invoice";
 import CTValidation from "./CTValidation";
 
 const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -99,7 +100,17 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 		},
 		{
 			key: "9",
-			label: "Final Payment and Invoice",
+			label: "Final Payment",
+			children: (
+				<Card>
+					<Payment orderId={orderId} />
+				</Card>
+			),
+			extra: genExtra(),
+		},
+		{
+			key: "10",
+			label: "Invoice",
 			children: (
 				<Card>
 					<Invoice orderId={orderId} />

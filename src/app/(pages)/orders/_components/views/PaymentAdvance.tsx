@@ -7,6 +7,7 @@ import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
 
 type AdvancePayment = {
+	currency: string;
 	value: number;
 	createdAt: string;
 	validatedBy: string;
@@ -29,7 +30,7 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 				setLoading(true);
 				setError(null);
 
-				const advanceRes = await api.get(`/orders/${orderId}/quotation`);
+				const advanceRes = await api.get(`/orders/${orderId}/payment-advance`);
 				setAdvance(advanceRes.data?.advancePayment || null);
 			} catch (err) {
 				console.error("Error fetching payment info:", err);
@@ -51,7 +52,9 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 			<Descriptions title="Advance Payment">
 				{advance ? (
 					<>
-						<Descriptions.Item label="Value">{advance.value ? `$${advance.value}` : "N/A"}</Descriptions.Item>
+						<Descriptions.Item label="Value">
+							{advance.value ? `$${advance.value}` : "N/A"}
+						</Descriptions.Item>
 						<Descriptions.Item label="Date">
 							<DateDisplay isoDate={advance.createdAt || "N/A"} />
 						</Descriptions.Item>
