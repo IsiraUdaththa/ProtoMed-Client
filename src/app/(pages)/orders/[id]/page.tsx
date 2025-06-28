@@ -273,7 +273,7 @@ export default function OrderStatusPage() {
 							{
 								key: "forum",
 								label: "Forum",
-								children: <ForumDiscussion />,
+								children: <ForumDiscussion orderId={orderId}/>,
 							},
 						]}
 					/>
