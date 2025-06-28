@@ -36,16 +36,13 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ key: "4", label: "Contact Number", children: patient.contactNumber || "N/A" },
 					{ key: "5", label: "Address", children: patient.address || "N/A" },
 					{ key: "6", label: "Category", children: patient.category || "N/A" },
-					{ key: "7", label: "CT Scan Method", children: patient.ctScanMethod || "N/A" },
-					{ key: "8", label: "Hospital", children: patient.hospital || "N/A" },
-					{ key: "9", label: "Ward", children: patient.ward || "N/A" },
-					{ key: "10", label: "Planned Surgery Date", children: patient.surgeryDate || "N/A" },
-					{ key: "11", label: "Comment", children: patient.comment || "N/A" },
-					{ key: "12", label: "Registered By", children: patient.registeredBy ? <UserTag userId={patient.registeredBy} /> : "N/A" },
-					{ key: "13", label: "Order Status", children: order?.status || "N/A" },
-					{ key: "14", label: "Total Price", children: order?.totalPrice ? `$${order.totalPrice}` : "N/A" },
-					{ key: "15", label: "Order Date", children: order?.orderDate || "N/A" },
-					{ key: "16", label: "Last Updated", children: order?.lastUpdated || "N/A" },
+					{ key: "7", label: "surgeonName", children: patient.surgeonName || "N/A" },
+					{ key: "8", label: "CT Scan Method", children: patient.ctScanMethod || "N/A" },
+					{ key: "9", label: "Hospital", children: patient.hospital || "N/A" },
+					{ key: "10", label: "Ward", children: patient.ward || "N/A" },
+					{ key: "11", label: "Planned Surgery Date", children: patient.surgeryDate || "N/A" },
+					{ key: "12", label: "Comment", children: patient.comment || "N/A" },
+					{ key: "13", label: "Registered By", children: patient.registeredBy ? <UserTag userId={patient.registeredBy} /> : "N/A" },
 				].filter((item) => item.children !== "N/A");
 
 				setData(items.length > 0 ? items : null);

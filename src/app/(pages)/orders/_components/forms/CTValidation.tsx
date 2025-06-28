@@ -4,12 +4,26 @@ import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+interface IFormData {
+	width: number;
+	length: number;
+	"size-sqcm"?: string;
+	"implant-name"?: string;
+	"implant-size"?: string;
+	"ct-image-2d"?: string;
+	"ct-image-3d"?: string;
+}
 
 const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setFormData] = useState<IFormData>({
+		length: 0,
+		width: 0,
+	});
+
 	const [current, setCurrent] = useState(0);
-	const [formData, setFormData] = useState<any>(null);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [dateTime, setDateTime] = useState<string>("");
 	const dummyUsername = "JohnDoe";
@@ -19,7 +33,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: IFormData) => {
 		setFormData(values);
 		setDateTime(getCurrentDateTime());
 		next();
@@ -37,7 +51,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			orderId: orderId,
 			username: dummyUsername,
 			dateTime: dateTime,
-			size: formData["size-sqcm"],
+			size: formData["size-sqcm"] || formData["width"] * formData["length"],
 			implantName: formData["implant-name"],
 			implantSize: formData["implant-size"],
 			ctImage2D: formData["ct-image-2d"],
@@ -116,7 +130,15 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Upload.Dragger>
 					</Form.Item>
 
-					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ required: true, message: "Please enter size" }]}>
+					<Form.Item label="Length (cm)" name="length" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} />
+					</Form.Item>
+
+					<Form.Item label="Width (cm)" name="width" rules={[{ message: "Please enter width" }]}>
+						<Input type="number" min={0} max={1000} step={0.01} />
+					</Form.Item>
+
+					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ message: "Please enter size" }]}>
 						<Input min={1} max={1000} type="number" />
 					</Form.Item>
 
@@ -161,9 +183,18 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Date and Time:", children: dateTime },
 							{ label: "CT Image 2D:", children: dummyUsername },
 							{ label: "Date and Time", children: dateTime },
-							{ label: "CT Image 2D", children: formData["ct-image-2d"]?.[0]?.name || "No file uploaded" },
-							{ label: "CT Image 3D", children: formData["ct-image-3d"]?.[0]?.name || "No file uploaded" },
-							{ label: "Size (sqcm)", children: formData["size-sqcm"] },
+							{
+								label: "CT Image 2D",
+								children: formData["ct-image-2d"] || "No file uploaded",
+							},
+							{
+								label: "CT Image 3D",
+								children: formData["ct-image-3d"] || "No file uploaded",
+							},
+							{
+								label: "Size (sqcm)",
+								children: formData["size-sqcm"] || formData["length"] * formData["width"],
+							},
 							{ label: "Implant Name", children: formData["implant-name"] },
 							{ label: "Size of Implant", children: formData["implant-size"] },
 						]}
@@ -183,7 +214,11 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="Data Submitted Successfully" />
 					) : (
-						<Result status="error" title="Submission Failed" subTitle="Please check details and try again." />
+						<Result
+							status="error"
+							title="Submission Failed"
+							subTitle="Please check details and try again."
+						/>
 					)}
 				</>
 			)}

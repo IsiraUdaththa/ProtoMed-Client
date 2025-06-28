@@ -27,6 +27,14 @@ const App: React.FC = () => {
 		{ value: "qc", label: "QC" },
 	];
 
+	const titleOptions = [
+		{ value: "Mr.", label: "Mr." },
+		{ value: "Ms.", label: "Ms." },
+		{ value: "Mrs.", label: "Mrs." },
+		{ value: "Miss.", label: "Miss." },
+		{ value: "Dr.", label: "Dr." },
+	];
+
 	const onFinish = async (values: { phone: { countryCode: string; areaCode: string; phoneNumber: string } }) => {
 		console.log(values);
 		try {
@@ -46,10 +54,17 @@ const App: React.FC = () => {
 
 	return (
 		<Form layout="vertical" form={form} onFinish={onFinish}>
+			<Form.Item name="title" label="Title" rules={[{ required: false, message: "Please select a Title" }]}>
+				<Select style={{ width: "100%" }} options={titleOptions} />
+			</Form.Item>
 			<Form.Item name="name" label="Name" rules={[{ required: false, message: "Username is required!" }]}>
 				<Input placeholder="Please enter user name" />
 			</Form.Item>
-			<Form.Item name="email" label="Email" rules={[{ required: false, type: "email", message: "Invalid email!" }]}>
+			<Form.Item
+				name="email"
+				label="Email"
+				rules={[{ required: false, type: "email", message: "Invalid email!" }]}
+			>
 				<Input placeholder="Please enter user email" />
 			</Form.Item>
 			<Form.Item name="phone" label="Phone Number" rules={[{ validator: phoneValidator }]} required>

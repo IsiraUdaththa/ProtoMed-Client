@@ -4,12 +4,21 @@ import React, { useState } from "react";
 import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+import dayjs from "dayjs";
+
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+interface IFormData {
+	ctScanLink?: string;
+	ctNumber?: string;
+	ctDate?: Date;
+	comment?: string;
+}
 
 const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<IFormData>();
 	const [current, setCurrent] = useState(0);
-	const [formData, setFormData] = useState<any>(null);
+	const [formData, setFormData] = useState<IFormData>({});
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [isUploaded, setIsUploaded] = useState(false);
 	const [manualEntry, setManualEntry] = useState(false);
@@ -17,7 +26,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: any) => {
+	const handleSubmit = (values: IFormData) => {
 		setFormData(values);
 		next(); // Move to confirmation step
 	};
@@ -104,11 +113,19 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						/>
 					</Form.Item>
 
-					<Form.Item label="CT Date" name="ctDate" rules={[{ required: true, message: "Please select CT scan date" }]}>
+					<Form.Item
+						label="CT Date"
+						name="ctDate"
+						rules={[{ required: true, message: "Please select CT scan date" }]}
+					>
 						<DatePicker />
 					</Form.Item>
 
-					<Form.Item label="CT Number" name="ctNumber" rules={[{ required: true, message: "Please enter CT number" }]}>
+					<Form.Item
+						label="CT Number"
+						name="ctNumber"
+						rules={[{ required: true, message: "Please enter CT number" }]}
+					>
 						<Input />
 					</Form.Item>
 
@@ -132,7 +149,10 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						column={1}
 						items={[
 							{ label: "CT Scan Link/DVD:", children: formData.ctScanLink },
-							{ label: "CT Date:", children: formData.ctDate?.format("YYYY-MM-DD") },
+							{
+								label: "CT Date:",
+								children: formData.ctDate ? dayjs(formData.ctDate).format("YYYY-MM-DD") : "",
+							},
 							{ label: "CT Number:", children: formData.ctNumber },
 							{ label: "Comment:", children: formData.comment },
 						]}
@@ -151,7 +171,11 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="CT Scan Data Submitted Successfully" />
 					) : (
-						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
+						<Result
+							status="error"
+							title="Submission Failed"
+							subTitle="Please check the details and try again."
+						/>
 					)}
 				</>
 			)}

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let accessToken: string | null = null;
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env['NEXT_PUBLIC_API_URL']!;
 
 export const setAccessToken = (token: string) => {
     accessToken = token;

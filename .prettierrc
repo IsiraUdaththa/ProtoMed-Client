@@ -1,5 +1,7 @@
 {
     "useTabs": true,
 	"printWidth": 120,
-	"endOfLine": "crlf"
+	"endOfLine": "crlf",
+	"tabWidth": 4,
+	"singleQuote": false
 }

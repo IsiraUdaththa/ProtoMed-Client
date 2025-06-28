@@ -6,11 +6,28 @@ import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descript
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
+import dayjs from "dayjs";
+
+interface IFormData {
+	country?: string;
+	name?: string;
+	gender?: string;
+	age?: string;
+	category?: string;
+	collectingMethod?: string;
+	contactNumber?: any; // TODO
+	surgeonName?: string;
+	hospital?: string;
+	ward?: string;
+	plannedDate?: Date;
+	comment?: string;
+}
 
 const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setFormData] = useState<IFormData>({});
+
 	const [current, setCurrent] = useState(0);
-	const [formData, setFormData] = useState<any>(null);
 	const [userName, setUserName] = useState("Fetching...");
 	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -73,7 +90,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const prev = () => setCurrent(current - 1);
 
 	// Handle Form Submission (First Step)
-	const handleNext = async (values: any) => {
+	const handleNext = async (values: IFormData) => {
 		values.contactNumber = `${values.contactNumber.countryCode} ${values.contactNumber?.areaCode}${values.contactNumber.phoneNumber}`;
 		setFormData(values);
 		next(); // Move to confirmation step
@@ -85,7 +102,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			...formData,
 			userName,
 			dateTime,
-			plannedDate: formData.plannedDate?.format("YYYY-MM-DD"),
+			plannedDate: formData.plannedDate ? dayjs(formData.plannedDate).format("YYYY-MM-DD") : "",
 		};
 
 		try {
@@ -159,7 +176,12 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
-					<Form.Item label="Category" name="category" rules={[{ message: "Please select a category" }]} required>
+					<Form.Item
+						label="Category"
+						name="category"
+						rules={[{ message: "Please select a category" }]}
+						required
+					>
 						<Select>
 							{[
 								"Accuplasty",
@@ -201,7 +223,12 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="Phone Number" name="contactNumber" rules={[{ validator: phoneValidator }]} required>
+					<Form.Item
+						label="Phone Number"
+						name="contactNumber"
+						rules={[{ validator: phoneValidator }]}
+						required
+					>
 						<PhoneInput distinct enableSearch onlyCountries={["us", "lk", "in", "sg"]} />
 					</Form.Item>
 
@@ -251,7 +278,12 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
 							{ label: "Hospital Name", children: formData.hospital || "N/A" },
 							{ label: "Ward", children: formData.ward || "N/A" },
-							{ label: "Planned Date", children: formData.plannedDate?.format("YYYY-MM-DD") || "N/A" },
+							{
+								label: "Planned Date",
+								children: formData.plannedDate
+									? dayjs(formData.plannedDate).format("YYYY-MM-DD")
+									: "N/A",
+							},
 							{ label: "Comment", children: formData.comment || "N/A" },
 						]}
 					></Descriptions>
@@ -275,7 +307,6 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 									? "Your order has been submitted successfully."
 									: "There was an issue submitting your order. Please try again."
 							}
-
 						/>
 					)}
 				</>

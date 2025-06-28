@@ -7,10 +7,10 @@ import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
 
 interface Data {
-	createdAt: Date;
-	verifiedBy: string;
-	isPaid: boolean;
-	comment: string;
+	invoiceNumber: string;
+	isSent: boolean;
+	sentDate: Date;
+	doneBy: string;
 }
 
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -21,7 +21,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 		const fetchData = async () => {
 			try {
 				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.fullPayment);
+				setData(response.data.invoice);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -41,15 +41,15 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 				items={[
 					{
 						label: "Status",
-						children: data.isPaid ? (
-							<Badge count="Paid" style={{ backgroundColor: "#52c41a" }} />
+						children: data.isSent ? (
+							<Badge count="Send" style={{ backgroundColor: "#52c41a" }} />
 						) : (
-							<Badge count="Skipped" />
+							<Badge count="Not Send" />
 						),
 					},
-					{ label: "Verified By", children: <UserTag userId={data.verifiedBy} /> },
-					{ label: "Date", children: <DateDisplay isoDate={data.createdAt} /> },
-					{ label: "Comment", children: data.comment },
+					{ label: "Verified By", children: <UserTag userId={data.doneBy} /> },
+					{ label: "Date", children: <DateDisplay isoDate={data.sentDate} /> },
+					{ label: "Comment", children: data.invoiceNumber },
 				]}
 			/>
 		</>

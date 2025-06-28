@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert, Badge, Breadcrumb, Button, Card, Skeleton, Space, Steps, Tabs } from "antd";
+import { Alert, Badge, Breadcrumb, Button, Card, Skeleton, Space, Tabs } from "antd";
 import Link from "next/link";
 import {
 	ArrowLeftOutlined,
 	CalendarOutlined,
 	CheckCircleOutlined,
 	ClockCircleOutlined,
-	DollarOutlined,
-	FileDoneOutlined,
 	LoadingOutlined,
-	PrinterOutlined,
 	ReloadOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
@@ -20,9 +17,14 @@ import Details from "../_components/views/All";
 import api from "@/lib/axiosInstance";
 import DateDisplay from "@/app/_components/DateDisplay";
 import ActiveForm from "../_components/forms/activeform";
+import ForumDiscussion from "../_components/ForumDiscussion";
+import OrderTimeline from "../_components/OrderTimeline";
+import { login } from "@/services/auth.service";
+
+login("admin@example.com", "password");
 
 // Simulated order status service
-const fetchOrderStatus = async (orderId) => {
+const fetchOrderStatus = async (orderId: string) => {
 	// Simulate API call delay
 	await new Promise((resolve) => setTimeout(resolve, 800));
 
@@ -33,17 +35,21 @@ const fetchOrderStatus = async (orderId) => {
 		"scanValidation",
 		"quotation",
 		"advancePayment",
-		"designSubmission",
+		"designImages",
+		"designQCDocs",
+		"designFile",
 		"internalApproval",
 		"externalApproval",
 		"outerPrint",
 		"flapPrint",
+		"plaQCDocs",
 		"plasticApproval",
 		"implantPrint",
 		"annealing",
 		"roughPolishing",
 		"laserMarking",
 		"finalPolishing",
+		"peekQCDocs",
 		"implantApproval",
 		"packing",
 		"finalPayment",
@@ -70,40 +76,6 @@ const fetchOrderStatus = async (orderId) => {
 	};
 };
 
-// Helper function to get step status
-const getStepStatus = (currentStep, stepIndex) => {
-	const statuses = [
-		"draft",
-		"scanUpload",
-		"scanValidation",
-		"quotation",
-		"advancePayment",
-		"designSubmission",
-		"internalApproval",
-		"externalApproval",
-		"outerPrint",
-		"flapPrint",
-		"plasticApproval",
-		"implantPrint",
-		"annealing",
-		"roughPolishing",
-		"laserMarking",
-		"finalPolishing",
-		"implantApproval",
-		"packing",
-		"finalPayment",
-		"invoice",
-		"completed",
-	];
-
-	const currentIndex = statuses.indexOf(currentStep);
-
-	if (currentIndex < 0) return "wait";
-	if (stepIndex < currentIndex) return "finish";
-	if (stepIndex === currentIndex) return "process";
-	return "wait";
-};
-
 // Helper function to map status to form component mapping
 const getFormComponentKey = (status) => {
 	const mapping = {
@@ -112,13 +84,17 @@ const getFormComponentKey = (status) => {
 		scanValidation: "2",
 		quotation: "4",
 		advancePayment: "4",
-		designSubmission: "5",
+		designImages: "5",
+		designQCDocs: "5",
+		designFile: "5",
 		internalApproval: "5",
 		externalApproval: "6",
 		outerPrint: "6",
 		flapPrint: "7",
+		plaQCDocs: "6",
 		peek_annealed: "7",
 		peek_rough_polished: "7",
+		peek_qcdocs: "7",
 		peek_approved: "7",
 		peek_laser_marked: "7",
 		peek_final_polished: "7",
@@ -165,7 +141,7 @@ const StatusBadge = ({ status }) => {
 export default function OrderStatusPage() {
 	const params = useParams();
 	const router = useRouter();
-	const orderId = params.id || "";
+	const orderId = params["id"] || "";
 	const [activeTab, setActiveTab] = useState("status");
 	const [orderStatus, setOrderStatus] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -251,12 +227,15 @@ export default function OrderStatusPage() {
 									</p>
 									<p>
 										<strong>Current Stage:</strong>{" "}
-										{orderStatus.currentStatus.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+										{orderStatus.currentStatus
+											.replace(/_/g, " ")
+											.replace(/\b\w/g, (l) => l.toUpperCase())}
 									</p>
 								</div>
 								<div>
 									<p>
-										<UserOutlined /> <strong>Created:</strong> <DateDisplay isoDate={orderStatus.createdAt} />
+										<UserOutlined /> <strong>Created:</strong>{" "}
+										<DateDisplay isoDate={orderStatus.createdAt} />
 									</p>
 									<p>
 										<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
@@ -285,6 +264,16 @@ export default function OrderStatusPage() {
 								key: "details",
 								label: "Order Details",
 								children: <Details orderId={orderId} />,
+							},
+							{
+								key: "timeline",
+								label: "Timeline",
+								children: <OrderTimeline orderId={orderId} />,
+							},
+							{
+								key: "forum",
+								label: "Forum",
+								children: <ForumDiscussion orderId={orderId}/>,
 							},
 						]}
 					/>

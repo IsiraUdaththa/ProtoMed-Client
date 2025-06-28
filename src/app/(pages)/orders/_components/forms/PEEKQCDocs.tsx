@@ -1,43 +1,53 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Steps, Result, Form, Descriptions, message } from "antd";
+import { Button, Steps, Result, Form, Descriptions, message, Input } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
-interface IFormData {
-	image?: string;
-	markingDate?: Date;
-}
+type FormDataType = {
+  images: string[]; // array of images URLs
+  implantModelA?: string;
+  implantModelB?: string;
+  implantModelC?: string;
+  markingDate?: string;
+};
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm<IFormData>();
-	const [formData, setFormData] = useState<IFormData>({});
+	const [form] = Form.useForm<FormDataType>();
+	const [formData, setFormData] = useState<FormDataType>({ images: [] });
 
 	const [current, setCurrent] = useState(0);
 	const [userName, setUserName] = useState("Fetching...");
+	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	useEffect(() => {
 		setTimeout(() => setUserName("John Doe"), 1000);
+		const interval = setInterval(() => {
+			setDateTime(new Date().toLocaleString());
+		}, 1000);
+		return () => clearInterval(interval);
 	}, []);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: IFormData) => {
+	const handleSubmit = (values: FormDataType) => {
 		setFormData(values);
 		next();
 	};
 
 	const handleConfirm = async () => {
-		console.log(`Submitting PEEK Laser Marking Process:`, { userName });
+		console.log(`Submitting PEEK Laser Marking Process:`, { userName, dateTime });
+
+		formData["markingDate"] = dateTime;
 
 		try {
-			const response = await api.post(`/orders/${orderId}/peek-laser-marking`, formData);
+			const response = await api.post(`/orders/${orderId}/peek-qcdocs`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
 		} catch (error) {
@@ -47,21 +57,23 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: string) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{url: string}>>, fieldName: keyof FormDataType) => {
 		if (info.file.status === "done") {
-			const fileUrl = info.file.response?.url;
-			if (fileUrl) {
-				form.setFieldsValue({
-					[fieldName]: fileUrl,
-				});
-				message.success(`${info.file.name} uploaded successfully`);
+			const fileList = info.fileList
+				.filter((file) => file.status === "done")
+				.map((file) => file.response?.url)
+				.filter((url): url is string => typeof url === "string");
 
-				// Update form data state
-				setFormData({
-					...formData,
-					[fieldName]: fileUrl,
-				});
-			}
+			form.setFieldsValue({
+				[fieldName]: fileList,
+			});
+
+			message.success(`${info.file.name} uploaded successfully`);
+
+			setFormData((prev) => ({
+				...prev,
+				[fieldName]: fileList,
+			}));
 		} else if (info.file.status === "error") {
 			message.error(`${info.file.name} upload failed.`);
 		}
@@ -79,21 +91,44 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 				<Form form={form} onFinish={handleSubmit} layout="vertical">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<Form.Item
-							key="image"
-							label="image"
-							name="image"
-							rules={[{ required: true, message: `Please upload the image` }]}
+							key="images"
+							label="images"
+							name="images"
+							rules={[{ required: true, message: `Please upload the images` }]}
 						>
 							<Upload
 								action={`${apiUrl}/upload`}
-								onChange={(info) => handleChange(info, "image")}
+								onChange={(info) => handleChange(info, "images")}
 								listType="picture"
-								maxCount={1}
+								maxCount={10}
+								multiple={true}
 							>
 								<Button icon={<UploadOutlined />}>Upload Image</Button>
 							</Upload>
 						</Form.Item>
 					</div>
+
+					<Form.Item
+						label="Enter implantModelA (mm)"
+						name="implantModelA"
+						rules={[{ message: "Please enter implantModel" }]}
+					>
+						<Input type="number" min={1} max={1000} step={0.01} />
+					</Form.Item>
+					<Form.Item
+						label="Enter implantModelB (mm)"
+						name="implantModelB"
+						rules={[{ message: "Please enter implantModel" }]}
+					>
+						<Input type="number" min={1} max={1000} step={0.01} />
+					</Form.Item>
+					<Form.Item
+						label="Enter implantModelC (mm)"
+						name="implantModelC"
+						rules={[{ message: "Please enter implantModel" }]}
+					>
+						<Input type="number" min={1} max={1000} step={0.01} />
+					</Form.Item>
 
 					<Form.Item className="mt-6">
 						<Button type="primary" htmlType="submit" size="large">
@@ -111,6 +146,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						column={1}
 						items={[
 							{ label: "User", children: userName },
+							{ label: "Date and Time:", children: dateTime },
 						]}
 					></Descriptions>
 					<>

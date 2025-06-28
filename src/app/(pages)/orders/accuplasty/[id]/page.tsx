@@ -3,8 +3,6 @@
 import { useParams } from "next/navigation";
 import Steps from "../../_components/ProgressBar";
 import { Breadcrumb, Tabs } from "antd";
-import Details from "../../_components/views/All";
-import Jobs from "../../_components/forms/All";
 
 export default function OrderDetailsPage() {
 	const params = useParams();
@@ -26,11 +24,10 @@ export default function OrderDetailsPage() {
 						href: "",
 					},
 				]}
-				params={{ id: params.id }}
+				params={{ id: params["id"] }}
 			/>
-			<h2>Order number: {params.id}</h2>
-			Basic Info. 
-			Lasts Updated, etc... 
+			<h2>Order number: {params["id"]}</h2>
+			Basic Info. Lasts Updated, etc...
 			<br />
 			<br />
 			{/* <Patient/> */}
@@ -50,7 +47,6 @@ export default function OrderDetailsPage() {
 					},
 				]}
 			/>
-
 			<br />
 		</>
 	);

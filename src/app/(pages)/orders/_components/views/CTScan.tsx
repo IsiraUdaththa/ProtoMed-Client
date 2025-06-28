@@ -1,12 +1,22 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { Button, Descriptions, Divider, Image, Spin, Alert } from "antd";
+import { Button, Descriptions, Spin, Alert } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
 import DateDisplay from "@/app/_components/DateDisplay";
 import UserTag from "@/app/_components/UserTag";
 
+interface data extends Document {
+	ctScanLink: string;
+	ctNumber: string;
+	ctDate: Date;
+	checkedBy: string;
+	comment: string;
+}
+
 const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [data, setData] = useState<any>(null);
+	const [data, setData] = useState<data>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -26,8 +36,8 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 				const result = response.data.ctScan;
 				setData(result);
-			} catch (err: any) {
-				setError(err.message);
+			} catch (error) {
+				console.error("Error fetching order data:", error);
 			} finally {
 				setLoading(false);
 			}

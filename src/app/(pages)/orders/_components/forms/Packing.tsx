@@ -2,42 +2,48 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React, { useState } from "react";
-import { Form, Upload, Button, Space, Steps, Typography, Result } from "antd";
+import { Form, Upload, Button, Space, Steps, Typography, Result, message } from "antd";
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import api from "@/lib/axiosInstance";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+
+interface IFormData {
+	"implant-video"?: string;
+	"implant-image"?: string;
+	"packing-image"?: string;
+}
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const [form] = Form.useForm();
+	const [form] = Form.useForm<IFormData>();
+	const [formData, setFormData] = useState<IFormData>({});
+
 	const [current, setCurrent] = useState(0);
-	const [formValues, setFormValues] = useState<any>({});
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
-	const onFinish = (values: any) => {
-		setFormValues(values);
+	const onFinish = (values: IFormData) => {
+		setFormData(values);
 		next();
 	};
 
 	const handleSubmit = async () => {
-		const formData = {
-			finalImplantVideo: formValues["implant-video"],
-			finalImplantPicture: formValues["implant-image"],
-			finalPackPicture: formValues["packing-image"],
-		};
+		if (!formData) return;
 
 		try {
 			const response = await api.post(`/orders/${orderId}/packing`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
+			message.success("File uploaded successfully.");
 		} catch (error) {
-			console.log(error);
+			console.error("Upload failed:", error);
 			setIsSuccess(false);
+			message.error("Error uploading file. Please try again.");
+		} finally {
+			next();
 		}
-		next();
 	};
 
 	return (
@@ -135,7 +141,8 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 				{current === 1 && (
 					<>
-						<Typography.Text strong>User: {formValues.userName || "Not Provided"}</Typography.Text>
+						{/* TODO:  */}
+						{/* <Typography.Text strong>User: {formData.userName || "Not Provided"}</Typography.Text> */}
 
 						<Typography.Text strong>Date & Time: {new Date().toLocaleString()}</Typography.Text>
 
@@ -151,7 +158,11 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{isSuccess ? (
 							<Result status="success" title="Packing Detail Submission Successful" />
 						) : (
-							<Result status="error" title="Packing Detail Submission Failed" subTitle="Please try again." />
+							<Result
+								status="error"
+								title="Packing Detail Submission Failed"
+								subTitle="Please try again."
+							/>
 						)}
 					</>
 				)}
