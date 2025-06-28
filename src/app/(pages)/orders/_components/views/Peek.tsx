@@ -60,7 +60,7 @@ interface PEEK {
 	annealing: IPEEKAnnealing;
 	screwHoleSize: string;
 	polishing: IPEEKPolishing;
-	qcdocs: IPeekQCDocs;
+	qcDocs: IPeekQCDocs;
 	approval: IPEEKApproval;
 	laserMarking: IPEEKLaserMarking;
 	finalPolishing: IPEEKFinalPolishing;
@@ -157,26 +157,26 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					},
 				];
 
-				const qcdocsItems: DescriptionsProps["items"] = [
+				const qcDocsItems: DescriptionsProps["items"] = [
 					{
 						key: "approvedBy",
 						label: "Approved By",
-						children: <UserTag userId={section.qcdocs?.doneBy} />,
+						children: <UserTag userId={section.qcDocs?.doneBy} />,
 					},
 					{
 						key: "skullDefectA",
 						label: "Skull Defect A",
-						children: section.qcdocs?.implantModelA,
+						children: section.qcDocs?.implantModelA,
 					},
 					{
 						key: "skullDefectB",
 						label: "Skull Defect B",
-						children: section.qcdocs?.implantModelB,
+						children: section.qcDocs?.implantModelB,
 					},
 					{
 						key: "skullDefectC",
 						label: "Skull Defect C",
-						children: section.qcdocs?.implantModelC,
+						children: section.qcDocs?.implantModelC,
 					},
 				];
 
@@ -238,9 +238,9 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Descriptions title="Print" items={printItems} />
 						<Descriptions title="Annealing" items={annealingItems} />
 						<Descriptions title="Polishing" items={polishingItems} />
-						<Descriptions title="QC Docs" items={qcdocsItems} />
+						<Descriptions title="QC Docs" items={qcDocsItems} />
 						<Image.PreviewGroup>
-							{section.qcdocs.images.map((imgSrc, index) => (
+							{section.qcDocs.images.map((imgSrc, index) => (
 								<Image key={index} width={200} src={imgSrc} alt={`Image ${index + 1}`} />
 							))}
 						</Image.PreviewGroup>

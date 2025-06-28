@@ -52,7 +52,7 @@ interface IPLAApproval {
 interface PLA {
 	outerPrint: IPLAOuterPrint;
 	flapPrint: IPLAFlapPrint;
-	qcdocs: IPLAQCDocs;
+	qcDocs: IPLAQCDocs;
 	approval: IPLAApproval;
 }
 
@@ -153,42 +153,42 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{
 						key: "approvedBy",
 						label: "Approved By",
-						children: <UserTag userId={section.qcdocs?.doneBy} />,
+						children: <UserTag userId={section.qcDocs?.doneBy} />,
 					},
 					{
 						key: "approvalDate",
 						label: "Approval Date",
-						children: <DateDisplay isoDate={section.qcdocs?.designDate} />,
+						children: <DateDisplay isoDate={section.qcDocs?.designDate} />,
 					},
 					{
 						key: "skullDefectA",
 						label: "Skull Defect A",
-						children: section.qcdocs?.skullDefectA,
+						children: section.qcDocs?.skullDefectA,
 					},
 					{
 						key: "skullDefectB",
 						label: "Skull Defect B",
-						children: section.qcdocs?.skullDefectB,
+						children: section.qcDocs?.skullDefectB,
 					},
 					{
 						key: "skullDefectC",
 						label: "Skull Defect C",
-						children: section.qcdocs?.skullDefectC,
+						children: section.qcDocs?.skullDefectC,
 					},
 					{
 						key: "implantModelA",
 						label: "Implant Model A",
-						children: section.qcdocs?.implantModelA,
+						children: section.qcDocs?.implantModelA,
 					},
 					{
 						key: "implantModelB",
 						label: "Implant Model B",
-						children: section.qcdocs?.implantModelB,
+						children: section.qcDocs?.implantModelB,
 					},
 					{
 						key: "implantModelC",
 						label: "Implant Model C",
-						children: section.qcdocs?.implantModelC,
+						children: section.qcDocs?.implantModelC,
 					},
 				];
 

@@ -178,11 +178,11 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				}
 
 				// PLA QC
-				if (pla.qcdocs) {
+				if (pla.qcDocs) {
 					events.push({
-						date: pla.qcdocs.designDate || pla.qcdocs.createdAt,
+						date: pla.qcDocs.designDate || pla.qcDocs.createdAt,
 						title: `${plaPrefix}QC Documentation`,
-						userId: pla.qcdocs.doneBy,
+						userId: pla.qcDocs.doneBy,
 						status: "completed",
 					});
 				}
@@ -256,11 +256,11 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				}
 
 				// PEEK QC
-				if (peek.qcdocs) {
+				if (peek.qcDocs) {
 					events.push({
-						date: peek.qcdocs.createdAt,
+						date: peek.qcDocs.createdAt,
 						title: `${peekPrefix}QC Documentation`,
-						userId: peek.qcdocs.doneBy,
+						userId: peek.qcDocs.doneBy,
 						status: "completed",
 					});
 				}
