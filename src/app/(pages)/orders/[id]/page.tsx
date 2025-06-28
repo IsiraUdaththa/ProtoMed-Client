@@ -268,7 +268,7 @@ export default function OrderStatusPage() {
 							{
 								key: "timeline",
 								label: "Timeline",
-								children: <OrderTimeline order={orderId} />,
+								children: <OrderTimeline orderId={orderId} />,
 							},
 							{
 								key: "forum",
