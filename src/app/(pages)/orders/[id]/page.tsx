@@ -2,23 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert, Badge, Breadcrumb, Button, Card, Skeleton, Space, Tabs } from "antd";
+import { Alert, Breadcrumb, Button, Card, Skeleton, Space, Tabs } from "antd";
 import Link from "next/link";
-import {
-	ArrowLeftOutlined,
-	CalendarOutlined,
-	CheckCircleOutlined,
-	ClockCircleOutlined,
-	LoadingOutlined,
-	ReloadOutlined,
-	UserOutlined,
-} from "@ant-design/icons";
+import { ArrowLeftOutlined, CalendarOutlined, ReloadOutlined, UserOutlined } from "@ant-design/icons";
+
 import Details from "../_components/views/All";
-import api from "@/lib/axiosInstance";
-import DateDisplay from "@/app/_components/DateDisplay";
 import ActiveForm from "../_components/forms/activeform";
 import ForumDiscussion from "../_components/ForumDiscussion";
 import OrderTimeline from "../_components/OrderTimeline";
+
+import DateDisplay from "@/app/_components/DateDisplay";
+import api from "@/lib/axiosInstance";
 import { login } from "@/services/auth.service";
 
 login("admin@example.com", "password");
@@ -106,38 +100,6 @@ const getFormComponentKey = (status) => {
 	return mapping[status] || "1";
 };
 
-// Status Badge component
-const StatusBadge = ({ status }) => {
-	let color = "default";
-	let icon = <ClockCircleOutlined />;
-	let text = "Unknown";
-
-	if (status === "invoiced" || status === "payment_completed") {
-		color = "success";
-		icon = <CheckCircleOutlined />;
-		text = "Completed";
-	} else if (status.includes("approved") || status.includes("validated") || status === "packed") {
-		color = "processing";
-		icon = <CheckCircleOutlined />;
-		text = "In Progress";
-	} else if (
-		status.includes("submitted") ||
-		status.includes("uploaded") ||
-		status.includes("printed") ||
-		status.includes("polished")
-	) {
-		color = "warning";
-		icon = <LoadingOutlined />;
-		text = "Processing";
-	} else if (status.includes("registered") || status.includes("sent")) {
-		color = "default";
-		icon = <ClockCircleOutlined />;
-		text = "Waiting";
-	}
-
-	return <Badge status={color} text={text} />;
-};
-
 export default function OrderStatusPage() {
 	const params = useParams();
 	const router = useRouter();
@@ -218,7 +180,7 @@ export default function OrderStatusPage() {
 				</Card>
 			) : orderStatus ? (
 				<>
-					<Card title={`${orderStatus.orderCode}`} extra={<StatusBadge status={orderStatus.currentStatus} />}>
+					<Card title={`${orderStatus.orderCode}`}>
 						<Space direction="vertical" style={{ width: "100%" }}>
 							<div style={{ display: "flex", justifyContent: "space-between" }}>
 								<div>
@@ -273,7 +235,7 @@ export default function OrderStatusPage() {
 							{
 								key: "forum",
 								label: "Forum",
-								children: <ForumDiscussion orderId={orderId}/>,
+								children: <ForumDiscussion orderId={orderId} />,
 							},
 						]}
 					/>
