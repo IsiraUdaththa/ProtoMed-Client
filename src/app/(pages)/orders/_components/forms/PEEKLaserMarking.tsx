@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Steps, Result, Form, Descriptions, message } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
+
+import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 

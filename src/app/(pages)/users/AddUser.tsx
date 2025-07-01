@@ -1,8 +1,9 @@
 import React from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import PhoneInput from "antd-phone-input";
-import api from "@/lib/axiosInstance";
 import { RuleObject } from "antd/es/form";
+
+import api from "@/lib/axiosInstance";
 
 const App: React.FC = () => {
 	const [form] = Form.useForm();

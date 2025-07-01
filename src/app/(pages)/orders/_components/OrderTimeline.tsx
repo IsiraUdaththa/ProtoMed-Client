@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Card, Spin, Timeline, TimelineItemProps, Tag } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
@@ -396,7 +397,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 							fontStyle: "italic",
 						}}
 					>
-						"{event.comment}"
+						{event.comment}
 					</div>
 				)}
 			</div>

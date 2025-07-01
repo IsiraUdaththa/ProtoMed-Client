@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Badge, Descriptions, Divider, Spin, Image, Button } from "antd";
 import type { DescriptionsProps } from "antd";
+import { DownloadOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
-import { DownloadOutlined } from "@ant-design/icons";
 
 interface IDesignImages {
 	designBy: string;

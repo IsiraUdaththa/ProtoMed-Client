@@ -5,8 +5,18 @@ import React, { useState, useEffect } from "react";
 import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import dayjs from "dayjs";
+import { RuleObject } from "antd/es/form";
+
+import api from "@/lib/axiosInstance";
+
+interface PhoneNumberValue {
+	areaCode: string;
+	countryCode: number;
+	isoCode: string;
+	phoneNumber: string;
+	valid: (strict?: boolean) => boolean;
+}
 
 interface IFormData {
 	country?: string;
@@ -15,7 +25,7 @@ interface IFormData {
 	age?: string;
 	category?: string;
 	collectingMethod?: string;
-	contactNumber?: any; // TODO
+	contactNumber?: PhoneNumberValue | string;
 	surgeonName?: string;
 	hospital?: string;
 	ward?: string;
@@ -80,18 +90,27 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	}, [orderId, form]);
 
 	// Phone number validator
-	const phoneValidator = (_: any, value: { valid: () => any }) => {
-		if (value?.valid()) return Promise.resolve();
+	const phoneValidator = (_rule: RuleObject, value: unknown): Promise<void> => {
+		const phoneValue = value as PhoneNumberValue;
+
+		if (typeof phoneValue?.valid === "function" && phoneValue.valid()) {
+			return Promise.resolve();
+		}
+
 		return Promise.reject("Invalid phone number");
 	};
-
 	// Step navigation
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
 	// Handle Form Submission (First Step)
 	const handleNext = async (values: IFormData) => {
-		values.contactNumber = `${values.contactNumber.countryCode} ${values.contactNumber?.areaCode}${values.contactNumber.phoneNumber}`;
+		const contact = values.contactNumber as PhoneNumberValue;
+		if (contact) {
+			const { countryCode, areaCode = "", phoneNumber } = contact;
+			values.contactNumber = `+${countryCode} ${areaCode}${phoneNumber}`;
+		}
+
 		setFormData(values);
 		next(); // Move to confirmation step
 	};
@@ -274,7 +293,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Age", children: formData.age },
 							{ label: "Category", children: formData.category },
 							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
-							{ label: "Phone Number", children: formData.contactNumber },
+							{ label: "Phone Number", children: formData.contactNumber as string },
 							{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
 							{ label: "Hospital Name", children: formData.hospital || "N/A" },
 							{ label: "Ward", children: formData.ward || "N/A" },

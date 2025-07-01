@@ -1,8 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Steps from "../../_components/ProgressBar";
 import { Breadcrumb, Tabs } from "antd";
+
+import Steps from "../../_components/ProgressBar";
 
 export default function OrderDetailsPage() {
 	const params = useParams();

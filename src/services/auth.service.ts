@@ -1,8 +1,10 @@
 // services/auth.service.ts
-import api, { getAccessToken, setAccessToken } from '@/lib/axiosInstance';
 import { message } from 'antd';
 import axios from 'axios';
+
 import { getSSRToken } from './auth.server';
+
+import api, { setAccessToken } from '@/lib/axiosInstance';
 
 const apiUrl = process.env['NEXT_PUBLIC_API_URL'];
 

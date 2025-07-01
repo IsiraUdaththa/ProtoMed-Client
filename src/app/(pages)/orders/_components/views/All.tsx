@@ -5,6 +5,7 @@ import React from "react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { CollapseProps } from "antd";
 import { Card, Collapse, Space } from "antd";
+
 import Patient from "./Patient";
 import CTScan from "./CTScan";
 import Design from "./Design";
