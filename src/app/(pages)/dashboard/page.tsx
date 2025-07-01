@@ -1,9 +1,17 @@
 "use client";
 
+import StageAnalytics from "./StageAnalytics";
+import AssignedTable from "./AssignedTable";
+import UnassignedTable from "./UnassignedTable";
+
 export default function DashboardPage() {
 	return (
 		<div>
-			<h1>Welcome to the Dashboard</h1>
+			<StageAnalytics />
+			<br />
+			<AssignedTable />
+			<br />
+			<UnassignedTable />
 		</div>
 	);
 }
