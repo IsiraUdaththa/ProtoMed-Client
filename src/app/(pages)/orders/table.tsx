@@ -7,7 +7,9 @@ import Link from "next/link";
 import api from "@/lib/axiosInstance";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+
 import AssignOrder from "./_components/AssignOrder";
+import OrderActions from "./_components/MoveButtons";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<GetProp<TableProps, "pagination">, boolean>;
@@ -248,6 +250,11 @@ const App: React.FC = () => {
 			title: "Assigned to",
 			fixed: "right",
 			render: (record) => <AssignOrder currentAssignee={record.currentAssignee} orderId={record._id} />,
+		},
+		{
+			title: "Actions",
+			fixed: "right",
+			render: (record) => <OrderActions orderId={record._id} />,
 		},
 	];
 
