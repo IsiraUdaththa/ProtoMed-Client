@@ -5,6 +5,7 @@ import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Card, Image, Flex, message } from "antd";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { login } from "@/services/auth.service";
 
@@ -31,15 +32,22 @@ const Apsdap: React.FC = () => {
 			<Card
 				style={{
 					width: 400,
+					// height: 400,
 					borderRadius: 12,
 					padding: 20,
+					textAlign: "center",
 				}}
 			>
 				<div style={{ display: "flex", justifyContent: "center" }}>
-					<Image src="/logo.png" alt="Logo" preview={false} width={200} style={{ marginBottom: 50 }} />
+					<Image src="/logo.png" alt="Logo" preview={false} width={200} style={{ marginBottom: 30 }} />
 				</div>
 
-				<Form name="login" initialValues={{ remember: true }} style={{ maxWidth: 360 }} onFinish={onFinish}>
+				<Form
+					name="login"
+					initialValues={{ remember: true }}
+					style={{ maxWidth: 360, marginTop: 24 }}
+					onFinish={onFinish}
+				>
 					<Form.Item name="email" rules={[{ required: true, message: "Please input your email!" }]}>
 						<Input prefix={<UserOutlined />} placeholder="email" />
 					</Form.Item>
@@ -51,7 +59,7 @@ const Apsdap: React.FC = () => {
 							<Form.Item name="remember" valuePropName="checked" noStyle>
 								<Checkbox>Remember me</Checkbox>
 							</Form.Item>
-							<a href="">Forgot password?</a>
+							<Link href="/forgot-password">Forgot password?</Link>
 						</Flex>
 					</Form.Item>
 

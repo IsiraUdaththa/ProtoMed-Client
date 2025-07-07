@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 
 // Define which paths are public (e.g., login, signup, static assets)
 const PUBLIC_FILE = /\.(.*)$/;
-const publicRoutes = ['/login', '/signup'];
+const publicRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
