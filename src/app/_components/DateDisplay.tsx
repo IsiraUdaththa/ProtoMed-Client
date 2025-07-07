@@ -10,7 +10,7 @@ dayjs.extend(timezone);
 const { Text } = Typography;
 
 interface PrettyDateCardProps {
-	isoDate: string;
+	isoDate: Date;
 }
 
 const PrettyDateCard: React.FC<PrettyDateCardProps> = ({ isoDate }) => {

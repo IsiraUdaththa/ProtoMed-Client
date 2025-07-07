@@ -13,9 +13,6 @@ import OrderTimeline from "../_components/OrderTimeline";
 
 import DateDisplay from "@/app/_components/DateDisplay";
 import api from "@/lib/axiosInstance";
-import { login } from "@/services/auth.service";
-
-login("admin@example.com", "password");
 
 // Simulated order status service
 const fetchOrderStatus = async (orderId: string) => {
@@ -180,33 +177,33 @@ export default function OrderStatusPage() {
 				</Card>
 			) : orderStatus ? (
 				<>
-					<Card title={`${orderStatus.orderCode}`}>
-						<Space direction="vertical" style={{ width: "100%" }}>
-							<div style={{ display: "flex", justifyContent: "space-between" }}>
-								<div>
-									<p>
-										<strong>Patient:</strong> {orderStatus.patientName}
-									</p>
-									<p>
-										<strong>Current Stage:</strong>{" "}
-										{orderStatus.currentStatus
-											.replace(/_/g, " ")
-											.replace(/\b\w/g, (l) => l.toUpperCase())}
-									</p>
-								</div>
-								<div>
-									<p>
-										<UserOutlined /> <strong>Created:</strong>{" "}
-										<DateDisplay isoDate={orderStatus.createdAt} />
-									</p>
-									<p>
-										<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
-										<DateDisplay isoDate={orderStatus.expectedCompletionDate} />
-									</p>
-								</div>
+					{/* <Card title={`${orderStatus.orderCode}`} style={{actionsBg: "transparent"}}> */}
+					<Space direction="vertical" style={{ width: "100%" }}>
+						<div style={{ display: "flex", justifyContent: "space-between" }}>
+							<div>
+								<p>
+									<strong>Patient:</strong> {orderStatus.patientName}
+								</p>
+								<p>
+									<strong>Current Stage:</strong>{" "}
+									{orderStatus.currentStatus
+										.replace(/_/g, " ")
+										.replace(/\b\w/g, (l) => l.toUpperCase())}
+								</p>
 							</div>
-						</Space>
-					</Card>
+							<div>
+								<p>
+									<UserOutlined /> <strong>Created:</strong>{" "}
+									<DateDisplay isoDate={orderStatus.createdAt} />
+								</p>
+								<p>
+									<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
+									<DateDisplay isoDate={orderStatus.expectedCompletionDate} />
+								</p>
+							</div>
+						</div>
+					</Space>
+					{/* </Card> */}
 
 					<Tabs
 						activeKey={activeTab}

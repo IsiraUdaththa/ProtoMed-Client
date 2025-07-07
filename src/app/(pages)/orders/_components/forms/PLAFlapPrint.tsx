@@ -68,8 +68,8 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item label="Print Time (min)" name="printTime">
-							<Input type="number" />
+						<Form.Item label="Print Time" name="printTime">
+							<Input type="number" addonAfter="min"/>
 						</Form.Item>
 					</Form>
 					<Button type="primary" onClick={handleNext} block>

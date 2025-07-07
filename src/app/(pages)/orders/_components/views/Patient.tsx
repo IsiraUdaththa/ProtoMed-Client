@@ -38,9 +38,9 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ key: "5", label: "Address", children: patient.address || "N/A" },
 					{ key: "6", label: "Category", children: patient.category || "N/A" },
 					{ key: "7", label: "surgeonName", children: patient.surgeonName || "N/A" },
-					{ key: "8", label: "CT Scan Method", children: patient.ctScanMethod || "N/A" },
 					{ key: "9", label: "Hospital", children: patient.hospital || "N/A" },
 					{ key: "10", label: "Ward", children: patient.ward || "N/A" },
+					{ key: "8", label: "CT Scan Method", children: patient.ctScanMethod || "N/A" },
 					{ key: "11", label: "Planned Surgery Date", children: patient.surgeryDate || "N/A" },
 					{ key: "12", label: "Comment", children: patient.comment || "N/A" },
 					{ key: "13", label: "Registered By", children: patient.registeredBy ? <UserTag userId={patient.registeredBy} /> : "N/A" },
@@ -64,7 +64,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			<Descriptions items={data} />
+			<Descriptions items={data} column={2}/>
 		</>
 	);
 };

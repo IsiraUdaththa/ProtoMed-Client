@@ -39,6 +39,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Descriptions
+				column={2}
 				items={[
 					{
 						label: "Status",
@@ -48,9 +49,9 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Badge count="Skipped" />
 						),
 					},
-					{ label: "Verified By", children: <UserTag userId={data.verifiedBy} /> },
-					{ label: "Date", children: <DateDisplay isoDate={data.createdAt} /> },
-					{ label: "Comment", children: data.comment },
+					{ label: "Verified By", children: data.verifiedBy ? <UserTag userId={data.verifiedBy} /> : "N/A" },
+					{ label: "Date", children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A" },
+					{ label: "Comment", children: data.comment ?? "No comment" },
 				]}
 			/>
 		</>

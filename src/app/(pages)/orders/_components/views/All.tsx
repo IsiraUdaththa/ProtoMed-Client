@@ -2,7 +2,6 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React from "react";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { CollapseProps } from "antd";
 import { Card, Collapse, Space } from "antd";
 
@@ -19,13 +18,6 @@ import Invoice from "./Invoice";
 import CTValidation from "./CTValidation";
 
 const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
-	const genExtra = () => (
-		<Space>
-			<EditOutlined onClick={(event) => event.stopPropagation()} />
-			<DeleteOutlined />
-		</Space>
-	);
-
 	const items: CollapseProps["items"] = [
 		{
 			key: "1",
@@ -35,29 +27,34 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Patient orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "2",
 			label: "CT Scan Details",
 			children: (
-				<Card>
-					<CTScan orderId={orderId} />
-					<CTValidation orderId={orderId} />
-				</Card>
+				<Space direction="vertical">
+					<Card>
+						<CTScan orderId={orderId} />
+					</Card>
+					<Card>
+						<CTValidation orderId={orderId} />
+					</Card>
+				</Space>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "4",
 			label: "Quotation & Payment",
 			children: (
-				<Card>
-					<Quotation orderId={orderId} />
-					<Advance orderId={orderId} />
-				</Card>
+				<Space direction="vertical">
+					<Card>
+						<Quotation orderId={orderId} />
+					</Card>
+					<Card>
+						<Advance orderId={orderId} />
+					</Card>
+				</Space>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "5",
@@ -67,7 +64,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Design orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "6",
@@ -77,7 +73,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<PLA orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "7",
@@ -87,7 +82,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Peek orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "8",
@@ -97,7 +91,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Packing orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "9",
@@ -107,7 +100,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Payment orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 		{
 			key: "10",
@@ -117,7 +109,6 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Invoice orderId={orderId} />
 				</Card>
 			),
-			extra: genExtra(),
 		},
 	];
 

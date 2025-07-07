@@ -66,46 +66,46 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 0 && (
 				<Form form={form} layout="vertical" onFinish={handleSubmit}>
 					<Form.Item
-						label="Enter skullDefectA (mm)"
+						label="Enter skullDefectA"
 						name="skullDefectA"
 						rules={[{ message: "Please enter skullDefectA" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter skullDefectB (mm)"
+						label="Enter skullDefectB"
 						name="skullDefectB"
 						rules={[{ message: "Please enter skullDefectB" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter skullDefectC (mm)"
+						label="Enter skullDefectC"
 						name="skullDefectC"
 						rules={[{ message: "Please enter skullDefectC" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelA (mm)"
+						label="Enter implantModelA"
 						name="implantModelA"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelB (mm)"
+						label="Enter implantModelB"
 						name="implantModelB"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelC (mm)"
+						label="Enter implantModelC"
 						name="implantModelC"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 
 					<Form.Item className="mt-6">

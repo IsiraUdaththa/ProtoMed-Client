@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, Descriptions, Spin, Alert } from "antd";
+import { Button, Descriptions, Spin, Alert, Tooltip, Divider } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -53,19 +53,28 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	// Access data from the ctScan object
 	const items = [
-		{ key: "1", label: "CT Number", children: data?.ctNumber },
-		{ key: "2", label: "Date", children: <DateDisplay isoDate={data?.ctDate} /> },
-		{ key: "3", label: "Checked By", children: <UserTag userId={data?.checkedBy} /> },
-		{ key: "4", label: "Comment", children: data?.comment },
+		{ key: "1", label: "CT Number", children: data?.ctNumber ?? "N/A" },
+		{ key: "2", label: "Date", children: data?.ctDate ? <DateDisplay isoDate={data.ctDate} /> : "N/A" },
+		{
+			key: "3",
+			label: "Checked By",
+			children: data?.checkedBy ? <UserTag userId={data.checkedBy} /> : "N/A",
+		},
+		{ key: "4", label: "Comment", children: data?.comment ?? "No comment" },
 	];
 
 	return (
 		<>
-			<Button icon={<DownloadOutlined />} href={data?.ctScanLink}>
-				Download Model
-			</Button>
+			<Tooltip title={data?.ctScanLink ? "" : "CT Scan link not available"}>
+				<span>
+					<Button icon={<DownloadOutlined />} href={data?.ctScanLink} disabled={!data?.ctScanLink}>
+						Download Scan
+					</Button>
+				</span>
+			</Tooltip>
 
-			<Descriptions items={items} />
+			<Divider />
+			<Descriptions items={items} column={2}/>
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Badge, Descriptions, Divider, Spin } from "antd";
+import { Alert, Badge, Card, Descriptions, Divider, Flex, Space, Spin, Table, Tabs } from "antd";
 import type { DescriptionsProps } from "antd";
 
 import api from "@/lib/axiosInstance";
@@ -43,11 +43,11 @@ interface IPLAApproval {
 	isApproved: boolean;
 	approvalDate: Date;
 	approvedBy: string;
-	fitFinishCheckedBy: string;   // ????
-	accuracyCheckedBy: string;    // ????
+	fitFinishCheckedBy: string; // ????
+	accuracyCheckedBy: string; // ????
 	qcDesignDoc?: string; // ????
 	qcMeasureValuesDoc?: string; // ????
-	comment?: string; 
+	comment?: string;
 }
 
 interface PLA {
@@ -83,153 +83,252 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			{data.map((section, index) => {
-				const outerItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.outerPrint?.printBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.outerPrint?.printDate} />,
-					},
-					{
-						key: "color",
-						label: "Color",
-						children: section.outerPrint?.color,
-					},
-					{
-						key: "weight",
-						label: "Weight",
-						children: section.outerPrint?.weight,
-					},
-					{
-						key: "printMachine",
-						label: "Print Machine",
-						children: section.outerPrint?.printMachine,
-					},
-					{
-						key: "printTime",
-						label: "Print Time",
-						children: section.outerPrint?.printTime,
-					},
-				];
+			<Tabs defaultActiveKey="0">
+				{data.map((section, index) => {
+					const outerItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.outerPrint?.printBy ? (
+								<UserTag userId={section.outerPrint?.printBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.outerPrint?.printDate ? (
+								<DateDisplay isoDate={section.outerPrint?.printDate} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "color",
+							label: "Color",
+							children: section.outerPrint?.color ?? "N/A",
+						},
+						{
+							key: "weight",
+							label: "Weight",
+							children: section.outerPrint?.weight ?? "N/A",
+						},
+						{
+							key: "printMachine",
+							label: "Print Machine",
+							children: section.outerPrint?.printMachine ?? "N/A",
+						},
+						{
+							key: "printTime",
+							label: "Print Time",
+							children: section.outerPrint?.printTime ?? "N/A",
+						},
+					];
 
-				const innerItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.flapPrint?.printBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.flapPrint?.printDate} />,
-					},
-					{
-						key: "color",
-						label: "Color",
-						children: section.flapPrint?.color,
-					},
-					{
-						key: "weight",
-						label: "Weight",
-						children: section.flapPrint?.weight,
-					},
-					{
-						key: "printMachine",
-						label: "Print Machine",
-						children: section.flapPrint?.printMachine,
-					},
-					{
-						key: "printTime",
-						label: "Print Time",
-						children: section.flapPrint?.printTime,
-					},
-				];
+					const innerItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.flapPrint?.printBy ? (
+								<UserTag userId={section.flapPrint?.printBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.flapPrint?.printDate ? (
+								<DateDisplay isoDate={section.flapPrint?.printDate} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "color",
+							label: "Color",
+							children: section.flapPrint?.color ?? "N/A",
+						},
+						{
+							key: "weight",
+							label: "Weight",
+							children: section.flapPrint?.weight ?? "N/A",
+						},
+						{
+							key: "printMachine",
+							label: "Print Machine",
+							children: section.flapPrint?.printMachine ?? "N/A",
+						},
+						{
+							key: "printTime",
+							label: "Print Time",
+							children: section.flapPrint?.printTime ?? "N/A",
+						},
+					];
 
-				const qcDocsItems: DescriptionsProps["items"] = [
-					{
-						key: "approvedBy",
-						label: "Approved By",
-						children: <UserTag userId={section.qcDocs?.doneBy} />,
-					},
-					{
-						key: "approvalDate",
-						label: "Approval Date",
-						children: <DateDisplay isoDate={section.qcDocs?.designDate} />,
-					},
-					{
-						key: "skullDefectA",
-						label: "Skull Defect A",
-						children: section.qcDocs?.skullDefectA,
-					},
-					{
-						key: "skullDefectB",
-						label: "Skull Defect B",
-						children: section.qcDocs?.skullDefectB,
-					},
-					{
-						key: "skullDefectC",
-						label: "Skull Defect C",
-						children: section.qcDocs?.skullDefectC,
-					},
-					{
-						key: "implantModelA",
-						label: "Implant Model A",
-						children: section.qcDocs?.implantModelA,
-					},
-					{
-						key: "implantModelB",
-						label: "Implant Model B",
-						children: section.qcDocs?.implantModelB,
-					},
-					{
-						key: "implantModelC",
-						label: "Implant Model C",
-						children: section.qcDocs?.implantModelC,
-					},
-				];
+					const qcDocsItems: DescriptionsProps["items"] = [
+						{
+							key: "approvedBy",
+							label: "Approved By",
+							children: section.qcDocs?.doneBy ? <UserTag userId={section.qcDocs?.doneBy} /> : "N/A",
+						},
+						{
+							key: "approvalDate",
+							label: "Approval Date",
+							children: section.qcDocs?.designDate ? (
+								<DateDisplay isoDate={section.qcDocs?.designDate} />
+							) : (
+								"N/A"
+							),
+						},
+					];
 
-				const approvalItems: DescriptionsProps["items"] = [
-					{
-						key: "isApproved",
-						label: "Approved",
-						children: section.approval.isApproved ? (
-							<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
-						) : (
-							<Badge count="Rejected" />
-						),
-					},
-					{
-						key: "approvalDate",
-						label: "Approval Date",
-						children: <DateDisplay isoDate={section.approval?.approvalDate} />,
-					},
-					{
-						key: "approvedBy",
-						label: "Approved By",
-						children: <UserTag userId={section.approval?.approvedBy} />,
-					},
-					{
-						key: "comment",
-						label: "Comment",
-						children: section.approval?.comment,
-					},
-				];
+					const approvalItems: DescriptionsProps["items"] = [
+						{
+							key: "isApproved",
+							label: "Approved",
+							children: section.approval.isApproved ? (
+								<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
+							) : (
+								<Badge count="Rejected" />
+							),
+						},
+						{
+							key: "approvalDate",
+							label: "Approval Date",
+							children: section.approval?.approvalDate ? (
+								<DateDisplay isoDate={section.approval?.approvalDate} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "approvedBy",
+							label: "Approved By",
+							children: section.approval?.approvedBy ? (
+								<UserTag userId={section.approval?.approvedBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "comment",
+							label: "Comment",
+							children: section.approval?.comment ?? "No comment",
+						},
+					];
 
-				return (
-					<div key={index}>
-						<Divider orientation="left">PLA Attempt #{index + 1}</Divider>
-						<Descriptions title="Inner Print" items={outerItems} />
-						<Descriptions title="Outer Print" items={innerItems} />
-						<Descriptions title="QC Docs" items={qcDocsItems} />
-						<Descriptions title="Approval" items={approvalItems} />
-					</div>
-				);
-			})}
+					return (
+						<Tabs.TabPane tab={`Print Attempt #${index + 1}`} key={index}>
+							<Space direction="vertical">
+								<Card>
+									<Descriptions title="Inner Print" items={outerItems} column={2} />
+								</Card>
+								<Card>
+									<Descriptions title="Outer Print" items={innerItems} column={2} />
+								</Card>
+								<Card>
+									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Divider />
+									<Flex justify="space-around">
+										<Table
+											columns={[
+												{
+													title: "No",
+													dataIndex: "no",
+													key: "no",
+													width: 100,
+													align: "center",
+												},
+												{
+													title: "Parameter/Specification (mm)",
+													dataIndex: "parameter",
+													key: "parameter",
+													width: 200,
+													align: "center",
+												},
+											]}
+											dataSource={[
+												{
+													key: "1",
+													no: "A",
+													parameter: section.qcDocs?.implantModelA
+														? section.qcDocs.implantModelA
+														: "N/A",
+												},
+												{
+													key: "2",
+													no: "B",
+													parameter: section.qcDocs?.implantModelB
+														? section.qcDocs.implantModelB
+														: "N/A",
+												},
+												{
+													key: "3",
+													no: "C",
+													parameter: section.qcDocs?.implantModelC
+														? section.qcDocs.implantModelC
+														: "N/A",
+												},
+											]}
+											size="small"
+											pagination={false}
+										/>
+										<Table
+											columns={[
+												{
+													title: "No",
+													dataIndex: "no",
+													key: "no",
+													width: 100,
+													align: "center",
+												},
+												{
+													title: "Parameter/Specification (mm)",
+													dataIndex: "parameter",
+													key: "parameter",
+													width: 200,
+													align: "center",
+												},
+											]}
+											dataSource={[
+												{
+													key: "1",
+													no: "A",
+													parameter: section.qcDocs?.skullDefectA
+														? section.qcDocs.skullDefectA
+														: "N/A",
+												},
+												{
+													key: "2",
+													no: "B",
+													parameter: section.qcDocs?.skullDefectB
+														? section.qcDocs.skullDefectB
+														: "N/A",
+												},
+												{
+													key: "3",
+													no: "C",
+													parameter: section.qcDocs?.skullDefectC
+														? section.qcDocs.skullDefectC
+														: "N/A",
+												},
+											]}
+											size="small"
+											pagination={false}
+										/>
+									</Flex>
+								</Card>
+
+								<Card>
+									<Descriptions title="Approval" items={approvalItems} column={2} />
+								</Card>
+							</Space>
+						</Tabs.TabPane>
+					);
+				})}
+			</Tabs>
 		</>
 	);
 };

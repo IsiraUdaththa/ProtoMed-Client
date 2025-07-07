@@ -10,12 +10,12 @@ import DateDisplay from "@/app/_components/DateDisplay";
 type AdvancePayment = {
 	currency: string;
 	value: number;
-	createdAt: string;
+	createdAt: Date;
 	validatedBy: string;
 };
 
 const PaymentInfo = ({ orderId }: { orderId: string }) => {
-	const [advance, setAdvance] = useState<AdvancePayment>();
+	const [data, setData] = useState<AdvancePayment>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 				setError(null);
 
 				const advanceRes = await api.get(`/orders/${orderId}/payment-advance`);
-				setAdvance(advanceRes.data?.advancePayment || null);
+				setData(advanceRes.data?.advancePayment || null);
 			} catch (err) {
 				console.error("Error fetching payment info:", err);
 				setError("Failed to fetch payment information. Please try again.");
@@ -46,27 +46,24 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 
 	if (loading) return <Spin size="large" />;
 	if (error) return <Alert message="Error" description={error} type="error" showIcon />;
-	if (!advance) return <Alert message="No details available." type="info" showIcon />;
+	if (!data) return <Alert message="No details available." type="info" showIcon />;
 
 	return (
 		<>
-			<Descriptions title="Advance Payment">
-				{advance ? (
-					<>
-						<Descriptions.Item label="Value">
-							{advance.value ? `$${advance.value}` : "N/A"}
-						</Descriptions.Item>
-						<Descriptions.Item label="Date">
-							<DateDisplay isoDate={advance.createdAt || "N/A"} />
-						</Descriptions.Item>
-						<Descriptions.Item label="Received By">
-							<UserTag userId={advance.validatedBy} />
-						</Descriptions.Item>
-					</>
-				) : (
-					<Descriptions.Item label="Info">No Advance Payment Data</Descriptions.Item>
-				)}
-			</Descriptions>
+			<Descriptions
+				title="Advanced Payment"
+				items={[
+					{
+						label: "Value",
+						children: data.value ? `$${data.value}` : "N/A",
+					},
+					{
+						label: "Verified By",
+						children: data.validatedBy ? <UserTag userId={data.validatedBy} /> : "N/A",
+					},
+					{ label: "Date", children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A" },
+				]}
+			/>
 		</>
 	);
 };
