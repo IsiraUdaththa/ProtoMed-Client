@@ -14,10 +14,14 @@ const Dashboard: React.FC = () => {
 	return (
 		<>
 			<Content>
-				<Breadcrumb style={{marginLeft: 5, marginBottom:5}}
+				<Breadcrumb
+					style={{ marginLeft: 5, marginBottom: 15 }}
 					items={[
 						{
-							title: <Link href="/orders">Orders/</Link>,
+							title: <Link href="/orders">Orders</Link>,
+						},
+						{
+							title: "All",
 						},
 					]}
 				/>
