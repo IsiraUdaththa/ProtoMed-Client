@@ -19,18 +19,6 @@ const items: MenuItem[] = [
 		key: "/orders",
 		label: "Orders",
 		icon: <AppstoreOutlined />,
-		children: [
-			{ key: "/orders/", label: "All" },
-			{ key: "/orders/accuplasty", label: "Accuplasty" },
-			{ key: "/orders/accupectomy", label: "Accupectomy" },
-			{ key: "/orders/accufacial", label: "Accufacial" },
-			{ key: "/orders/accuortho", label: "Accuortho" },
-			{ key: "/orders/lamifix", label: "Lamifix" },
-			{ key: "/orders/screws", label: "Screws" },
-			{ key: "/orders/accumesh", label: "Accumesh" },
-			{ key: "/orders/screws-and-plates", label: "Screws and plates" },
-			{ key: "/orders/other", label: "Other" },
-		],
 	},
 	{
 		key: "/users",
