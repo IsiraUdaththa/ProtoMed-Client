@@ -1,3 +1,11 @@
+import { Result, Card } from "antd";
+
 export default function DashboardPage() {
-	return <h1>Welcome to the Settings</h1>;
+	return (
+		<>
+			<Card>
+				<Result status="404" title="404" subTitle="Sorry, the page you visited is under construction." />
+			</Card>
+		</>
+	);
 }
