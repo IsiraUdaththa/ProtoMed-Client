@@ -127,19 +127,19 @@ const App: React.FC = () => {
 			</div>
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
-		onFilter: (value, record) =>
+		onFilter: (text: string, record: DataType) =>
 			(dataIndex === "name" ? record.patientDetails.name : `${record.orderId.fullCode}`)
 				.toString()
 				.toLowerCase()
-				.includes((value as string).toLowerCase()),
+				.includes(text.toLowerCase()),
 		filterDropdownProps: {
-			onOpenChange: (open) => {
+			onOpenChange: (open: boolean) => {
 				if (open) {
 					setTimeout(() => searchInput.current?.select(), 100);
 				}
 			},
 		},
-		render: (text, record) => {
+		render: (text: string, record: DataType) => {
 			let data = "";
 			if (dataIndex === "name") {
 				data = record.patientDetails.name;
