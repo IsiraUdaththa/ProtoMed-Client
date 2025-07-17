@@ -20,7 +20,7 @@ const PrettyDateCard: React.FC<PrettyDateCardProps> = ({ isoDate }) => {
 	const localDate = dayjs(isoDate).tz(dayjs.tz.guess());
 	const formatted = localDate.format("dddd, MMMM D, YYYY h:mm A");
 
-	return <Text>{formatted}</Text>;
+	return formatted;
 };
 
 export default PrettyDateCard;

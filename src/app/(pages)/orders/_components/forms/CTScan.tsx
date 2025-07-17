@@ -101,6 +101,10 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<p className="ant-upload-drag-icon">
 								<FileTextOutlined />
 							</p>
+							<p className="ant-upload-text">Click or drag a file to this area to upload</p>
+							<p className="ant-upload-hint">
+								You can either upload a single file or paste a link into the text box.
+							</p>
 						</Upload.Dragger>
 						<Input
 							disabled={isUploaded}

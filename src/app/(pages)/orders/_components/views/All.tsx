@@ -21,7 +21,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const items: CollapseProps["items"] = [
 		{
 			key: "1",
-			label: "Patient Details",
+			label: "Patient Information",
 			children: (
 				<Card>
 					<Patient orderId={orderId} />
@@ -61,7 +61,7 @@ const Details: React.FC<{ orderId: string }> = ({ orderId }) => {
 			label: "Design Attempts",
 			children: (
 				<Card>
-					<Design orderId={orderId} />
+					<Design orderId={orderId} onlyQCDocs={false} />
 				</Card>
 			),
 		},

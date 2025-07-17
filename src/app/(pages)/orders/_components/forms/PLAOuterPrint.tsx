@@ -57,7 +57,7 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Input />
 						</Form.Item>
 						<Form.Item label="Weight" name="weight" rules={[{ message: "Please enter your age" }]}>
-							<Input type="number" min={1} />
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">

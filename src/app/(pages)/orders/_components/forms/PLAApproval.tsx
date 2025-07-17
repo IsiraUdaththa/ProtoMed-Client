@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
+import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Space } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -82,23 +82,27 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item>
-						<Button
-							type="primary"
-							icon={<CheckCircleOutlined />}
-							loading={loading}
-							onClick={() => handleApproval(true)}
-						>
-							Approve
-						</Button>
-						<Button
-							type="default"
-							icon={<CloseCircleOutlined />}
-							loading={loading}
-							danger
-							onClick={() => handleApproval(false)}
-						>
-							Not Approve
-						</Button>
+						<Space>
+							<Button
+								color="green"
+								variant="filled"
+								icon={<CheckCircleOutlined />}
+								loading={loading}
+								onClick={() => handleApproval(true)}
+							>
+								Approve
+							</Button>
+							<Button
+								color="red"
+								variant="filled"
+								icon={<CloseCircleOutlined />}
+								loading={loading}
+								danger
+								onClick={() => handleApproval(false)}
+							>
+								Reject
+							</Button>
+						</Space>
 					</Form.Item>
 				</Form>
 			)}

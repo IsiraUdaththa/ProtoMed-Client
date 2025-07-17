@@ -110,21 +110,21 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 					</div>
 
 					<Form.Item
-						label="Enter implantModelA"
+						label="A"
 						name="implantModelA"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
 						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelB"
+						label="B"
 						name="implantModelB"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
 						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelC"
+						label="C"
 						name="implantModelC"
 						rules={[{ message: "Please enter implantModel" }]}
 					>

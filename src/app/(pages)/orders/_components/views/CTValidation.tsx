@@ -65,7 +65,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const items2 = [
 		{ key: "1", label: "Name", children: data?.implantName ?? "N/A" },
 		{ key: "2", label: "Size", children: data?.implantSize ?? "N/A" },
-		{ key: "3", label: "Size", children: data?.size ? `${data?.size} mm\u00B2` : "N/A" },
+		{ key: "3", label: "Area", children: data?.size ? `${data?.size} mm\u00B2` : "N/A" },
 		{
 			key: "4",
 			label: "Validated By",

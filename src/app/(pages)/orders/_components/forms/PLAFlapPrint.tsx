@@ -57,7 +57,7 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Input />
 						</Form.Item>
 						<Form.Item label="Weight" name="weight">
-							<Input type="number" />
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">

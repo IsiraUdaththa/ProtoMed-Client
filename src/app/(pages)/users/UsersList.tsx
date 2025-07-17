@@ -91,7 +91,8 @@ const UserList: React.FC = () => {
 							avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
 							title={
 								<>
-									<a href={`/users/${item._id}`}>{item.name}</a>{" "}
+									{/* <a href={`/users/${item._id}`}>{item.name}</a>{" "} */}
+									{item.name}{" "}
 									<Tag bordered={false} color="cyan">
 										{item.roles.join(", ")}
 									</Tag>
