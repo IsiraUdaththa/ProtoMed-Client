@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import type { GetProp, InputRef, TableProps } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { AnyObject } from "antd/es/_util/type";
-import type { FilterDropdownProps, SorterResult } from "antd/es/table/interface";
+import type { ColumnType, FilterDropdownProps, SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -89,18 +89,18 @@ const App: React.FC = () => {
 
 	const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps["confirm"], dataIndex: string) => {
 		confirm();
-		setSearchText(selectedKeys[0]);
+		setSearchText(selectedKeys[0] ?? "");
 		setSearchedColumn(dataIndex);
 	};
 
-	const handleReset = (clearFilters?: () => void, confirm: FilterDropdownProps["confirm"]) => {
-		if (clearFilters) clearFilters();
+	const handleReset = (clearFilters: (() => void) | undefined, confirm: FilterDropdownProps["confirm"]) => {
+		clearFilters?.();
 		setSearchText("");
 		confirm();
 	};
 
-	const getColumnSearchProps = (dataIndex: string): ColumnsType<DataType>[number] => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+	const getColumnSearchProps = (dataIndex: string): ColumnType<DataType> => ({
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps) => (
 			<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
 				<Input
 					ref={searchInput}
@@ -127,11 +127,11 @@ const App: React.FC = () => {
 			</div>
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />,
-		onFilter: (text: string, record: DataType) =>
+		onFilter: (value: string | number | boolean | bigint, record: DataType) =>
 			(dataIndex === "name" ? record.patientDetails.name : `${record.orderId.fullCode}`)
 				.toString()
 				.toLowerCase()
-				.includes(text.toLowerCase()),
+				.includes(value.toString().toLowerCase()),
 		filterDropdownProps: {
 			onOpenChange: (open: boolean) => {
 				if (open) {
@@ -139,7 +139,7 @@ const App: React.FC = () => {
 				}
 			},
 		},
-		render: (text: string, record: DataType) => {
+		render: (record: DataType) => {
 			let data = "";
 			if (dataIndex === "name") {
 				data = record.patientDetails.name;
@@ -267,38 +267,42 @@ const App: React.FC = () => {
 		setFiltersValue(JSON.stringify(tableParams.filters));
 	}, [tableParams.filters]);
 
-	useEffect(() => {
-		const params = toURLSearchParams(getRandomuserParams(tableParams));
-		const fetchData = () => {
-			setLoading(true);
+	useEffect(
+		() => {
+			const params = toURLSearchParams(getRandomuserParams(tableParams));
+			const fetchData = () => {
+				setLoading(true);
 
-			api.get(`/orders?${params.toString()}`)
-				.then((response) => {
-					const { results, pagination } = response.data;
-					setData(results);
-					setLoading(false);
+				api.get(`/orders?${params.toString()}`)
+					.then((response) => {
+						const { results, pagination } = response.data;
+						setData(results);
+						setLoading(false);
 
-					setTableParams((prev) => ({
-						...prev,
-						pagination: {
-							...prev.pagination,
-							total: pagination.total,
-						},
-					}));
-				})
-				.catch((error) => {
-					console.error("Error fetching data:", error);
-					setLoading(false);
-				});
-		};
-		fetchData();
-	}, [
-		tableParams.pagination?.current,
-		tableParams.pagination?.pageSize,
-		tableParams?.sortField,
-		tableParams?.sortOrder,
-		filtersValue, // Use the separate state variable instead
-	]);
+						setTableParams((prev) => ({
+							...prev,
+							pagination: {
+								...prev.pagination,
+								total: pagination.total,
+							},
+						}));
+					})
+					.catch((error) => {
+						console.error("Error fetching data:", error);
+						setLoading(false);
+					});
+			};
+			fetchData();
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[
+			tableParams.pagination?.current,
+			tableParams.pagination?.pageSize,
+			tableParams?.sortField,
+			tableParams?.sortOrder,
+			filtersValue, // Use the separate state variable instead
+		],
+	);
 
 	const handleTableChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter) => {
 		setTableParams({
@@ -319,7 +323,7 @@ const App: React.FC = () => {
 			columns={columns}
 			rowKey={(record) => record.patientDetails._id}
 			dataSource={data}
-			pagination={tableParams.pagination}
+			pagination={tableParams.pagination ?? false}
 			loading={loading}
 			onChange={handleTableChange}
 			scroll={{ x: "max-content" }}
