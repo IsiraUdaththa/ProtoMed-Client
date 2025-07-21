@@ -3,8 +3,9 @@ import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
 import { Button, Upload, message, Steps, Result, Form, Card, Space, Typography, UploadFile } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import { UploadChangeParam } from "antd/es/upload";
+
+import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 

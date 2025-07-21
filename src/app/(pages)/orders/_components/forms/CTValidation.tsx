@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select } from "antd";
+import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select, Tooltip } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
@@ -22,7 +23,8 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		length: 0,
 		width: 0,
 	});
-
+	const length = Form.useWatch("length", form);
+	const width = Form.useWatch("width", form);
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 	const [dateTime, setDateTime] = useState<string>("");
@@ -72,6 +74,16 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		next();
 	};
 
+	const handleFormChange = (changedValues: { length?: number; width?: number; "size-sqcm"?: number }) => {
+		const { length, width } = changedValues;
+		if (length && width) {
+			const size = (length * width).toFixed(2);
+			form.setFieldsValue({
+				"size-sqcm": size,
+			});
+		}
+	};
+
 	return (
 		<>
 			<Steps current={current}>
@@ -81,7 +93,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical">
+				<Form form={form} onFinish={handleSubmit} layout="vertical" onValuesChange={handleFormChange}>
 					<Form.Item label="CT Image 2D" name="ct-image-2d">
 						<Upload.Dragger
 							action={`${apiUrl}/upload`}
@@ -102,7 +114,8 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<p className="ant-upload-drag-icon">
 								<InboxOutlined />
 							</p>
-							<p className="ant-upload-text">Click or drag to upload</p>
+							<p className="ant-upload-text">Click or drag file to this area to upload</p>
+							<p className="ant-upload-hint">Only one file is allowed.</p>
 						</Upload.Dragger>
 					</Form.Item>
 
@@ -126,22 +139,37 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<p className="ant-upload-drag-icon">
 								<InboxOutlined />
 							</p>
-							<p className="ant-upload-text">Click or drag to upload</p>
+							<p className="ant-upload-text">Click or drag file to this area to upload</p>
+							<p className="ant-upload-hint">Only one file is allowed.</p>
 						</Upload.Dragger>
 					</Form.Item>
 
-					<Form.Item label="Length (cm)" name="length" rules={[{ message: "Please enter length" }]}>
-						<Input type="number" min={1} max={1000} step={0.01} />
-					</Form.Item>
+					<div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+						<Form.Item label="Length" name="length" rules={[{ message: "Please enter length" }]}>
+							<Input type="number" min={1} max={100} step={0.01} addonAfter="cm" />
+						</Form.Item>
 
-					<Form.Item label="Width (cm)" name="width" rules={[{ message: "Please enter width" }]}>
-						<Input type="number" min={0} max={1000} step={0.01} />
-					</Form.Item>
+						<span>x</span>
 
-					<Form.Item label="Size (sqcm)" name="size-sqcm" rules={[{ message: "Please enter size" }]}>
-						<Input min={1} max={1000} type="number" />
-					</Form.Item>
+						<Form.Item label="Width" name="width" rules={[{ message: "Please enter width" }]}>
+							<Input type="number" min={0} max={100} step={0.01} addonAfter="cm" />
+						</Form.Item>
 
+						<span>=</span>
+
+						<Form.Item label="Area" name="size-sqcm" rules={[{ message: "Please enter size" }]}>
+							<Tooltip title="This value is auto-calculated. You can click to override it if needed.">
+								<Input
+									min={1}
+									max={10000}
+									type="number"
+									addonAfter="cm²"
+									placeholder={String((width || 0) * (length || 0))}
+									status="warning"
+								/>
+							</Tooltip>
+						</Form.Item>
+					</div>
 					<Form.Item
 						label="Implant Name"
 						name="implant-name"

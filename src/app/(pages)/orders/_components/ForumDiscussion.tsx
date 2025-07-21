@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Card, List, Avatar, Input, Button, Typography, Space, message as AntMessage } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 
@@ -26,18 +27,23 @@ const ForumDiscussion: React.FC<ForumDiscussionProps> = ({ orderId }) => {
 	const [loading, setLoading] = useState(false);
 	const [newContent, setNewContent] = useState("");
 
-	const fetchDiscussions = async () => {
+	const fetchDiscussions = useCallback(async () => {
 		setLoading(true);
 		try {
 			const res = await api.get(`/orders/${orderId}/discussions`);
 			console.log(res.data);
 			setDiscussions(res.data.discussions);
-		} catch (err) {
+		} catch (error) {
+			console.error(error);
 			AntMessage.error("Failed to fetch discussions.");
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [orderId]);
+
+	useEffect(() => {
+		fetchDiscussions();
+	}, [fetchDiscussions]);
 
 	const postDiscussion = async () => {
 		if (!newContent.trim()) return;
@@ -47,7 +53,8 @@ const ForumDiscussion: React.FC<ForumDiscussionProps> = ({ orderId }) => {
 			});
 			setDiscussions((prev) => [res.data, ...prev]);
 			setNewContent("");
-		} catch (err) {
+		} catch (error) {
+			console.error(error);
 			AntMessage.error("Failed to post discussion.");
 		}
 	};
@@ -64,14 +71,11 @@ const ForumDiscussion: React.FC<ForumDiscussionProps> = ({ orderId }) => {
 			setDiscussions((prev) =>
 				prev.map((d) => (d._id === discussionId ? { ...d, replies: [...(d.replies || []), res.data] } : d)),
 			);
-		} catch (err) {
+		} catch (error) {
+			console.error(error);
 			AntMessage.error("Failed to post reply.");
 		}
 	};
-
-	useEffect(() => {
-		fetchDiscussions();
-	}, []);
 
 	const PostItem: React.FC<{ post: Discussion }> = ({ post }) => {
 		const [replyContent, setReplyContent] = useState("");

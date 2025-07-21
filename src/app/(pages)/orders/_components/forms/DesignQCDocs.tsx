@@ -3,8 +3,9 @@ import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
+
+import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
@@ -109,25 +110,25 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item
-						label="A (cm)"
+						label="A"
 						name="skullDefectSpecificationA"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="B (cm)"
+						label="B"
 						name="skullDefectSpecificationB"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="C (cm)"
+						label="C"
 						name="skullDefectSpecificationC"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 
 					<Form.Item
@@ -150,25 +151,25 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item
-						label="A (cm)"
+						label="A"
 						name="implantModelSpecificationA"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="B (cm)"
+						label="B"
 						name="implantModelSpecificationB"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="C (cm)"
+						label="C"
 						name="implantModelSpecificationC"
 						rules={[{ message: "Please enter length" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 
 					<Form.Item className="mt-6">

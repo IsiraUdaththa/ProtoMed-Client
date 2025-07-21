@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Badge, Descriptions, Divider, Spin, Image } from "antd";
+import { Alert, Badge, Descriptions, Divider, Spin, Image, Table, Tabs, Space, Card, Flex } from "antd";
 import type { DescriptionsProps } from "antd";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
@@ -92,166 +93,260 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			{data.map((section, index) => {
-				const printItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.print?.printBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.print?.printDate} />,
-					},
-					{
-						key: "color",
-						label: "Color",
-						children: section.print?.material,
-					},
-					{
-						key: "weight",
-						label: "Weight",
-						children: section.print?.printMachine,
-					},
-					{
-						key: "printMachine",
-						label: "Print Machine",
-						children: section.print?.batchNumber,
-					},
-					{
-						key: "printTime",
-						label: "Print Time",
-						children: section.print?.weight,
-					},
-					{
-						key: "printTime",
-						label: "Print Time",
-						children: section.print?.wasteWeight,
-					},
-				];
+			<Tabs defaultActiveKey="0">
+				{data.map((section, index) => {
+					const printItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.print?.printBy ? <UserTag userId={section.print?.printBy} /> : "N/A",
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.print?.printDate ? (
+								<DateDisplay isoDate={section.print?.printDate} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "color",
+							label: "Color",
+							children: section.print?.material ?? "N/A",
+						},
+						{
+							key: "weight",
+							label: "Weight",
+							children: section.print?.printMachine ?? "N/A",
+						},
+						{
+							key: "printMachine",
+							label: "Print Machine",
+							children: section.print?.batchNumber ?? "N/A",
+						},
+						{
+							key: "printTime",
+							label: "Print Time",
+							children: section.print?.weight ?? "N/A",
+						},
+						{
+							key: "printTime",
+							label: "Print Time",
+							children: section.print?.wasteWeight ?? "N/A",
+						},
+					];
 
-				const annealingItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.annealing?.doneBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.annealing?.processDate} />,
-					},
-				];
+					const annealingItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.annealing?.doneBy ? (
+								<UserTag userId={section.annealing?.doneBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.annealing?.processDate ? (
+								<DateDisplay isoDate={section.annealing?.processDate} />
+							) : (
+								"N/A"
+							),
+						},
+					];
 
-				const polishingItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.polishing?.polishingBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.polishing?.polishingDate} />,
-					},
-				];
+					const polishingItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.polishing?.polishingBy ? (
+								<UserTag userId={section.polishing?.polishingBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.polishing?.polishingDate ? (
+								<DateDisplay isoDate={section.polishing?.polishingDate} />
+							) : (
+								"N/A"
+							),
+						},
+					];
 
-				const qcDocsItems: DescriptionsProps["items"] = [
-					{
-						key: "approvedBy",
-						label: "Approved By",
-						children: <UserTag userId={section.qcDocs?.doneBy} />,
-					},
-					{
-						key: "skullDefectA",
-						label: "Skull Defect A",
-						children: section.qcDocs?.implantModelA,
-					},
-					{
-						key: "skullDefectB",
-						label: "Skull Defect B",
-						children: section.qcDocs?.implantModelB,
-					},
-					{
-						key: "skullDefectC",
-						label: "Skull Defect C",
-						children: section.qcDocs?.implantModelC,
-					},
-				];
+					const qcDocsItems: DescriptionsProps["items"] = [
+						{
+							key: "doneBy",
+							label: "Done By",
+							children: section.qcDocs?.doneBy ? <UserTag userId={section.qcDocs?.doneBy} /> : "N/A",
+						},
+					];
 
-				const approvalItems: DescriptionsProps["items"] = [
-					{
-						key: "isApproved",
-						label: "Approved",
-						children: section.approval.isApproved ? (
-							<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
-						) : (
-							<Badge count="Rejected" />
-						),
-					},
-					{
-						key: "approvalDate",
-						label: "Approval Date",
-						children: <DateDisplay isoDate={section.approval?.approvalDate} />,
-					},
-					{
-						key: "approvedBy",
-						label: "Approved By",
-						children: <UserTag userId={section.approval?.approvedBy} />,
-					},
-					{
-						key: "comment",
-						label: "Comment",
-						children: section.approval?.comment,
-					},
-				];
+					const approvalItems: DescriptionsProps["items"] = [
+						{
+							key: "isApproved",
+							label: "Approved",
+							children: section.approval?.isApproved ? (
+								<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
+							) : (
+								<Badge count="Rejected" />
+							),
+						},
+						{
+							key: "approvalDate",
+							label: "Approval Date",
+							children: section.approval?.approvalDate ? (
+								<DateDisplay isoDate={section.approval?.approvalDate} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "approvedBy",
+							label: "Approved By",
+							children: section.approval?.approvedBy ? (
+								<UserTag userId={section.approval?.approvedBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "comment",
+							label: "Comment",
+							children: section.approval?.comment,
+						},
+					];
 
-				const laserMarkingItems: DescriptionsProps["items"] = [
-					{
-						key: "approvedBy",
-						label: "Approved By",
-						children: <UserTag userId={section.laserMarking?.doneBy} />,
-					},
-					{
-						key: "approvalDate",
-						label: "Approval Date",
-						children: <DateDisplay isoDate={section.laserMarking?.markingDate} />,
-					},
-				];
+					const laserMarkingItems: DescriptionsProps["items"] = [
+						{
+							key: "approvedBy",
+							label: "Approved By",
+							children: section.laserMarking?.doneBy ? (
+								<UserTag userId={section.laserMarking?.doneBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "approvalDate",
+							label: "Approval Date",
+							children: section.laserMarking?.markingDate ? (
+								<DateDisplay isoDate={section.laserMarking?.markingDate} />
+							) : (
+								"N/A"
+							),
+						},
+					];
 
-				const finalPolishingItems: DescriptionsProps["items"] = [
-					{
-						key: "printBy",
-						label: "Print By",
-						children: <UserTag userId={section.finalPolishing?.doneBy} />,
-					},
-					{
-						key: "printDate",
-						label: "Print Date",
-						children: <DateDisplay isoDate={section.finalPolishing?.date} />,
-					},
-				];
-				return (
-					<div key={index}>
-						<Divider orientation="left">PEEK Attempt #{index + 1}</Divider>
-						<Descriptions title="Print" items={printItems} />
-						<Descriptions title="Annealing" items={annealingItems} />
-						<Descriptions title="Polishing" items={polishingItems} />
-						<Descriptions title="QC Docs" items={qcDocsItems} />
-						<Image.PreviewGroup>
-							{section.qcDocs.images.map((imgSrc, index) => (
-								<Image key={index} width={200} src={imgSrc} alt={`Image ${index + 1}`} />
-							))}
-						</Image.PreviewGroup>
-						<Descriptions title="Laser Marking" items={laserMarkingItems} />
-						<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
-						<Descriptions title="Final Polishing" items={finalPolishingItems} />
+					const finalPolishingItems: DescriptionsProps["items"] = [
+						{
+							key: "printBy",
+							label: "Print By",
+							children: section.finalPolishing?.doneBy ? (
+								<UserTag userId={section.finalPolishing?.doneBy} />
+							) : (
+								"N/A"
+							),
+						},
+						{
+							key: "printDate",
+							label: "Print Date",
+							children: section.finalPolishing?.date ? (
+								<DateDisplay isoDate={section.finalPolishing?.date} />
+							) : (
+								"N/A"
+							),
+						},
+					];
+					return (
+						<Tabs.TabPane tab={`PEEK Attempt #${index + 1}`} key={index}>
+							<Space direction="vertical">
+								<Card>
+									<Descriptions title="Print" items={printItems} column={2} />
+								</Card>
 
-						<Descriptions title="Approval" items={approvalItems} />
-					</div>
-				);
-			})}
+								<Card>
+									<Descriptions title="Annealing" items={annealingItems} column={2} />
+								</Card>
+								<Card>
+									<Descriptions title="Polishing" items={polishingItems} column={2} />
+								</Card>
+
+								<Card>
+									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Divider />
+									<Image.PreviewGroup>
+										{section.qcDocs?.images.map((imgSrc, index) => (
+											<Image key={index} width={200} src={imgSrc} alt={`Image ${index + 1}`} />
+										))}
+									</Image.PreviewGroup>
+									<Divider />
+									<Flex justify="space-around">
+										<Table
+											columns={[
+												{
+													title: "No",
+													dataIndex: "no",
+													key: "no",
+													width: 100,
+												},
+												{
+													title: "Parameter/Specification (mm)",
+													dataIndex: "parameter",
+													key: "parameter",
+													width: 200,
+													align: "center",
+												},
+											]}
+											dataSource={[
+												{
+													key: "1",
+													no: "A",
+													parameter: section.qcDocs?.implantModelA
+														? section.qcDocs.implantModelA
+														: "N/A",
+												},
+												{
+													key: "2",
+													no: "B",
+													parameter: section.qcDocs?.implantModelB
+														? section.qcDocs.implantModelB
+														: "N/A",
+												},
+												{
+													key: "3",
+													no: "C",
+													parameter: section.qcDocs?.implantModelC
+														? section.qcDocs.implantModelC
+														: "N/A",
+												},
+											]}
+											size="small"
+											pagination={false}
+										/>
+									</Flex>
+								</Card>
+								<Card>
+									<Descriptions title="Laser Marking" items={laserMarkingItems} column={2} />
+									<Divider />
+									<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
+								</Card>
+								<Card>
+									<Descriptions title="Final Polishing" items={finalPolishingItems} column={2} />
+								</Card>
+								<Card>
+									<Descriptions title="Approval" items={approvalItems} column={2} />
+								</Card>
+							</Space>
+						</Tabs.TabPane>
+					);
+				})}
+			</Tabs>
 		</>
 	);
 };

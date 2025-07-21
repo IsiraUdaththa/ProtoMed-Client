@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -71,11 +72,11 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Batch Number" name="batchNumber">
 							<Input />
 						</Form.Item>
-						<Form.Item label="Weight" name="weight">
-							<Input type="number" />
+						<Form.Item label="Weight" name="weight" >
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 						<Form.Item label="Waste Weight" name="wasteWeight">
-							<Input type="number" />
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 					</Form>
 

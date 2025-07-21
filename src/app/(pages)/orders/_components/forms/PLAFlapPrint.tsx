@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -56,7 +57,7 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Input />
 						</Form.Item>
 						<Form.Item label="Weight" name="weight">
-							<Input type="number" />
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">
@@ -67,8 +68,8 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item label="Print Time (min)" name="printTime">
-							<Input type="number" />
+						<Form.Item label="Print Time" name="printTime">
+							<Input type="number" addonAfter="min"/>
 						</Form.Item>
 					</Form>
 					<Button type="primary" onClick={handleNext} block>

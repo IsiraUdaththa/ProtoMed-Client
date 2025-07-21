@@ -30,6 +30,8 @@
     "@types/react-highlight-words": "^0.20.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "3.5.3",
     "typescript": "^5"
   }

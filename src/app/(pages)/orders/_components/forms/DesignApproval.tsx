@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
+import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Space } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -8,6 +8,7 @@ import {
 	SolutionOutlined,
 	SmileOutlined,
 } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 interface DesignApproval {
@@ -29,8 +30,7 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	// Handle approval or not approval on Step 1
 	const handleApproval = (isApproved: boolean) => {
-		form
-			.validateFields()
+		form.validateFields()
 			.then((values) => {
 				const data: DesignApproval = {
 					isApproved,
@@ -50,8 +50,7 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		if (!approvalData) return;
 
 		setLoading(true);
-		api
-			.post(`orders/${orderId}/design-approval`, approvalData)
+		api.post(`orders/${orderId}/design-approval`, approvalData)
 			.then(() => {
 				setLoading(false);
 				setIsSuccess(true);
@@ -80,23 +79,27 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item>
-						<Button
-							type="primary"
-							icon={<CheckCircleOutlined />}
-							loading={loading}
-							onClick={() => handleApproval(true)}
-						>
-							Approve
-						</Button>
-						<Button
-							type="default"
-							icon={<CloseCircleOutlined />}
-							loading={loading}
-							danger
-							onClick={() => handleApproval(false)}
-						>
-							Not Approve
-						</Button>
+						<Space>
+							<Button
+								color="green"
+								variant="filled"
+								icon={<CheckCircleOutlined />}
+								loading={loading}
+								onClick={() => handleApproval(true)}
+							>
+								Approve
+							</Button>
+							<Button
+								color="red"
+								variant="filled"
+								icon={<CloseCircleOutlined />}
+								loading={loading}
+								danger
+								onClick={() => handleApproval(false)}
+							>
+								Reject
+							</Button>
+						</Space>
 					</Form.Item>
 				</Form>
 			)}
@@ -108,7 +111,10 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "Approval Status", children: approvalData.isApproved ? "Approved" : "Not Approved" },
+							{
+								label: "Approval Status",
+								children: approvalData.isApproved ? "Approved" : "Not Approved",
+							},
 							{ label: "Comment", children: approvalData.comment || "No comment provided" },
 							{ label: "Username", children: username },
 							{ label: "Date/Time", children: currentDate },
@@ -130,7 +136,11 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="Design Approval Submitted Successfully" />
 					) : (
-						<Result status="error" title="Submission Failed" subTitle="Please check the details and try again." />
+						<Result
+							status="error"
+							title="Submission Failed"
+							subTitle="Please check the details and try again."
+						/>
 					)}
 				</>
 			)}

@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Steps, Result, Form, Descriptions, message, Input } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
+
+import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
@@ -109,25 +110,25 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 					</div>
 
 					<Form.Item
-						label="Enter implantModelA (mm)"
+						label="A"
 						name="implantModelA"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelB (mm)"
+						label="B"
 						name="implantModelB"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 					<Form.Item
-						label="Enter implantModelC (mm)"
+						label="C"
 						name="implantModelC"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} />
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
 					</Form.Item>
 
 					<Form.Item className="mt-6">

@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import jwt, { SignOptions } from 'jsonwebtoken';
+
 import api from '@/lib/axiosInstance';
 
 const JWT_SECRET: string = process.env['JWT_SECRET'] || 'dev_secret_key';
@@ -11,7 +12,7 @@ const createSSRToken = (payload: object, expiresIn: number = 600): string => {
 	return jwt.sign(payload, JWT_SECRET, options);
 };
 
-export const verifySSRToken = async (token: string): Promise<any> => {
+export const verifySSRToken = async (token: string): Promise<unknown> => {
 	return new Promise((resolve, reject) => {
 		jwt.verify(token, JWT_SECRET, (err, decoded) => {
 			if (err) {

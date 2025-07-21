@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -51,12 +52,12 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 1: Input Details */}
 			{current === 0 && (
 				<>
-					<Form layout="vertical" form={FormData}>
+					<Form layout="vertical" form={FormData} onFinish={handleNext}> 
 						<Form.Item label="Color" name="color">
 							<Input />
 						</Form.Item>
-						<Form.Item label="Weight" name="weight">
-							<Input type="number" />
+						<Form.Item label="Weight" name="weight" rules={[{ message: "Please enter your age" }]}>
+							<Input type="number" min={0} addonAfter="g"/>
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">
@@ -67,8 +68,8 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
-						<Form.Item label="Print Time (min)" name="printTime">
-							<Input type="number" />
+						<Form.Item label="Print Time" name="printTime">
+							<Input type="number" addonAfter="min"/>
 						</Form.Item>
 					</Form>
 					<Button type="primary" onClick={handleNext} block>
@@ -83,7 +84,9 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Descriptions bordered size="small" column={1}>
 						<Descriptions.Item label="Color">{FormData.getFieldValue("color")}</Descriptions.Item>
 						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
-						<Descriptions.Item label="Print Machine">{FormData.getFieldValue("printMachine")}</Descriptions.Item>
+						<Descriptions.Item label="Print Machine">
+							{FormData.getFieldValue("printMachine")}
+						</Descriptions.Item>
 						<Descriptions.Item label="Print Date">
 							{FormData.getFieldValue("printDate")?.format("YYYY-MM-DD")}
 						</Descriptions.Item>

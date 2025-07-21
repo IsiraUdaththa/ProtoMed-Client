@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Alert, Badge, Descriptions, Spin } from "antd";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
@@ -38,6 +39,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Descriptions
+				column={2}
 				items={[
 					{
 						label: "Status",
@@ -47,9 +49,9 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Badge count="Not Send" />
 						),
 					},
-					{ label: "Verified By", children: <UserTag userId={data.doneBy} /> },
-					{ label: "Date", children: <DateDisplay isoDate={data.sentDate} /> },
-					{ label: "Comment", children: data.invoiceNumber },
+					{ label: "Verified By", children: data.doneBy ? <UserTag userId={data.doneBy} /> : "N/A" },
+					{ label: "Date", children: data.sentDate ? <DateDisplay isoDate={data.sentDate} /> : "N/A" },
+					{ label: "Invoice Number", children: data.invoiceNumber ?? "N/A" },
 				]}
 			/>
 		</>

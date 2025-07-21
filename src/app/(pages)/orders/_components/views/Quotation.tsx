@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { Descriptions, Spin, Alert } from "antd";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
 
 type Quotation = {
 	value: number;
-	createdAt: string;
+	createdAt: Date;
 	createdBy: string;
 };
 
@@ -53,11 +54,11 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 				{quotation ? (
 					<>
 						<Descriptions.Item label="Value">{quotation.value ? `$${quotation.value}` : "N/A"}</Descriptions.Item>
-						<Descriptions.Item label="Date">
-							<DateDisplay isoDate={quotation.createdAt || "N/A"} />
-						</Descriptions.Item>
 						<Descriptions.Item label="Valued By">
 							<UserTag userId={quotation.createdBy} />
+						</Descriptions.Item>
+						<Descriptions.Item label="Date">
+							<DateDisplay isoDate={quotation.createdAt || "N/A"} />
 						</Descriptions.Item>
 					</>
 				) : (

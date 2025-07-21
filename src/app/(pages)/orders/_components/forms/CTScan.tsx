@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { Button, DatePicker, Form, Input, Steps, Result, Descriptions, Space, Upload } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
-import api from "@/lib/axiosInstance";
 import dayjs from "dayjs";
+
+import api from "@/lib/axiosInstance";
 
 const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
 
@@ -99,6 +100,10 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						>
 							<p className="ant-upload-drag-icon">
 								<FileTextOutlined />
+							</p>
+							<p className="ant-upload-text">Click or drag a file to this area to upload</p>
+							<p className="ant-upload-hint">
+								You can either upload a single file or paste a link into the text box.
 							</p>
 						</Upload.Dragger>
 						<Input

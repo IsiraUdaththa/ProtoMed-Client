@@ -5,6 +5,9 @@ import React from "react";
 import { Card, Alert, Space } from "antd";
 
 // Import all individual form components
+import Design from "../views/Design";
+import CTValidationView from "../views/CTValidation";
+
 import Patient from "./Patient";
 import CTScan from "./CTScan";
 import CTValidation from "./CTValidation";
@@ -29,111 +32,182 @@ import Packing from "./Packing";
 import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
+// Function to render the appropriate form based on status
 const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, status }) => {
-	// Function to get the form title based on status
-	const getFormTitle = (status: string): string => {
-		const formTitles: { [key: string]: string } = {
-			draft: "Patient Details",
-			scanUpload: "CT Scan Details",
-			scanValidation: "CT Scan Validation",
-			quotation: "Quotation",
-			advancePayment: "Payment Advance",
-			designImages: "Design Submission",
-			designQCDocs: "Design QC Docs",
-			designFile: "Design File",
-			internalApproval: "Design Approval",
-			externalApproval: "Doctor Approval",
-			outerPrint: "PLA Outer Print",
-			flapPrint: "PLA Flap Print",
-			plaQCDocs: "PLA QC DOCS",
-			plasticApproval: "PLA Approval",
-			implantPrint: "PEEK Print",
-			annealing: "PEEK Annealing",
-			roughPolishing: "PEEK Rough Polishing",
-			peekQCDocs: "PEEK QC Docs",
-			implantApproval: "PEEK Approval",
-			laserMarking: "PEEK Laser Marking",
-			finalPolishing: "PEEK Final Polishing",
-			packing: "Packing",
-			finalPayment: "Payment Completion",
-			invoice: "Invoice",
-			completed: "Completed",
-		};
-
-		return formTitles[status] || "Unknown Form";
-	};
-
-	// Function to render the appropriate form based on status
 	const renderForm = () => {
 		switch (status) {
 			case "draft":
-				return <Patient orderId={orderId} />;
+				return (
+					<Card>
+						<Patient orderId={orderId} />
+					</Card>
+				);
 
 			case "scanUpload":
-				return <CTScan orderId={orderId} />;
+				return (
+					<Card>
+						<CTScan orderId={orderId} />
+					</Card>
+				);
 
 			case "scanValidation":
-				return <CTValidation orderId={orderId} />;
+				return (
+					<Card>
+						<CTValidation orderId={orderId} />
+					</Card>
+				);
 
 			case "quotation":
-				return <Quotation orderId={orderId} />;
+				return (
+					<Space direction="vertical">
+						<Card>
+							<CTValidationView orderId={orderId} />
+						</Card>
+						<Card>
+							<Quotation orderId={orderId} />
+						</Card>
+					</Space>
+				);
 
 			case "advancePayment":
-				return <PaymentAdvance orderId={orderId} />;
+				return (
+					<Card>
+						<PaymentAdvance orderId={orderId} />
+					</Card>
+				);
 
 			case "designImages":
-				return <DesignImage orderId={orderId} />;
+				return (
+					<Card>
+						<DesignImage orderId={orderId} />
+					</Card>
+				);
 
 			case "designQCDocs":
-				return <DesignQCDocs orderId={orderId} />;
-				
+				return (
+					<Card>
+						<DesignQCDocs orderId={orderId} />
+					</Card>
+				);
+
 			case "designFile":
-				return <DesignFile orderId={orderId} />;
+				return (
+					<Card>
+						<DesignFile orderId={orderId} />
+					</Card>
+				);
 
 			case "internalApproval":
-				return <DesignApproval orderId={orderId} />;
+				return (
+					<Card>
+						<DesignApproval orderId={orderId} />
+					</Card>
+				);
 
 			case "outerPrint":
-				return <PLAOuterPrint orderId={orderId} />;
+				return (
+					<Card>
+						<PLAOuterPrint orderId={orderId} />
+					</Card>
+				);
 
 			case "flapPrint":
-				return <PLAFlapPrint orderId={orderId} />;
+				return (
+					<Card>
+						<PLAFlapPrint orderId={orderId} />
+					</Card>
+				);
 
 			case "plaQCDocs":
-				return <PLAQCDocs orderId={orderId}/>;
+				return (
+					<Space direction="vertical">
+						<Design orderId={orderId} onlyQCDocs={true} />
+						<Card>
+							<PLAQCDocs orderId={orderId} />
+						</Card>
+					</Space>
+				);
 
 			case "plasticApproval":
-				return <PLAApproval orderId={orderId} />;
+				return (
+					<Card>
+						<PLAApproval orderId={orderId} />
+					</Card>
+				);
 
 			case "implantPrint":
-				return <PEEKPrint orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKPrint orderId={orderId} />
+					</Card>
+				);
 
 			case "annealing":
-				return <PEEKAnnealing orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKAnnealing orderId={orderId} />
+					</Card>
+				);
 
 			case "roughPolishing":
-				return <PEEKRoughPolishing orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKRoughPolishing orderId={orderId} />
+					</Card>
+				);
 
 			case "peekQCDocs":
-				return <PEEKQCDocs orderId={orderId} />;
+				return (
+					<Space direction="vertical">
+						<Design orderId={orderId} onlyQCDocs={true} />
+
+						<Card>
+							<PEEKQCDocs orderId={orderId} />
+						</Card>
+					</Space>
+				);
 
 			case "implantApproval":
-				return <PEEKApprove orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKApprove orderId={orderId} />
+					</Card>
+				);
 
 			case "laserMarking":
-				return <PEEKLaserMarking orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKLaserMarking orderId={orderId} />
+					</Card>
+				);
 
 			case "finalPolishing":
-				return <PEEKFinalPolishing orderId={orderId} />;
+				return (
+					<Card>
+						<PEEKFinalPolishing orderId={orderId} />
+					</Card>
+				);
 
 			case "packing":
-				return <Packing orderId={orderId} />;
+				return (
+					<Card>
+						<Packing orderId={orderId} />
+					</Card>
+				);
 
 			case "finalPayment":
-				return <PaymentCompletion orderId={orderId} />;
+				return (
+					<Card>
+						<PaymentCompletion orderId={orderId} />
+					</Card>
+				);
 
 			case "invoice":
-				return <Invoice orderId={orderId} />;
+				return (
+					<Card>
+						<Invoice orderId={orderId} />;
+					</Card>
+				);
 			case "completed":
 				return <Alert message="Success Text" type="success" />;
 			default:
@@ -209,7 +283,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 
 			default:
 				// For most statuses, just show the single form
-				return <Card title={getFormTitle(status)}>{renderForm()}</Card>;
+				return renderForm();
 		}
 	};
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { List, Avatar, Tag, Space, Input, Select, Flex, Pagination } from "antd";
 import { MailOutlined, PhoneOutlined, HomeOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 const { Search } = Input;
@@ -90,7 +91,8 @@ const UserList: React.FC = () => {
 							avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
 							title={
 								<>
-									<a href={`/users/${item._id}`}>{item.name}</a>{" "}
+									{/* <a href={`/users/${item._id}`}>{item.name}</a>{" "} */}
+									{item.name}{" "}
 									<Tag bordered={false} color="cyan">
 										{item.roles.join(", ")}
 									</Tag>

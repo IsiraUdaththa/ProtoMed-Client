@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { Alert, Card, Spin, Timeline, TimelineItemProps, Tag } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 import UserTag from "@/app/_components/UserTag";
 import DateDisplay from "@/app/_components/DateDisplay";
@@ -12,7 +14,7 @@ interface OrderTimelineProps {
 }
 
 interface TimelineEvent {
-	date: string;
+	date: Date;
 	title: string;
 	userId?: string;
 	comment?: string;
@@ -396,7 +398,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 							fontStyle: "italic",
 						}}
 					>
-						"{event.comment}"
+						{event.comment}
 					</div>
 				)}
 			</div>

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Steps, Result, Form, Input, message } from "antd";
+import { Button, Typography, Steps, Result, Form, Input, message, Space } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined, CloseCircleOutlined } from "@ant-design/icons";
+
 import api from "@/lib/axiosInstance";
 
 interface IFormData {
@@ -70,23 +71,27 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item>
-						<Button
-							type="default"
-							icon={<CheckCircleOutlined />}
-							loading={loading}
-							onClick={() => handleApproval(true)}
-						>
-							Accept
-						</Button>
-						<Button
-							type="default"
-							icon={<CloseCircleOutlined />}
-							loading={loading}
-							danger
-							onClick={() => handleApproval(false)}
-						>
-							skip
-						</Button>
+						<Space>
+							<Button
+								color="green"
+								variant="filled"
+								icon={<CheckCircleOutlined />}
+								loading={loading}
+								onClick={() => handleApproval(true)}
+							>
+								Accept
+							</Button>
+							<Button
+								color="red"
+								variant="filled"
+								icon={<CloseCircleOutlined />}
+								loading={loading}
+								danger
+								onClick={() => handleApproval(false)}
+							>
+								Skip
+							</Button>
+						</Space>
 					</Form.Item>
 				</Form>
 			)}

@@ -2,12 +2,12 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React, { useState } from "react";
-
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Modal, Flex, Space } from "antd";
 import { Header } from "antd/es/layout/layout";
 import Image from "next/image";
 import Link from "next/link";
+
 import { getUser } from "@/services/auth.service";
 
 const Navbar: React.FC = () => {
