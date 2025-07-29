@@ -28,12 +28,21 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+          
+      - name: Copy deployable files
+        run: |
+          mkdir deploy
+          cp -r .next deploy/.next
+          cp -r public deploy/public
+          cp package.json deploy/
+          cp package-lock.json deploy/
+          cp -r node_modules deploy/node_modules # optional if Azure will install itself
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: deploy
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,7 +55,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: nextjs-app
       
       - name: Login to Azure
         uses: azure/login@v2
