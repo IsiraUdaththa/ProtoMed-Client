@@ -36,7 +36,7 @@ jobs:
           cp -r public deploy/public
           cp package.json deploy/
           cp package-lock.json deploy/
-          cp -r node_modules deploy/node_modules # optional if Azure will install itself
+          cp -r node_modules deploy/node_modules
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
