@@ -32,12 +32,15 @@ jobs:
           mkdir -p .next/standalone/.next
           mv public .next/standalone/
           mv .next/static .next/standalone/.next/
+        env:
+          NEXT_PUBLIC_API_URL: "https://protomed-orders-be-f9f7e9crfnfda6ar.southeastasia-01.azurewebsites.net/api/"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: .next/standalone
+          include-hidden-files: true
 
   deploy:
     if: github.repository == 'SyscatecLK/protomed-order-fe'
