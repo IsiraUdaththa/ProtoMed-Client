@@ -35,7 +35,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 					throw new Error("Failed to fetch CT scan data");
 				}
 
-				const result = response.data.ctScan;
+				const result = response.data;
 				setData(result);
 			} catch (error) {
 				console.error("Error fetching order data:", error);

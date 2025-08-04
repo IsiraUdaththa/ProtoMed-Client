@@ -60,7 +60,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					const response = await api.get(`orders/${orderId}`);
 					console.log(response);
 
-					const order = response.data.patientDetails;
+					const order = response.data;
 					setFormData(order);
 
 					// Populate form fields with the fetched data

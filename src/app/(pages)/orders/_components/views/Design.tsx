@@ -86,8 +86,8 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.designs);
+				const response = await api.get(`orders/${orderId}/designs`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {

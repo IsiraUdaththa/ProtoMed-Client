@@ -20,14 +20,13 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 				setLoading(true);
 				setError(null);
 
-				const response = await api.get(`orders/${orderId}`);
+				const response = await api.get(`orders/${orderId}/patient`);
 
 				if (!response.data) {
 					throw new Error("Empty response from server.");
 				}
 
-				const order = response.data;
-				const patient = order?.patientDetails || {};
+				const patient = response.data || {};
 				console.log(patient.registeredBy)
 
 				const items: DescriptionsProps["items"] = [

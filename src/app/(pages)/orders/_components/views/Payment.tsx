@@ -21,8 +21,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.fullPayment);
+				const response = await api.get(`orders/${orderId}/payment-completion`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {

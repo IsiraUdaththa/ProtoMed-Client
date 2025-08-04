@@ -23,8 +23,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.packing);
+				const response = await api.get(`orders/${orderId}/packing`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
