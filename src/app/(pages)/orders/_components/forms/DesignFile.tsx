@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } fro
 import { UploadChangeParam } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	designFile?: string;
@@ -25,7 +24,7 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: string) => {
 		if (info.file.status === "done") {
-			const fileUrl = info.file.response?.url;
+			const fileUrl = info.file.response?.url || info.file.url;
 			if (fileUrl) {
 				form.setFieldsValue({
 					[fieldName]: fileUrl,
@@ -78,7 +77,7 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							rules={[{ required: true, message: `Please upload Design File` }]}
 						>
 							<Upload
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								onChange={(info) => handleChange(info, "designFile")}
 								listType="picture"
 								maxCount={1}

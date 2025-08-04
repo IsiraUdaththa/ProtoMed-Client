@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/i
 import dayjs from "dayjs";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	ctScanLink?: string;
@@ -79,7 +78,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: "Please enter CT scan link/DVD number" }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							disabled={manualEntry}
 							multiple={false}
 							maxCount={1}

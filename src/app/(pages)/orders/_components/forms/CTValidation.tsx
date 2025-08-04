@@ -4,8 +4,7 @@ import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	width: number;
@@ -96,7 +95,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<Form form={form} onFinish={handleSubmit} layout="vertical" onValuesChange={handleFormChange}>
 					<Form.Item label="CT Image 2D" name="ct-image-2d">
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							accept="image/*"
 							multiple={false}
 							maxCount={1}
@@ -121,7 +120,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					<Form.Item label="CT Image 3D" name="ct-image-3d">
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							accept="image/*"
 							multiple={false}
 							maxCount={1}

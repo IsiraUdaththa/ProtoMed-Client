@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined, UploadOutlined } fro
 import { UploadChangeParam } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 type ImageFieldName =
 	| "damageFront"
@@ -111,7 +110,7 @@ const DesignImageForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								rules={[{ required: true, message: `Please upload ${field.label}` }]}
 							>
 								<Upload
-									action={`${apiUrl}/upload`}
+									customRequest={uploadToAzure}
 									onChange={(info) => handleChange(info, field.name)}
 									listType="picture"
 									maxCount={1}

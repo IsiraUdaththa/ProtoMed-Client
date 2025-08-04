@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/i
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface QCFormValues {
 	skullDefectSpecificationA?: number;
@@ -95,7 +94,7 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: `Please upload ${"skullDefectSpecificationImage"}` }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => {
@@ -138,7 +137,7 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: `Please upload ${"implantModelSpecificationImage"}` }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => handleChange(info, "implantModelSpecificationImage")}

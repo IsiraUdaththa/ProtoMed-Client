@@ -6,8 +6,7 @@ import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } f
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 type FormDataType = {
   images: string[]; // array of images URLs
@@ -98,7 +97,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 							rules={[{ required: true, message: `Please upload the images` }]}
 						>
 							<Upload
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								onChange={(info) => handleChange(info, "images")}
 								listType="picture"
 								maxCount={10}

@@ -6,8 +6,7 @@ import { Form, Upload, Button, Space, Steps, Typography, Result, message } from 
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	"implant-video"?: string;
@@ -60,7 +59,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Form form={form} onFinish={onFinish}>
 						<Form.Item name="implant-video">
 							<Upload.Dragger
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								accept="video/*"
 								multiple={false}
 								maxCount={1}
@@ -84,7 +83,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 						<Form.Item name="implant-image">
 							<Upload.Dragger
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								accept="image/*"
 								multiple={false}
 								maxCount={1}
@@ -109,7 +108,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item name="packing-image">
 							<Upload.Dragger
 								accept="image/*"
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								multiple={false}
 								maxCount={1}
 								onChange={(info) => {
