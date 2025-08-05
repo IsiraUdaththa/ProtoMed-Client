@@ -15,7 +15,6 @@ const Apsdap: React.FC = () => {
 	const onFinish = async (values: { email: string; password: string }) => {
 		try {
 			await login(values.email, values.password);
-			await new Promise((resolve) => setTimeout(resolve, 0));
 			router.push("/dashboard");
 		} catch (error) {
 			message.error("Login failed. Please check your credentials.");

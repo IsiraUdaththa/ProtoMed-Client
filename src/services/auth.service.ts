@@ -24,7 +24,7 @@ export const login = async (email: string, password: string) => {
 	setAccessToken(accessToken);
 
 	// Then call a Next.js Server to set SSR token
-	getSSRToken(accessToken);
+	await getSSRToken(accessToken);
 	message.success("Login successful!");
 
 	setUser();
