@@ -188,7 +188,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "isApproved",
 							label: "Approved",
-							children: section.approval.isApproved ? (
+							children: section.approval?.isApproved ? (
 								<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
 							) : (
 								<Badge count="Rejected" />
