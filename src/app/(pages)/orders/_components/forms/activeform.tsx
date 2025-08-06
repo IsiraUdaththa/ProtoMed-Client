@@ -2,9 +2,10 @@
 
 // import "@ant-design/v5-patch-for-react-19";
 import React from "react";
-import { Card, Alert, Space } from "antd";
-
+import { Card, Alert, Space, Result } from "antd";
 // Import all individual form components
+import { SmileOutlined } from "@ant-design/icons";
+
 import Design from "../views/Design";
 import CTValidationView from "../views/CTValidation";
 
@@ -209,7 +210,11 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 					</Card>
 				);
 			case "completed":
-				return <Alert message="Success Text" type="success" />;
+				return (
+					<Card>
+						<Result icon={<SmileOutlined />} title="Great, we have done all the operations!" />
+					</Card>
+				);
 			default:
 				return (
 					<Alert
