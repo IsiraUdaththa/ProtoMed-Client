@@ -111,8 +111,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							onChange={(e) => {
 								const value = e.target.value;
 								form.setFieldsValue({ ctScanLink: value });
-								setManualEntry(!!value);
-								setIsUploaded(false);
+								setManualEntry(value === "true");
 							}}
 						/>
 					</Form.Item>
