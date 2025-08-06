@@ -72,11 +72,11 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Form.Item label="Batch Number" name="batchNumber">
 							<Input />
 						</Form.Item>
-						<Form.Item label="Weight" name="weight" >
-							<Input type="number" min={0} addonAfter="g"/>
+						<Form.Item label="Weight" name="weight">
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 						<Form.Item label="Waste Weight" name="wasteWeight">
-							<Input type="number" min={0} addonAfter="g"/>
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 					</Form>
 
@@ -90,13 +90,20 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 1 && (
 				<>
 					<Descriptions bordered size="small" column={1}>
-						<Descriptions.Item label="Color">{FormData.getFieldValue("color")}</Descriptions.Item>
-						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
-						<Descriptions.Item label="Print Machine">{FormData.getFieldValue("printMachine")}</Descriptions.Item>
+						<Descriptions.Item label="Print Machine">
+							{FormData.getFieldValue("printMachine")}
+						</Descriptions.Item>
 						<Descriptions.Item label="Print Date">
 							{FormData.getFieldValue("printDate")?.format("YYYY-MM-DD")}
 						</Descriptions.Item>
-						<Descriptions.Item label="Print Time">{FormData.getFieldValue("printTime")}</Descriptions.Item>
+						<Descriptions.Item label="Material">{FormData.getFieldValue("material")}</Descriptions.Item>
+						<Descriptions.Item label="Batch Number">
+							{FormData.getFieldValue("batchNumber")}
+						</Descriptions.Item>
+						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
+						<Descriptions.Item label="Waste Weight">
+							{FormData.getFieldValue("wasteWeight")} g
+						</Descriptions.Item>
 					</Descriptions>
 
 					<div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
