@@ -38,19 +38,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [formData, setFormData] = useState<IFormData>({});
 
 	const [current, setCurrent] = useState(0);
-	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		setTimeout(() => setUserName("John Doe"), 1000);
-
-		const interval = setInterval(() => {
-			setDateTime(new Date().toLocaleString());
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
 
 	// Fetch data if orderId is provided
 	useEffect(() => {
@@ -119,8 +107,6 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const handleConfirm = async () => {
 		const submissionData = {
 			...formData,
-			userName,
-			dateTime,
 			plannedDate: formData.plannedDate ? dayjs(formData.plannedDate).format("YYYY-MM-DD") : "",
 		};
 
@@ -286,8 +272,6 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "User", children: userName },
-							{ label: "Date & Time", children: dateTime },
 							{ label: "Name", children: formData.name },
 							{ label: "Gender", children: formData.gender },
 							{ label: "Age", children: formData.age },

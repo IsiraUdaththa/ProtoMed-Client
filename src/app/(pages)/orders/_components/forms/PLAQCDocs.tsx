@@ -24,9 +24,6 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
-
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
 
@@ -70,42 +67,42 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="skullDefectA"
 						rules={[{ message: "Please enter skullDefectA" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter skullDefectB"
 						name="skullDefectB"
 						rules={[{ message: "Please enter skullDefectB" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter skullDefectC"
 						name="skullDefectC"
 						rules={[{ message: "Please enter skullDefectC" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelA"
 						name="implantModelA"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelB"
 						name="implantModelB"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelC"
 						name="implantModelC"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item className="mt-6">
@@ -118,15 +115,7 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "Username", children: username },
-							{ label: "Date/Time", children: currentDate },
-						]}
-					></Descriptions>
+					<Descriptions bordered size="small" column={1} items={[]}></Descriptions>
 					<Card></Card>
 
 					<Form.Item>

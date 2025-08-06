@@ -206,10 +206,6 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "User", children: dummyUsername },
-							{ label: "Date and Time:", children: dateTime },
-							{ label: "CT Image 2D:", children: dummyUsername },
-							{ label: "Date and Time", children: dateTime },
 							{
 								label: "CT Image 2D",
 								children: formData["ct-image-2d"] || "No file uploaded",

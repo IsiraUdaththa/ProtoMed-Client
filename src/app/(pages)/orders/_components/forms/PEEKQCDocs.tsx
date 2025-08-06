@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Steps, Result, Form, Descriptions, message, Input } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
@@ -21,17 +21,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	const [formData, setFormData] = useState<FormDataType>({ images: [] });
 
 	const [current, setCurrent] = useState(0);
-	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		setTimeout(() => setUserName("John Doe"), 1000);
-		const interval = setInterval(() => {
-			setDateTime(new Date().toLocaleString());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, []);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -42,10 +32,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	};
 
 	const handleConfirm = async () => {
-		console.log(`Submitting PEEK Laser Marking Process:`, { userName, dateTime });
-
-		formData["markingDate"] = dateTime;
-
 		try {
 			const response = await api.post(`/orders/${orderId}/peek-qcdocs`, formData);
 			console.log("File uploaded successfully:", response.data);
@@ -145,8 +131,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						size="small"
 						column={1}
 						items={[
-							{ label: "User", children: userName },
-							{ label: "Date and Time:", children: dateTime },
 						]}
 					></Descriptions>
 					<>

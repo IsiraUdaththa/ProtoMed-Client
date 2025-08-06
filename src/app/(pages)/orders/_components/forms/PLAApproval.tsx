@@ -23,8 +23,6 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -116,8 +114,6 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 						items={[
 							{ label: "Approval Status", children: approvalData.isApproved ? "Approved" : "Not Approved" },
 							{ label: "Comment", children: approvalData.comment || "No comment provided" },
-							{ label: "Username", children: username },
-							{ label: "Date/Time", children: currentDate },
 						]}
 					></Descriptions>
 					<Card></Card>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Steps, Button, Select, Input, message, Result, Flex, Descriptions } from "antd";
 import { SmileOutlined, SolutionOutlined, UserOutlined } from "@ant-design/icons";
 
@@ -9,14 +9,7 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [currency, setCurrency] = useState("lkr");
 	const [amount, setAmount] = useState("");
-	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		setTimeout(() => setUserName("John Doe"), 1000);
-		setDateTime(new Date().toLocaleString());
-	}, []);
 
 	const next = () => {
 		if (current === 0 && !amount) {
@@ -29,7 +22,7 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const prev = () => setCurrent(current - 1);
 
 	const handleConfirm = async () => {
-		const paymentData = { userName, currency, amount, dateTime };
+		const paymentData = { currency, amount };
 		console.log("Payment data confirmed:", paymentData);
 
 		const formData = {
@@ -85,8 +78,6 @@ const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "User", children: userName },
-							{ label: "Date and Time:", children: dateTime },
 							{
 								label: "Amount",
 								children: (
