@@ -10,8 +10,8 @@ import DateDisplay from "@/app/_components/DateDisplay";
 interface Data {
 	invoiceNumber: string;
 	isSent: boolean;
-	sentDate: Date;
 	doneBy: string;
+	createdAt: Date;
 }
 
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -50,7 +50,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						),
 					},
 					{ label: "Verified By", children: data.doneBy ? <UserTag userId={data.doneBy} /> : "N/A" },
-					{ label: "Date", children: data.sentDate ? <DateDisplay isoDate={data.sentDate} /> : "N/A" },
+					{ label: "Date", children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A" },
 					{ label: "Invoice Number", children: data.invoiceNumber ?? "N/A" },
 				]}
 			/>

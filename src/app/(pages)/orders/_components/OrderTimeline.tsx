@@ -68,7 +68,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 		// 2. CT Scan
 		if (orderData.ctScan) {
 			events.push({
-				date: orderData.ctScan.ctDate || orderData.ctScan.createdAt,
+				date: orderData.ctScan.ctDate,
 				title: "CT Scan Uploaded",
 				userId: orderData.ctScan.checkedBy,
 				comment: orderData.ctScan.comment,
@@ -114,7 +114,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Design Images
 				if (design.designImages) {
 					events.push({
-						date: design.designImages.designDate || design.designImages.createdAt,
+						date: design.designImages.createdAt,
 						title: `${designPrefix}Design Images Created`,
 						userId: design.designImages.designBy,
 						status: "completed",
@@ -124,7 +124,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// QC Documents
 				if (design.qcDocs) {
 					events.push({
-						date: design.qcDocs.designDate || design.qcDocs.createdAt,
+						date: design.qcDocs.createdAt,
 						title: `${designPrefix}QC Documents Prepared`,
 						userId: design.qcDocs.designBy,
 						status: "completed",
@@ -134,7 +134,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Design File
 				if (design.designFile) {
 					events.push({
-						date: design.designFile.designDate || design.designFile.createdAt,
+						date: design.designFile.createdAt,
 						title: `${designPrefix}Design File Uploaded`,
 						userId: design.designFile.designBy,
 						status: "completed",
@@ -144,7 +144,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Design Approval
 				if (design.approval) {
 					events.push({
-						date: design.approval.date || design.approval.createdAt,
+						date: design.approval.createdAt,
 						title: `${designPrefix}Design Approval`,
 						userId: design.approval.approvedBy,
 						comment: design.approval.comment,
@@ -182,7 +182,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// PLA QC
 				if (pla.qcDocs) {
 					events.push({
-						date: pla.qcDocs.designDate || pla.qcDocs.createdAt,
+						date: pla.qcDocs.createdAt,
 						title: `${plaPrefix}QC Documentation`,
 						userId: pla.qcDocs.doneBy,
 						status: "completed",
@@ -192,7 +192,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// PLA Approval
 				if (pla.approval) {
 					events.push({
-						date: pla.approval.approvalDate || pla.approval.createdAt,
+						date: pla.approval.createdAt,
 						title: `${plaPrefix}PLA Approval`,
 						userId: pla.approval.approvedBy,
 						comment: pla.approval.comment,
@@ -220,7 +220,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Annealing
 				if (peek.annealing) {
 					events.push({
-						date: peek.annealing.processDate || peek.annealing.createdAt,
+						date: peek.annealing.createdAt,
 						title: `${peekPrefix}Annealing Process`,
 						userId: peek.annealing.doneBy,
 						status: "completed",
@@ -230,7 +230,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Polishing
 				if (peek.polishing) {
 					events.push({
-						date: peek.polishing.polishingDate || peek.polishing.createdAt,
+						date: peek.polishing.createdAt,
 						title: `${peekPrefix}Polishing`,
 						userId: peek.polishing.polishingBy,
 						status: "completed",
@@ -250,7 +250,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// Final Polishing
 				if (peek.finalPolishing) {
 					events.push({
-						date: peek.finalPolishing.date || peek.finalPolishing.createdAt,
+						date: peek.finalPolishing.createdAt,
 						title: `${peekPrefix}Final Polishing`,
 						userId: peek.finalPolishing.doneBy,
 						status: "completed",
@@ -270,7 +270,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 				// PEEK Approval
 				if (peek.approval) {
 					events.push({
-						date: peek.approval.approvalDate || peek.approval.createdAt,
+						date: peek.approval.createdAt,
 						title: `${peekPrefix}PEEK Approval`,
 						userId: peek.approval.approvedBy,
 						comment: peek.approval.comment,
@@ -283,7 +283,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 		// 9. Packing
 		if (orderData.packing) {
 			events.push({
-				date: orderData.packing.packedDate || orderData.packing.createdAt,
+				date: orderData.packing.createdAt,
 				title: "Product Packed",
 				userId: orderData.packing.packedBy,
 				status: "completed",
@@ -304,7 +304,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ orderId }) => {
 		// 11. Invoice
 		if (orderData.invoice) {
 			events.push({
-				date: orderData.invoice.sentDate || orderData.invoice.createdAt,
+				date: orderData.invoice.createdAt,
 				title: "Invoice Sent",
 				userId: orderData.invoice.doneBy,
 				status: orderData.invoice.isSent ? "completed" : "pending",

@@ -28,7 +28,7 @@ interface IPLAFlapPrint {
 
 interface IPLAQCDocs extends Document {
 	doneBy: string;
-	designDate: Date;
+	createdAt: Date;
 
 	skullDefectA: number;
 	skullDefectB: number;
@@ -41,12 +41,8 @@ interface IPLAQCDocs extends Document {
 
 interface IPLAApproval {
 	isApproved: boolean;
-	approvalDate: Date;
+	createdAt: Date;
 	approvedBy: string;
-	fitFinishCheckedBy: string; // ????
-	accuracyCheckedBy: string; // ????
-	qcDesignDoc?: string; // ????
-	qcMeasureValuesDoc?: string; // ????
 	comment?: string;
 }
 
@@ -174,10 +170,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							children: section.qcDocs?.doneBy ? <UserTag userId={section.qcDocs?.doneBy} /> : "N/A",
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.qcDocs?.designDate ? (
-								<DateDisplay isoDate={section.qcDocs?.designDate} />
+							children: section.qcDocs?.createdAt ? (
+								<DateDisplay isoDate={section.qcDocs?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -188,17 +184,17 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "isApproved",
 							label: "Approved",
-							children: section.approval.isApproved ? (
+							children: section.approval?.isApproved ? (
 								<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
 							) : (
 								<Badge count="Rejected" />
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.approval?.approvalDate ? (
-								<DateDisplay isoDate={section.approval?.approvalDate} />
+							children: section.approval?.createdAt ? (
+								<DateDisplay isoDate={section.approval?.createdAt} />
 							) : (
 								"N/A"
 							),

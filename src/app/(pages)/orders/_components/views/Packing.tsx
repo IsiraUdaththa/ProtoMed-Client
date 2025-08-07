@@ -10,10 +10,10 @@ import DateDisplay from "@/app/_components/DateDisplay";
 
 interface PackingData {
 	packedBy: string;
-	packedDate: Date;
-	finalImplantVideo: string;
-	finalImplantPicture: string;
-	finalPackPicture: string;
+	createdAt: Date;
+	implantVideo: string;
+	implantImage: string;
+	packedImage: string;
 }
 
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -45,7 +45,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ label: "Packed By", children: data.packedBy ? <UserTag userId={data.packedBy} /> : "N/A" },
 					{
 						label: "Packed Date",
-						children: data.packedDate ? <DateDisplay isoDate={data.packedDate} /> : "N/A",
+						children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A",
 					},
 				]}
 			/>
@@ -54,10 +54,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Image
 				width={200}
 				preview={
-					data.finalImplantVideo
+					data.implantVideo
 						? {
 								destroyOnClose: true,
-								imageRender: () => <video muted height="100%" controls src={data.finalImplantVideo} />,
+								imageRender: () => <video muted height="100%" controls src={data.implantVideo} />,
 								toolbarRender: () => null,
 								mask: "Final Implant Video",
 							}
@@ -70,12 +70,12 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Image
 				width={200}
 				alt="Implant Picture"
-				src={data.finalImplantPicture}
+				src={data.implantImage}
 				fallback="https://placehold.co/200x200?text=Not+available"
 				preview={
-					data.finalImplantPicture
+					data.implantImage
 						? {
-								visible: data.finalImplantPicture ? true : false,
+								visible: data.implantImage ? true : false,
 								mask: "Final Implant Picture",
 							}
 						: false
@@ -84,12 +84,12 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 			<Image
 				width={200}
 				alt="Final Pack Picture"
-				src={data.finalPackPicture}
+				src={data.packedImage}
 				fallback="https://placehold.co/200x200?text=Not+available"
 				preview={
-					data.finalPackPicture
+					data.packedImage
 						? {
-								visible: data.finalPackPicture ? true : false,
+								visible: data.packedImage ? true : false,
 								mask: "Final Pack Picture",
 							}
 						: false

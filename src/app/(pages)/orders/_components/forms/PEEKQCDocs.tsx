@@ -13,7 +13,6 @@ type FormDataType = {
   implantModelA?: string;
   implantModelB?: string;
   implantModelC?: string;
-  markingDate?: string;
 };
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {

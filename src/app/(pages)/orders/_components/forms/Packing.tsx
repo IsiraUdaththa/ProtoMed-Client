@@ -9,9 +9,9 @@ import api from "@/lib/axiosInstance";
 import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
-	"implant-video"?: string;
-	"implant-image"?: string;
-	"packing-image"?: string;
+	"implantVideo"?: string;
+	"implantImage"?: string;
+	"packedImage"?: string;
 }
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -57,7 +57,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 				{current === 0 && (
 					<Form form={form} onFinish={onFinish}>
-						<Form.Item name="implant-video">
+						<Form.Item name="implantVideo">
 							<Upload.Dragger
 								customRequest={uploadToAzure}
 								accept="video/*"
@@ -68,7 +68,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implant-video": fileUrl,
+												"implantVideo": fileUrl,
 											});
 										}
 									}
@@ -81,7 +81,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item name="implant-image">
+						<Form.Item name="implantImage">
 							<Upload.Dragger
 								customRequest={uploadToAzure}
 								accept="image/*"
@@ -92,7 +92,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implant-image": fileUrl,
+												"implantImage": fileUrl,
 											});
 										}
 									}
@@ -105,7 +105,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item name="packing-image">
+						<Form.Item name="packedImage">
 							<Upload.Dragger
 								accept="image/*"
 								customRequest={uploadToAzure}
@@ -116,7 +116,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"packing-image": fileUrl,
+												"packedImage": fileUrl,
 											});
 										}
 									}
