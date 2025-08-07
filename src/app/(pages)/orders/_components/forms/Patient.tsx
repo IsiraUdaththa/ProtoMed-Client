@@ -2,7 +2,7 @@
 
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space } from "antd";
+import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space, Flex } from "antd";
 import PhoneInput from "antd-phone-input";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -133,7 +133,8 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			setIsSuccess(false);
 		}
 
-		next(); // Move to success/error step
+		next();
+		 // Move to success/error step
 	};
 	return (
 		<>
@@ -267,52 +268,63 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "Name", children: formData.name },
-							{ label: "Gender", children: formData.gender },
-							{ label: "Age", children: formData.age },
-							{ label: "Category", children: formData.category },
-							{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
-							{ label: "Phone Number", children: formData.contactNumber as string },
-							{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
-							{ label: "Hospital Name", children: formData.hospital || "N/A" },
-							{ label: "Ward", children: formData.ward || "N/A" },
-							{
-								label: "Planned Date",
-								children: formData.plannedDate
-									? dayjs(formData.plannedDate).format("YYYY-MM-DD")
-									: "N/A",
-							},
-							{ label: "Comment", children: formData.comment || "N/A" },
-						]}
-					></Descriptions>
-					<Space>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Submit
-						</Button>
+					<Space direction="vertical" style={{ width: "100%" }}>
+						<Descriptions
+							bordered
+							size="small"
+							column={1}
+							items={[
+								{ label: "Name", children: formData.name },
+								{ label: "Gender", children: formData.gender },
+								{ label: "Age", children: formData.age },
+								{ label: "Category", children: formData.category },
+								{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+								{ label: "Phone Number", children: formData.contactNumber as string },
+								{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
+								{ label: "Hospital Name", children: formData.hospital || "N/A" },
+								{ label: "Ward", children: formData.ward || "N/A" },
+								{
+									label: "Planned Date",
+									children: formData.plannedDate
+										? dayjs(formData.plannedDate).format("YYYY-MM-DD")
+										: "N/A",
+								},
+								{ label: "Comment", children: formData.comment || "N/A" },
+							]}
+						></Descriptions>
+						<Space>
+							<Button onClick={prev}>Back</Button>
+							<Button type="primary" onClick={handleConfirm}>
+								Submit
+							</Button>
+						</Space>
 					</Space>
 				</>
 			)}
-
-			{current === 2 && (
-				<>
-					{isSuccess !== null && (
-						<Result
-							status={isSuccess ? "success" : "error"}
-							title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
-							subTitle={
-								isSuccess
-									? "Your order has been submitted successfully."
-									: "There was an issue submitting your order. Please try again."
-							}
-						/>
-					)}
-				</>
+{current === 2 && isSuccess !== null && (
+	<>
+		<Result
+			status={isSuccess ? "success" : "error"}
+			title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
+			subTitle={
+				isSuccess
+					? "Your order has been submitted successfully."
+					: "There was an issue submitting your order. Please try again."
+			}
+		/>
+		<Flex justify="center" align="center" gap="10px">
+					<Button
+						type="primary"
+						onClick={() => {
+							form.resetFields();
+							setFormData({});
+							setIsSuccess(null);
+							setCurrent(0);
+						}}
+					>
+						Make a New Order
+					</Button>
+			</Flex>	</>
 			)}
 		</>
 	);
