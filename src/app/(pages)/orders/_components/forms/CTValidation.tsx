@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select, Tooltip } from "antd";
+import { Form, Input, Upload, Button, Space, Steps, Result, Descriptions, Select, Tooltip, Flex } from "antd";
 import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -93,6 +93,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} onFinish={handleSubmit} layout="vertical" onValuesChange={handleFormChange}>
+					<Flex justify='space-around' gap="large" align='center' wrap>
 					<Form.Item label="CT Image 2D" name="ct-image-2d">
 						<Upload.Dragger
 							customRequest={uploadToAzure}
@@ -142,7 +143,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<p className="ant-upload-hint">Only one file is allowed.</p>
 						</Upload.Dragger>
 					</Form.Item>
-
+					</Flex>
 					<div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
 						<Form.Item label="Length" name="length" rules={[{ message: "Please enter length" }]}>
 							<Input type="number" min={1} max={100} step={0.01} addonAfter="cm" />
@@ -157,7 +158,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<span>=</span>
 
 						<Form.Item label="Area" name="size-sqcm" rules={[{ message: "Please enter size" }]}>
-							<Tooltip title="This value is auto-calculated. You can click to override it if needed.">
+							<Tooltip title="This value is auto-calculated. You can click to change it if needed.">
 								<Input
 									min={1}
 									max={10000}
