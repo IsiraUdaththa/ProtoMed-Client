@@ -19,13 +19,13 @@ interface IPEEKPrint {
 }
 
 interface IPEEKAnnealing {
-	processDate: Date;
+	createdAt: Date;
 	doneBy: string;
 }
 
 interface IPEEKPolishing {
 	polishingBy: string;
-	polishingDate: Date;
+	createdAt: Date;
 }
 
 interface IPeekQCDocs {
@@ -40,20 +40,19 @@ interface IPeekQCDocs {
 
 interface IPEEKApproval {
 	isApproved: boolean;
-	checkedBy: string; // ????
-	approvalDate: Date;
+	createdAt: Date;
 	approvedBy: string;
 	comment?: string;
 }
 interface IPEEKLaserMarking {
 	doneBy: string;
-	markingDate: Date;
+	createdAt: Date;
 	image: string;
 }
 
 interface IPEEKFinalPolishing extends Document {
 	doneBy: string;
-	date: Date;
+	createdAt: Date;
 }
 
 interface PEEK {
@@ -150,8 +149,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.annealing?.processDate ? (
-								<DateDisplay isoDate={section.annealing?.processDate} />
+							children: section.annealing?.createdAt ? (
+								<DateDisplay isoDate={section.annealing?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -171,8 +170,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.polishing?.polishingDate ? (
-								<DateDisplay isoDate={section.polishing?.polishingDate} />
+							children: section.polishing?.createdAt ? (
+								<DateDisplay isoDate={section.polishing?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -198,10 +197,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.approval?.approvalDate ? (
-								<DateDisplay isoDate={section.approval?.approvalDate} />
+							children: section.approval?.createdAt ? (
+								<DateDisplay isoDate={section.approval?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -233,10 +232,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.laserMarking?.markingDate ? (
-								<DateDisplay isoDate={section.laserMarking?.markingDate} />
+							children: section.laserMarking?.createdAt ? (
+								<DateDisplay isoDate={section.laserMarking?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -256,8 +255,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.finalPolishing?.date ? (
-								<DateDisplay isoDate={section.finalPolishing?.date} />
+							children: section.finalPolishing?.createdAt ? (
+								<DateDisplay isoDate={section.finalPolishing?.createdAt} />
 							) : (
 								"N/A"
 							),

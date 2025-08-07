@@ -10,7 +10,7 @@ import DateDisplay from "@/app/_components/DateDisplay";
 
 interface PackingData {
 	packedBy: string;
-	packedDate: Date;
+	createdAt: Date;
 	finalImplantVideo: string;
 	finalImplantPicture: string;
 	finalPackPicture: string;
@@ -45,7 +45,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ label: "Packed By", children: data.packedBy ? <UserTag userId={data.packedBy} /> : "N/A" },
 					{
 						label: "Packed Date",
-						children: data.packedDate ? <DateDisplay isoDate={data.packedDate} /> : "N/A",
+						children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A",
 					},
 				]}
 			/>

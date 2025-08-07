@@ -10,7 +10,7 @@ import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	image?: string;
-	markingDate?: Date;
+	createdAt?: Date;
 }
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {

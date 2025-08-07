@@ -25,7 +25,7 @@ import DateDisplay from "@/app/_components/DateDisplay";
 
 interface IDesignImages {
 	designBy: string;
-	designDate: Date;
+	createdAt: Date;
 
 	damageFront: string;
 	damageSide: string;
@@ -44,7 +44,7 @@ interface IDesignImages {
 
 interface IQCDocs {
 	designBy: string;
-	designDate: Date;
+	createdAt: Date;
 
 	skullDefectSpecificationImage: string;
 	skullDefectSpecificationA: number;
@@ -59,13 +59,13 @@ interface IQCDocs {
 
 interface IDesignFile {
 	designBy: string;
-	designDate: Date;
+	createdAt: Date;
 	designFile: string;
 }
 
 interface IDesignApproval {
 	isApproved: boolean;
-	date: Date;
+	createdAt: Date;
 	approvedBy: string;
 	comment: string;
 }
@@ -116,10 +116,10 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 							),
 						},
 						{
-							key: "designDate",
+							key: "createdAt",
 							label: "Date",
-							children: section.designImages.designDate ? (
-								<DateDisplay isoDate={section.designImages.designDate} />
+							children: section.designImages.createdAt ? (
+								<DateDisplay isoDate={section.designImages.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -128,10 +128,10 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 
 					const qcDocsItems: DescriptionsProps["items"] = [
 						{
-							key: "designDate",
+							key: "createdAt",
 							label: "Design Date",
-							children: section.qcDocs?.designDate ? (
-								<DateDisplay isoDate={section.qcDocs?.designDate} />
+							children: section.qcDocs?.createdAt ? (
+								<DateDisplay isoDate={section.qcDocs?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -147,8 +147,8 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 						{
 							key: "designFileUploadDate",
 							label: "Uploaded Date",
-							children: section.designFile?.designDate ? (
-								<DateDisplay isoDate={section.designFile?.designDate} />
+							children: section.designFile?.createdAt ? (
+								<DateDisplay isoDate={section.designFile?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -175,9 +175,9 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.approval?.date ? <DateDisplay isoDate={section.approval?.date} /> : "N/A",
+							children: section.approval?.createdAt ? <DateDisplay isoDate={section.approval?.createdAt} /> : "N/A",
 						},
 						{
 							key: "approvedBy",
