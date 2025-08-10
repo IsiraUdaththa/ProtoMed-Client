@@ -289,11 +289,18 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 								<Card>
 									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Divider />
-									<Image.PreviewGroup>
-										{section.qcDocs?.images.map((imgSrc, index) => (
-											<Image key={index} width={200} src={imgSrc} alt={`Image ${index + 1}`} />
-										))}
-									</Image.PreviewGroup>
+									<Flex wrap justify="space-evenly">
+										<Image.PreviewGroup >
+											{section.qcDocs?.images.map((imgSrc, index) => (
+												<Image
+													key={index}
+													width={200}
+													src={imgSrc}
+													alt={`Image ${index + 1}`}
+												/>
+											))}
+										</Image.PreviewGroup>
+									</Flex>
 									<Divider />
 									<Flex justify="space-around">
 										<Table

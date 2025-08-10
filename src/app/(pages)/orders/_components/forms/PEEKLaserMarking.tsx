@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Result, Form, Descriptions, message } from "antd";
-import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, Steps, Result, Form, message } from "antd";
+import { UserOutlined, CheckCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
@@ -21,15 +21,10 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	const next = () => setCurrent(current + 1);
-	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: IFormData) => {
-		setFormData(values);
-		next();
-	};
-
-	const handleConfirm = async () => {
+	const handleConfirm = async (values: IFormData) => {
 		try {
+			setFormData(values);
 			const response = await api.post(`/orders/${orderId}/peek-laser-marking`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
@@ -64,12 +59,11 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		<>
 			<Steps current={current} direction="horizontal">
 				<Steps.Step title="Start" icon={<UserOutlined />} />
-				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
 				<Steps.Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical">
+				<Form form={form} onFinish={handleConfirm} layout="vertical">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<Form.Item
 							key="image"
@@ -97,18 +91,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 			)}
 
 			{current === 1 && (
-				<>
-					<Descriptions bordered size="small" column={1} items={[]}></Descriptions>
-					<>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</>
-				</>
-			)}
-
-			{current === 2 && (
 				<>
 					{isSuccess ? (
 						<Result status="success" title="PEEK Laser Marking Process Confirmed Successfully" />

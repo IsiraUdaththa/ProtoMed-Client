@@ -2,7 +2,7 @@
 
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
+import { Form, Input, Button, Steps, Result, message, Descriptions, Space } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -115,15 +115,21 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Descriptions bordered size="small" column={1} items={[]}></Descriptions>
-					<Card></Card>
+					<Descriptions bordered size="small" column={1}>
+						<Descriptions.Item label="skullDefectA">{formData["skullDefectA"]}</Descriptions.Item>
+						<Descriptions.Item label="skullDefectB">{formData["skullDefectB"]}</Descriptions.Item>
+						<Descriptions.Item label="skullDefectC">{formData["skullDefectC"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelA">{formData["implantModelA"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelB">{formData["implantModelB"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelC">{formData["implantModelC"]}</Descriptions.Item>
+					</Descriptions>
 
-					<Form.Item>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
-					</Form.Item>
+					</Space>
 				</>
 			)}
 

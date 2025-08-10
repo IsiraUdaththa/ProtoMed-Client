@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
+import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions, Space } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -52,12 +52,12 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 1: Input Details */}
 			{current === 0 && (
 				<>
-					<Form layout="vertical" form={FormData} onFinish={handleNext}> 
+					<Form layout="vertical" form={FormData} onFinish={handleNext}>
 						<Form.Item label="Color" name="color">
 							<Input />
 						</Form.Item>
 						<Form.Item label="Weight" name="weight" rules={[{ message: "Please enter your age" }]}>
-							<Input type="number" min={0} addonAfter="g"/>
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
 							<Select placeholder="Select Print Machine">
@@ -69,7 +69,7 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<DatePicker />
 						</Form.Item>
 						<Form.Item label="Print Time" name="printTime">
-							<Input type="number" addonAfter="min"/>
+							<Input type="number" addonAfter="min" />
 						</Form.Item>
 					</Form>
 					<Button type="primary" onClick={handleNext} block>
@@ -93,12 +93,12 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Descriptions.Item label="Print Time">{FormData.getFieldValue("printTime")}</Descriptions.Item>
 					</Descriptions>
 
-					<div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>
-					</div>
+					</Space>
 				</>
 			)}
 

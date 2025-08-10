@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
+import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions, Space } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -106,12 +106,12 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Descriptions.Item>
 					</Descriptions>
 
-					<div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>
-					</div>
+					</Space>
 				</>
 			)}
 
@@ -119,9 +119,9 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{isSuccess === true ? (
-						<Result status="success" title="Print Successful" />
+						<Result status="success" title="PEEK Print Data Submission Successfully" />
 					) : (
-						<Result status="error" title="Print Failed" subTitle="Please try again." />
+						<Result status="error" title="Data Submission Failed" subTitle="Please try again." />
 					)}
 				</>
 			)}

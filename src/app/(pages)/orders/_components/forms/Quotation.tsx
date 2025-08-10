@@ -122,7 +122,7 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						]}
 					></Descriptions>
 
-					<Space>
+					<Space style={{ marginTop: "8px" }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
@@ -137,7 +137,11 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="Data Submitted Successfully" />
 					) : (
-						<Result status="error" title="Submission Failed" subTitle="Please check details and try again." />
+						<Result
+							status="error"
+							title="Submission Failed"
+							subTitle="Please check details and try again."
+						/>
 					)}
 				</>
 			)}

@@ -2,16 +2,16 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React, { useState } from "react";
-import { Form, Upload, Button, Space, Steps, Typography, Result, message } from "antd";
+import { Form, Upload, Button, Space, Steps, Result, message } from "antd";
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
 import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
-	"implantVideo"?: string;
-	"implantImage"?: string;
-	"packedImage"?: string;
+	implantVideo?: string;
+	implantImage?: string;
+	packedImage?: string;
 }
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -22,14 +22,9 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	const next = () => setCurrent(current + 1);
-	const prev = () => setCurrent(current - 1);
 
-	const onFinish = (values: IFormData) => {
+	const handleSubmit = async (values: IFormData) => {
 		setFormData(values);
-		next();
-	};
-
-	const handleSubmit = async () => {
 		if (!formData) return;
 
 		try {
@@ -56,7 +51,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				</Steps>
 
 				{current === 0 && (
-					<Form form={form} onFinish={onFinish}>
+					<Form form={form} onFinish={handleSubmit}>
 						<Form.Item name="implantVideo">
 							<Upload.Dragger
 								customRequest={uploadToAzure}
@@ -68,7 +63,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implantVideo": fileUrl,
+												implantVideo: fileUrl,
 											});
 										}
 									}
@@ -92,7 +87,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implantImage": fileUrl,
+												implantImage: fileUrl,
 											});
 										}
 									}
@@ -116,7 +111,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"packedImage": fileUrl,
+												packedImage: fileUrl,
 											});
 										}
 									}
@@ -140,20 +135,6 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				)}
 
 				{current === 1 && (
-					<>
-						{/* TODO:  */}
-						{/* <Typography.Text strong>User: {formData.userName || "Not Provided"}</Typography.Text> */}
-
-						<Typography.Text strong>Date & Time: {new Date().toLocaleString()}</Typography.Text>
-
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleSubmit}>
-							Confirm
-						</Button>
-					</>
-				)}
-
-				{current === 2 && (
 					<>
 						{isSuccess ? (
 							<Result status="success" title="Packing Detail Submission Successful" />

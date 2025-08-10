@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Descriptions, Divider, Spin } from "antd";
+import { Alert, Descriptions, Divider, Flex, Spin } from "antd";
 import { Image } from "antd";
 
 import api from "@/lib/axiosInstance";
@@ -50,51 +50,52 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 				]}
 			/>
 			<Divider />
-
-			<Image
-				width={200}
-				preview={
-					data.implantVideo
-						? {
-								destroyOnClose: true,
-								imageRender: () => <video muted height="100%" controls src={data.implantVideo} />,
-								toolbarRender: () => null,
-								mask: "Final Implant Video",
-							}
-						: false
-				}
-				src="Video"
-				fallback="https://placehold.co/200x200?text=Not+available"
-				alt=""
-			/>
-			<Image
-				width={200}
-				alt="Implant Picture"
-				src={data.implantImage}
-				fallback="https://placehold.co/200x200?text=Not+available"
-				preview={
-					data.implantImage
-						? {
-								visible: data.implantImage ? true : false,
-								mask: "Final Implant Picture",
-							}
-						: false
-				}
-			/>
-			<Image
-				width={200}
-				alt="Final Pack Picture"
-				src={data.packedImage}
-				fallback="https://placehold.co/200x200?text=Not+available"
-				preview={
-					data.packedImage
-						? {
-								visible: data.packedImage ? true : false,
-								mask: "Final Pack Picture",
-							}
-						: false
-				}
-			/>
+			<Flex wrap justify="space-evenly">
+				<Image
+					width={200}
+					preview={
+						data.implantVideo
+							? {
+									destroyOnClose: true,
+									imageRender: () => <video muted height="100%" controls src={data.implantVideo} />,
+									toolbarRender: () => null,
+									mask: "Final Implant Video",
+								}
+							: false
+					}
+					src="Video"
+					fallback="https://placehold.co/200x200?text=Not+available"
+					alt=""
+				/>
+				<Image
+					width={200}
+					alt="Implant Picture"
+					src={data.implantImage}
+					fallback="https://placehold.co/200x200?text=Not+available"
+					preview={
+						data.implantImage
+							? {
+									visible: data.implantImage ? true : false,
+									mask: "Final Implant Picture",
+								}
+							: false
+					}
+				/>
+				<Image
+					width={200}
+					alt="Final Pack Picture"
+					src={data.packedImage}
+					fallback="https://placehold.co/200x200?text=Not+available"
+					preview={
+						data.packedImage
+							? {
+									visible: data.packedImage ? true : false,
+									mask: "Final Pack Picture",
+								}
+							: false
+					}
+				/>
+			</Flex>
 		</>
 	);
 };
