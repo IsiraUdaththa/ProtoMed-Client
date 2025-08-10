@@ -8,7 +8,7 @@ import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	width: number;
-	length: number;
+	height: number;
 	"size-sqcm"?: string;
 	"implant-name"?: string;
 	"implant-size"?: string;
@@ -19,10 +19,10 @@ interface IFormData {
 const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm<IFormData>();
 	const [formData, setFormData] = useState<IFormData>({
-		length: 0,
+		height: 0,
 		width: 0,
 	});
-	const length = Form.useWatch("length", form);
+	const height = Form.useWatch("height", form);
 	const width = Form.useWatch("width", form);
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -52,7 +52,9 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			orderId: orderId,
 			username: dummyUsername,
 			dateTime: dateTime,
-			size: formData["size-sqcm"] || formData["width"] * formData["length"],
+			width: formData["width"],
+			height: formData["height"],
+			size: formData["size-sqcm"] || formData["width"] * formData["height"],
 			implantName: formData["implant-name"],
 			implantSize: formData["implant-size"],
 			ctImage2D: formData["ct-image-2d"],
@@ -73,10 +75,10 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		next();
 	};
 
-	const handleFormChange = (changedValues: { length?: number; width?: number; "size-sqcm"?: number }) => {
-		const { length, width } = changedValues;
-		if (length && width) {
-			const size = (length * width).toFixed(2);
+	const handleFormChange = (changedValues: { height?: number; width?: number; "size-sqcm"?: number }) => {
+		const { height, width } = changedValues;
+		if (height && width) {
+			const size = (height * width).toFixed(2);
 			form.setFieldsValue({
 				"size-sqcm": size,
 			});
@@ -93,8 +95,8 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} onFinish={handleSubmit} layout="vertical" onValuesChange={handleFormChange}>
-					<Flex justify="space-around" gap="large" align="center" wrap>
-						<Form.Item label="CT Image 2D" name="ct-image-2d">
+					<Flex gap="large" wrap>
+						<Form.Item label="CT Image 2D" name="ct-image-2d" rules={[{ required: true }]}>
 							<Upload.Dragger
 								customRequest={uploadToAzure}
 								accept="image/*"
@@ -119,7 +121,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item label="CT Image 3D" name="ct-image-3d">
+						<Form.Item label="CT Image 3D" name="ct-image-3d" rules={[{ required: true }]}>
 							<Upload.Dragger
 								customRequest={uploadToAzure}
 								accept="image/*"
@@ -145,13 +147,21 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Form.Item>
 					</Flex>
 					<div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-						<Form.Item label="Length" name="length" rules={[{ message: "Please enter length" }]}>
+						<Form.Item
+							label="height"
+							name="height"
+							rules={[{ required: true, message: "Please enter height" }]}
+						>
 							<Input type="number" min={1} max={100} step={0.01} addonAfter="cm" />
 						</Form.Item>
 
 						<span>x</span>
 
-						<Form.Item label="Width" name="width" rules={[{ message: "Please enter width" }]}>
+						<Form.Item
+							label="Width"
+							name="width"
+							rules={[{ required: true, message: "Please enter width" }]}
+						>
 							<Input type="number" min={0} max={100} step={0.01} addonAfter="cm" />
 						</Form.Item>
 
@@ -164,7 +174,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 									max={10000}
 									type="number"
 									addonAfter="cm²"
-									placeholder={String((width || 0) * (length || 0))}
+									placeholder={String((width || 0) * (height || 0))}
 									status="warning"
 								/>
 							</Tooltip>
@@ -216,15 +226,23 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								children: formData["ct-image-3d"] || "No file uploaded",
 							},
 							{
+								label: "Width",
+								children: formData["width"],
+							},
+							{
+								label: "Height",
+								children: formData["height"],
+							},
+							{
 								label: "Size (sqcm)",
-								children: formData["size-sqcm"] || formData["length"] * formData["width"],
+								children: formData["size-sqcm"] || formData["height"] * formData["width"],
 							},
 							{ label: "Implant Name", children: formData["implant-name"] },
 							{ label: "Size of Implant", children: formData["implant-size"] },
 						]}
 					></Descriptions>
 
-					<Space>
+					<Space style={{ marginTop: "8px" }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm

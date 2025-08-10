@@ -82,6 +82,16 @@ type Data = Design[];
 const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, onlyQCDocs = false }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -199,7 +209,7 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 						return (
 							<Tabs.TabPane tab={`Design Attempt #${index + 1}`} key={index}>
 								<Card>
-									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Flex wrap gap={"large"} justify="space-around">
 										<Card>
 											<Image
@@ -305,7 +315,7 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 							<Tabs.TabPane tab={`Design Attempt #${index + 1}`} key={index}>
 								<Space direction="vertical">
 									<Card>
-										<Descriptions title="Design Details" items={designItems} column={2} />
+										<Descriptions title="Design Details" items={designItems} column={columns} />
 										<Divider />
 										<Image.PreviewGroup>
 											<Image
@@ -471,7 +481,7 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 										</Image.PreviewGroup>
 									</Card>
 									<Card>
-										<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+										<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 										<Flex wrap gap={"large"} justify="space-around">
 											<Card>
 												<Image
@@ -586,12 +596,16 @@ const App: React.FC<{ orderId: string; onlyQCDocs: boolean }> = ({ orderId, only
 											</Button>
 										</Tooltip>
 										<Divider />
-										<Descriptions items={designFileItems} column={2} />
+										<Descriptions items={designFileItems} column={columns} />
 									</Card>
 
 									<Card>
 										{approvalItems[index] != null && (
-											<Descriptions title="Approval Info" items={approvalItems} column={2} />
+											<Descriptions
+												title="Approval Info"
+												items={approvalItems}
+												column={columns}
+											/>
 										)}
 									</Card>
 								</Space>

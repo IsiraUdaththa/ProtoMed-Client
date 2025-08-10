@@ -71,6 +71,16 @@ type Data = PEEK[];
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -266,18 +276,18 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Tabs.TabPane tab={`PEEK Attempt #${index + 1}`} key={index}>
 							<Space direction="vertical">
 								<Card>
-									<Descriptions title="Print" items={printItems} column={2} />
+									<Descriptions title="Print" items={printItems} column={columns} />
 								</Card>
 
 								<Card>
-									<Descriptions title="Annealing" items={annealingItems} column={2} />
+									<Descriptions title="Annealing" items={annealingItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="Polishing" items={polishingItems} column={2} />
+									<Descriptions title="Polishing" items={polishingItems} column={columns} />
 								</Card>
 
 								<Card>
-									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Divider />
 									<Image.PreviewGroup>
 										{section.qcDocs?.images.map((imgSrc, index) => (
@@ -331,15 +341,21 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 									</Flex>
 								</Card>
 								<Card>
-									<Descriptions title="Laser Marking" items={laserMarkingItems} column={2} />
+									<Descriptions title="Laser Marking" items={laserMarkingItems} column={columns} />
 									<Divider />
-									<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
+									<Flex wrap justify="space-evenly">
+										<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
+									</Flex>
 								</Card>
 								<Card>
-									<Descriptions title="Final Polishing" items={finalPolishingItems} column={2} />
+									<Descriptions
+										title="Final Polishing"
+										items={finalPolishingItems}
+										column={columns}
+									/>
 								</Card>
 								<Card>
-									<Descriptions title="Approval" items={approvalItems} column={2} />
+									<Descriptions title="Approval" items={approvalItems} column={columns} />
 								</Card>
 							</Space>
 						</Tabs.TabPane>

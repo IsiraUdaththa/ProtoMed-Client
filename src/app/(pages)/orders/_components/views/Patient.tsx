@@ -11,6 +11,16 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<DescriptionsProps["items"] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		if (!orderId) return;
@@ -27,7 +37,6 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 				}
 
 				const patient = response.data || {};
-				console.log(patient.registeredBy)
 
 				const items: DescriptionsProps["items"] = [
 					{ key: "1", label: "Name", children: patient.name || "N/A" },
@@ -63,7 +72,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			<Descriptions items={data} column={2}/>
+			<Descriptions items={data} column={columns} />
 		</>
 	);
 };

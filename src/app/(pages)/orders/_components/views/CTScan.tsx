@@ -20,6 +20,16 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<data>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -74,7 +84,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 			</Tooltip>
 
 			<Divider />
-			<Descriptions items={items} column={2}/>
+			<Descriptions items={items} column={columns}/>
 		</>
 	);
 };
