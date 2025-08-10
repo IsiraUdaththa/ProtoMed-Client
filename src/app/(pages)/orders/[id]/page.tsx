@@ -2,15 +2,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Alert, Breadcrumb, Button, Card, Skeleton, Space, Tabs } from "antd";
 import Link from "next/link";
-import { ArrowLeftOutlined, CalendarOutlined, ReloadOutlined, UserOutlined } from "@ant-design/icons";
+import { CalendarOutlined, ReloadOutlined, UserOutlined } from "@ant-design/icons";
 
 import Details from "../_components/views/All";
 import ActiveForm from "../_components/forms/activeform";
 import ForumDiscussion from "../_components/ForumDiscussion";
 import OrderTimeline from "../_components/OrderTimeline";
+import { OrderActionsButton } from "../_components/MoveButtons";
+import OrderExportButton from "../_components/ExportButtons";
 
 import DateDisplay from "@/app/_components/DateDisplay";
 import api from "@/lib/axiosInstance";
@@ -18,8 +20,7 @@ import UserTag from "@/app/_components/UserTag";
 
 export default function OrderStatusPage() {
 	const params = useParams();
-	const router = useRouter();
-	const [orderStatus, setOrderStatus] : any = useState();
+	const [orderStatus, setOrderStatus]: any = useState();
 
 	const orderId = Array.isArray(params["id"]) ? params["id"][0] : params["id"] || "";
 	const [activeTab, setActiveTab] = useState("status");
@@ -52,11 +53,6 @@ export default function OrderStatusPage() {
 		return <Alert message="Error" description="Order ID is missing." type="error" showIcon />;
 	}
 
-	// Handle back to orders
-	const handleBackToOrders = () => {
-		router.push("/orders");
-	};
-
 	// Handle refresh status
 	const handleRefreshStatus = async () => {
 		try {
@@ -69,7 +65,6 @@ export default function OrderStatusPage() {
 
 			const result = response.data;
 			setOrderStatus(result);
-	
 		} catch (error) {
 			console.error("Error fetching order data:", error);
 		} finally {
@@ -91,12 +86,11 @@ export default function OrderStatusPage() {
 					]}
 				/>
 				<Space>
-					<Button icon={<ArrowLeftOutlined />} onClick={handleBackToOrders}>
-						Back to Orders
-					</Button>
 					<Button icon={<ReloadOutlined />} onClick={handleRefreshStatus} loading={loading}>
 						Refresh Status
 					</Button>
+					<OrderActionsButton orderId={orderId} />
+					<OrderExportButton orderId={orderId} />
 				</Space>
 			</Space>
 
@@ -106,31 +100,31 @@ export default function OrderStatusPage() {
 				</Card>
 			) : orderStatus ? (
 				<>
-					{/* <Card title={`${orderStatus.orderCode}`} style={{actionsBg: "transparent"}}> */}
-					<Space direction="vertical" style={{ width: "100%" }}>
-						<div style={{ display: "flex", justifyContent: "space-between" }}>
-							<div>
-								<p>
-									<strong>Current Stage:</strong> {orderStatus?.status}{" "}
-								</p>
-								<p>
-									<UserOutlined /> <strong>Owner:</strong>{" "}
-									<UserTag userId={orderStatus?.patientDetails.registeredBy} />
-								</p>
+					<Card>
+						<Space direction="vertical" style={{ width: "100%" }}>
+							<div style={{ display: "flex", justifyContent: "space-between" }}>
+								<div>
+									<p>
+										<strong>Current Stage:</strong> {orderStatus?.status}{" "}
+									</p>
+									<p>
+										<UserOutlined /> <strong>Owner:</strong>{" "}
+										<UserTag userId={orderStatus?.patientDetails.registeredBy} />
+									</p>
+								</div>
+								<div>
+									<p>
+										<UserOutlined /> <strong>Created:</strong>{" "}
+										<DateDisplay isoDate={orderStatus?.createdAt} />
+									</p>
+									<p>
+										<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
+										<DateDisplay isoDate={orderStatus?.createdAt} />
+									</p>
+								</div>
 							</div>
-							<div>
-								<p>
-									<UserOutlined /> <strong>Created:</strong>{" "}
-									<DateDisplay isoDate={orderStatus?.createdAt} />
-								</p>
-								<p>
-									<CalendarOutlined /> <strong>Expected Completion:</strong>{" "}
-									<DateDisplay isoDate={orderStatus?.createdAt} />
-								</p>
-							</div>
-						</div>
-					</Space>
-					{/* </Card> */}
+						</Space>
+					</Card>
 
 					<Tabs
 						activeKey={activeTab}

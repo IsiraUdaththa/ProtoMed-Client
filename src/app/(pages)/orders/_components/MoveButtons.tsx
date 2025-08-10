@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { message, Dropdown, MenuProps } from "antd";
+import { message, Dropdown, MenuProps, Button } from "antd";
 
 import api from "@/lib/axiosInstance";
 
@@ -35,7 +35,7 @@ const handleDelete = async (orderId: string) => {
 	}
 };
 
-const OrderActions = ({ orderId }: { orderId: string }) => {
+export const OrderActions = ({ orderId }: { orderId: string }) => {
 	const items: MenuProps["items"] = [
 		{
 			key: "moveForward",
@@ -78,4 +78,47 @@ const OrderActions = ({ orderId }: { orderId: string }) => {
 	);
 };
 
-export default OrderActions;
+
+export const OrderActionsButton = ({ orderId }: { orderId: string }) => {
+	const items: MenuProps["items"] = [
+		{
+			key: "moveForward",
+			icon: <ArrowRightOutlined />,
+			label: "Move Forward",
+		},
+		{
+			key: "moveBack",
+			icon: <ArrowLeftOutlined />,
+			label: "Move Backward",
+		},
+		{
+			key: "delete",
+			icon: <DeleteOutlined />,
+			label: "Delete",
+			danger: true,
+		},
+	];
+
+	const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
+		switch (key) {
+			case "moveForward":
+				handleMoveNext(orderId);
+				break;
+			case "moveBack":
+				handleMoveBack(orderId);
+				break;
+			case "delete":
+				handleDelete(orderId);
+				break;
+			default:
+				break;
+		}
+	};
+
+	return (
+		<Dropdown menu={{ items, onClick: handleMenuClick }} trigger={["click"]} placement="bottomLeft">
+			<Button icon={<EditOutlined />}>Actions</Button>
+		</Dropdown>
+	);
+};
+
