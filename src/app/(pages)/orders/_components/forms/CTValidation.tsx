@@ -93,56 +93,56 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} onFinish={handleSubmit} layout="vertical" onValuesChange={handleFormChange}>
-					<Flex justify='space-around' gap="large" align='center' wrap>
-					<Form.Item label="CT Image 2D" name="ct-image-2d">
-						<Upload.Dragger
-							customRequest={uploadToAzure}
-							accept="image/*"
-							multiple={false}
-							maxCount={1}
-							onChange={(info) => {
-								if (info.file.status === "done") {
-									const fileUrl = info.file.response?.url;
-									if (fileUrl) {
-										form.setFieldsValue({
-											"ct-image-2d": fileUrl,
-										});
+					<Flex justify="space-around" gap="large" align="center" wrap>
+						<Form.Item label="CT Image 2D" name="ct-image-2d">
+							<Upload.Dragger
+								customRequest={uploadToAzure}
+								accept="image/*"
+								multiple={false}
+								maxCount={1}
+								onChange={(info) => {
+									if (info.file.status === "done") {
+										const fileUrl = info.file.response?.url;
+										if (fileUrl) {
+											form.setFieldsValue({
+												"ct-image-2d": fileUrl,
+											});
+										}
 									}
-								}
-							}}
-						>
-							<p className="ant-upload-drag-icon">
-								<InboxOutlined />
-							</p>
-							<p className="ant-upload-text">Click or drag file to this area to upload</p>
-							<p className="ant-upload-hint">Only one file is allowed.</p>
-						</Upload.Dragger>
-					</Form.Item>
+								}}
+							>
+								<p className="ant-upload-drag-icon">
+									<InboxOutlined />
+								</p>
+								<p className="ant-upload-text">Click or drag file to this area to upload</p>
+								<p className="ant-upload-hint">Only one file is allowed.</p>
+							</Upload.Dragger>
+						</Form.Item>
 
-					<Form.Item label="CT Image 3D" name="ct-image-3d">
-						<Upload.Dragger
-							customRequest={uploadToAzure}
-							accept="image/*"
-							multiple={false}
-							maxCount={1}
-							onChange={(info) => {
-								if (info.file.status === "done") {
-									const fileUrl = info.file.response?.url;
-									if (fileUrl) {
-										form.setFieldsValue({
-											"ct-image-3d": fileUrl,
-										});
+						<Form.Item label="CT Image 3D" name="ct-image-3d">
+							<Upload.Dragger
+								customRequest={uploadToAzure}
+								accept="image/*"
+								multiple={false}
+								maxCount={1}
+								onChange={(info) => {
+									if (info.file.status === "done") {
+										const fileUrl = info.file.response?.url;
+										if (fileUrl) {
+											form.setFieldsValue({
+												"ct-image-3d": fileUrl,
+											});
+										}
 									}
-								}
-							}}
-						>
-							<p className="ant-upload-drag-icon">
-								<InboxOutlined />
-							</p>
-							<p className="ant-upload-text">Click or drag file to this area to upload</p>
-							<p className="ant-upload-hint">Only one file is allowed.</p>
-						</Upload.Dragger>
-					</Form.Item>
+								}}
+							>
+								<p className="ant-upload-drag-icon">
+									<InboxOutlined />
+								</p>
+								<p className="ant-upload-text">Click or drag file to this area to upload</p>
+								<p className="ant-upload-hint">Only one file is allowed.</p>
+							</Upload.Dragger>
+						</Form.Item>
 					</Flex>
 					<div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
 						<Form.Item label="Length" name="length" rules={[{ message: "Please enter length" }]}>
