@@ -112,12 +112,12 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 						]}
 					></Descriptions>
 
-					<>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handlePayment}>
-							Pay Now
+							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 
