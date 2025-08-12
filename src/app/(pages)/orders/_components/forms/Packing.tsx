@@ -16,20 +16,15 @@ interface IFormData {
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm<IFormData>();
-	const [formData, setFormData] = useState<IFormData>({});
-
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	const next = () => setCurrent(current + 1);
 
 	const handleSubmit = async (values: IFormData) => {
-		setFormData(values);
-		if (!formData) return;
-
 		try {
-			const response = await api.post(`/orders/${orderId}/packing`, formData);
-			console.log("File uploaded successfully:", response.data);
+			const response = await api.post(`/orders/${orderId}/packing`, values);
+			console.log("File uploaded successfully:", response);
 			setIsSuccess(true);
 			message.success("File uploaded successfully.");
 		} catch (error) {
