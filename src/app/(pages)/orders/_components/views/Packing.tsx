@@ -58,12 +58,12 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							? {
 									destroyOnClose: true,
 									imageRender: () => <video muted height="100%" controls src={data.implantVideo} />,
-									toolbarRender: () => null,
+									// toolbarRender: () => null,
 									mask: "Final Implant Video",
 								}
 							: false
 					}
-					src="Video"
+					src={data.implantVideo ? "https://placehold.co/200x200/5f77ff/white?text=Click+to+Preview" : "https://placehold.co/200x200?text=Not+available" }
 					fallback="https://placehold.co/200x200?text=Not+available"
 					alt=""
 				/>
@@ -75,7 +75,6 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					preview={
 						data.implantImage
 							? {
-									visible: data.implantImage ? true : false,
 									mask: "Final Implant Picture",
 								}
 							: false
@@ -89,7 +88,6 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					preview={
 						data.packedImage
 							? {
-									visible: data.packedImage ? true : false,
 									mask: "Final Pack Picture",
 								}
 							: false
