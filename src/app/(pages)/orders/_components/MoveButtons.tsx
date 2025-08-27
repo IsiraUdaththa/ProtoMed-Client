@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, DeleteOutlined, EditOutlined, StopOutlined, UndoOutlined } from "@ant-design/icons";
 import { message, Dropdown, MenuProps, Button } from "antd";
 
 import api from "@/lib/axiosInstance";
@@ -35,6 +35,26 @@ const handleDelete = async (orderId: string) => {
 	}
 };
 
+const handleCancel = async (orderId: string) => {
+	try {
+		await api.patch(`/orders/${orderId}/cancel`);
+		message.success("Order Canceled");
+	} catch (error) {
+		console.error(error);
+		message.error("Failed to cancel order");
+	}
+};
+
+const handleRevoke = async (orderId: string) => {
+	try {
+		await api.patch(`/orders/${orderId}/revoke`);
+		message.success("Order Revoked");
+	} catch (error) {
+		console.error(error);
+		message.error("Failed to revoke order");
+	}
+};
+
 export const OrderActions = ({ orderId }: { orderId: string }) => {
 	const items: MenuProps["items"] = [
 		{
@@ -53,6 +73,18 @@ export const OrderActions = ({ orderId }: { orderId: string }) => {
 			label: "Delete",
 			danger: true,
 		},
+		{
+			key: "cancel",
+			icon: <StopOutlined />,
+			label: "Cancel",
+			danger: true,
+		},
+		{
+			key: "revoke",
+			icon: <UndoOutlined />,
+			label: "Revoke",
+			danger: true,
+		},
 	];
 
 	const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
@@ -65,6 +97,12 @@ export const OrderActions = ({ orderId }: { orderId: string }) => {
 				break;
 			case "delete":
 				handleDelete(orderId);
+				break;
+			case "cancel":
+				handleCancel(orderId);
+				break;
+			case "revoke":
+				handleRevoke(orderId);
 				break;
 			default:
 				break;
@@ -97,6 +135,18 @@ export const OrderActionsButton = ({ orderId }: { orderId: string }) => {
 			label: "Delete",
 			danger: true,
 		},
+		{
+			key: "cancel",
+			icon: <StopOutlined />,
+			label: "Cancel",
+			danger: true,
+		},
+		{
+			key: "revoke",
+			icon: <UndoOutlined />,
+			label: "Revoke",
+			danger: true,
+		},
 	];
 
 	const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
@@ -109,6 +159,12 @@ export const OrderActionsButton = ({ orderId }: { orderId: string }) => {
 				break;
 			case "delete":
 				handleDelete(orderId);
+				break;
+			case "cancel":
+				handleCancel(orderId);
+				break;
+			case "revoke":
+				handleRevoke(orderId);
 				break;
 			default:
 				break;

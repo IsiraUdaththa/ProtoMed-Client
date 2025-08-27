@@ -4,7 +4,7 @@
 import React from "react";
 import { Card, Alert, Space, Result } from "antd";
 // Import all individual form components
-import { SmileOutlined } from "@ant-design/icons";
+import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
 import Design from "../views/Design";
 import CTValidationView from "../views/CTValidation";
@@ -35,6 +35,14 @@ import Invoice from "./Invoice";
 
 // Function to render the appropriate form based on status
 const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, status }) => {
+	if (status.startsWith("canceled")) {
+		return (
+			<Card>
+				<Result icon={<FrownOutlined />} title="Order has been cancelled!" />
+			</Card>
+		);
+	}
+
 	const renderForm = () => {
 		switch (status) {
 			case "draft":

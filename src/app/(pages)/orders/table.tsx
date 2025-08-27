@@ -251,6 +251,7 @@ const App: React.FC = () => {
 				{ text: "finalPayment", value: "finalPayment" },
 				{ text: "invoice", value: "invoice" },
 				{ text: "completed", value: "completed" },
+				{ text: "canceled", value: "canceled" },
 			],
 		},
 		{
