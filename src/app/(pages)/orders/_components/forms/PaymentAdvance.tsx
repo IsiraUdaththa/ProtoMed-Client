@@ -7,7 +7,7 @@ import api from "@/lib/axiosInstance";
 
 const PaymentStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
-	const [currency, setCurrency] = useState("lkr");
+	const [currency, setCurrency] = useState("usd");
 	const [amount, setAmount] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
