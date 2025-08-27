@@ -74,7 +74,9 @@ const DesignFileForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							customRequest={uploadToAzure}
 							onChange={(info) => handleChange(info, "designFile")}
 							listType="picture"
-							maxCount={1}
+							maxCount={5}
+							accept=".stl,.cly"
+
 						>
 							<Button icon={<UploadOutlined />}>Upload Design File</Button>
 						</Upload>
