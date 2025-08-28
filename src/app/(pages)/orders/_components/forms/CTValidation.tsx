@@ -5,6 +5,7 @@ import { InboxOutlined, FileTextOutlined, SolutionOutlined, SmileOutlined } from
 
 import api from "@/lib/axiosInstance";
 import uploadToAzure from "@/services/azure.service";
+import CustomDropdown from "@/app/_components/CustomDropdown";
 
 interface IFormData {
 	width: number;
@@ -185,7 +186,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="implant-name"
 						rules={[{ required: true, message: "Please enter name" }]}
 					>
-						<Input />
+						<CustomDropdown type="implantName" />
 					</Form.Item>
 
 					<Form.Item
