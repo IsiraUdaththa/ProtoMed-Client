@@ -51,7 +51,7 @@ const Apsdap: React.FC = () => {
 						<Input prefix={<UserOutlined />} placeholder="email" />
 					</Form.Item>
 					<Form.Item name="password" rules={[{ required: true, message: "Please input your Password!" }]}>
-						<Input prefix={<LockOutlined />} type="password" placeholder="password" />
+						<Input.Password prefix={<LockOutlined />} type="password" placeholder="password" />
 					</Form.Item>
 					<Form.Item>
 						<Flex justify="space-between" align="center">

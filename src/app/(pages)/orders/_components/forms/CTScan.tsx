@@ -94,6 +94,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 									setManualEntry(false);
 								} else if (info.file.status === "removed") {
 									setIsUploaded(false);
+									setManualEntry(true);
 								}
 							}}
 						>
@@ -109,9 +110,10 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							disabled={isUploaded}
 							value={form.getFieldValue("ctScanLink")}
 							onChange={(e) => {
-								const value = e.target.value;
-								form.setFieldsValue({ ctScanLink: value });
-								setManualEntry(value === "true");
+								setManualEntry(e.target.value !== "");
+							}}
+							onBlur={(e) => {
+								form.setFieldsValue({ ctScanLink: e.target.value });
 							}}
 						/>
 					</Form.Item>
@@ -136,11 +138,9 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Input.TextArea rows={4} />
 					</Form.Item>
 
-					<Form.Item>
-						<Button type="primary" htmlType="submit" block>
-							Next
-						</Button>
-					</Form.Item>
+					<Button type="primary" htmlType="submit" block>
+						Next
+					</Button>
 				</Form>
 			)}
 
@@ -160,7 +160,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Comment:", children: formData.comment },
 						]}
 					></Descriptions>
-					<Space>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm

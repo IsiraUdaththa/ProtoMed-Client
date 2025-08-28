@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Space } from "antd";
+import { Form, Input, Button, Steps, Result, message, Descriptions, Space } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -116,13 +116,14 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Comment", children: approvalData.comment || "No comment provided" },
 						]}
 					></Descriptions>
-					<Card></Card>
 
-					<Form.Item>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={submitApproval} loading={loading}>
-							Submit Approval
-						</Button>
+					<Form.Item style={{ marginTop: 8 }}>
+						<Space>
+							<Button onClick={prev}>Back</Button>
+							<Button type="primary" onClick={submitApproval} loading={loading}>
+								Submit Approval
+							</Button>
+						</Space>
 					</Form.Item>
 				</>
 			)}

@@ -11,8 +11,8 @@ const UserTag: React.FC<{ userId: string }> = ({ userId }) => {
 
 	if (error || !data) {
 		return (
-			<Tag icon={<WarningOutlined />} bordered={false} color="red">
-				Invalid User
+			<Tag icon={<WarningOutlined />} bordered={false} color="orange">
+				Not Assigned
 			</Tag>
 		);
 	}

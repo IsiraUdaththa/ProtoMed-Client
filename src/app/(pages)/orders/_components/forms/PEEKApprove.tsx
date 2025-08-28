@@ -109,17 +109,20 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "Approval Status ", children: approvalData.isApproved },
+							{
+								label: "Approval Status ",
+								children: approvalData.isApproved ? "Approved" : "Not Approved",
+							},
 							{ label: "Comment", children: approvalData.comment },
 						]}
 					></Descriptions>
 
-					<Form.Item>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
-					</Form.Item>
+					</Space>
 				</>
 			)}
 

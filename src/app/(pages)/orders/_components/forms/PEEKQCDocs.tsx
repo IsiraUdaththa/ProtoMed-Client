@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Result, Form, Descriptions, message, Input } from "antd";
+import { Button, Steps, Result, Form, Descriptions, message, Input, Space } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
@@ -9,10 +9,10 @@ import api from "@/lib/axiosInstance";
 import uploadToAzure from "@/services/azure.service";
 
 type FormDataType = {
-  images: string[]; // array of images URLs
-  implantModelA?: string;
-  implantModelB?: string;
-  implantModelC?: string;
+	images: string[]; // array of images URLs
+	implantModelA?: string;
+	implantModelB?: string;
+	implantModelC?: string;
 };
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -42,7 +42,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<{url: string}>>, fieldName: keyof FormDataType) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: keyof FormDataType) => {
 		if (info.file.status === "done") {
 			const fileList = info.fileList
 				.filter((file) => file.status === "done")
@@ -93,26 +93,14 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						</Form.Item>
 					</div>
 
-					<Form.Item
-						label="A"
-						name="implantModelA"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="A" name="implantModelA" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="B"
-						name="implantModelB"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="B" name="implantModelB" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="C"
-						name="implantModelC"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="C" name="implantModelC" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item className="mt-6">
@@ -125,19 +113,17 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 
 			{current === 1 && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-						]}
-					></Descriptions>
-					<>
+					<Descriptions bordered size="small" column={1}>
+						<Descriptions.Item label="implantModelA">{formData["implantModelA"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelB">{formData["implantModelB"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelC">{formData["implantModelC"]}</Descriptions.Item>
+					</Descriptions>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 
