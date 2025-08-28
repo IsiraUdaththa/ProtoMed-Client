@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Form, Input, Button, Steps, Result, Descriptions } from "antd";
+import { Form, Input, Button, Steps, Result, Descriptions, Space } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -72,12 +72,12 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						items={[{ label: "Invoice Number", children: invoiceNumber }]}
 					></Descriptions>
 
-					<>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 

@@ -134,7 +134,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		}
 
 		next();
-		 // Move to success/error step
+		// Move to success/error step
 	};
 	return (
 		<>
@@ -301,30 +301,31 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Space>
 				</>
 			)}
-{current === 2 && isSuccess !== null && (
-	<>
-		<Result
-			status={isSuccess ? "success" : "error"}
-			title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
-			subTitle={
-				isSuccess
-					? "Your order has been submitted successfully."
-					: "There was an issue submitting your order. Please try again."
-			}
-		/>
-		<Flex justify="center" align="center" gap="10px">
-					<Button
-						type="primary"
-						onClick={() => {
-							form.resetFields();
-							setFormData({});
-							setIsSuccess(null);
-							setCurrent(0);
-						}}
-					>
-						Make a New Order
-					</Button>
-			</Flex>	</>
+			{current === 2 && isSuccess !== null && (
+				<>
+					<Result
+						status={isSuccess ? "success" : "error"}
+						title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
+						subTitle={
+							isSuccess
+								? "Your order has been submitted successfully."
+								: "There was an issue submitting your order. Please try again."
+						}
+					/>
+					<Flex justify="center" align="center" gap="10px">
+						<Button
+							type="primary"
+							onClick={() => {
+								form.resetFields();
+								setFormData({});
+								setIsSuccess(null);
+								setCurrent(0);
+							}}
+						>
+							Make a New Order
+						</Button>
+					</Flex>
+				</>
 			)}
 		</>
 	);

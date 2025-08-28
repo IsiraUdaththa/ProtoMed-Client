@@ -21,6 +21,16 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<data>();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -58,7 +68,7 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 	];
 
 	return (
-		<div style={{ position: "relative", paddingBottom: 48 }}>
+		<>
 			{/* Download button */}
 			<Tooltip title={data.ctScanLink ? "" : "CT Scan link not available"}>
 				<span>
@@ -70,33 +80,37 @@ const CTScan: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			<Divider />
 
-			<Descriptions items={items} column={3} />
+			<Descriptions items={items} column={columns} />
 
 			{data.checkedBy && data.createdAt && (
-				<Tooltip color="white"
+				<Tooltip
+					color="white"
 					placement="left"
 					title={
 						<>
-							<div><UserTag userId={data.checkedBy} /></div>
-							<div style={{ color: "black" }}><DateDisplay isoDate={data.createdAt} /></div>
+							<div>
+								<UserTag userId={data.checkedBy} />
+							</div>
+							<div style={{ color: "black" }}>
+								<DateDisplay isoDate={data.createdAt} />
+							</div>
 						</>
 					}
 				>
 					<Button
-						
 						type="text"
 						shape="circle"
 						icon={<ExclamationCircleOutlined />}
 						style={{
 							position: "absolute",
-							bottom: 0,
-							right: 0,
+							bottom: 24, // give a little breathing room
+							right: 24,
 						}}
 						//aria-label="CT Scan Metadata"
 					/>
 				</Tooltip>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -8,7 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
 import AssignOrder from "./_components/AssignOrder";
-import OrderActions from "./_components/MoveButtons";
+import {OrderActions} from "./_components/MoveButtons";
 
 import api from "@/lib/axiosInstance";
 
@@ -251,6 +251,7 @@ const App: React.FC = () => {
 				{ text: "finalPayment", value: "finalPayment" },
 				{ text: "invoice", value: "invoice" },
 				{ text: "completed", value: "completed" },
+				{ text: "canceled", value: "canceled" },
 			],
 		},
 		{

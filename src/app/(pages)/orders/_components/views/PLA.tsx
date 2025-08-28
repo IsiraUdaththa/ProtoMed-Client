@@ -58,6 +58,16 @@ type Data = PLA[];
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -217,17 +227,17 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					return (
 						<Tabs.TabPane tab={`Print Attempt #${index + 1}`} key={index}>
-							<Space direction="vertical">
+							<Space direction="vertical" style={{width:"100%"}}>
 								<Card>
-									<Descriptions title="Inner Print" items={outerItems} column={2} />
+									<Descriptions title="Inner Print" items={outerItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="Outer Print" items={innerItems} column={2} />
+									<Descriptions title="Outer Print" items={innerItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Divider />
-									<Flex justify="space-around">
+									<Flex justify="space-around" wrap>
 										<Table
 											columns={[
 												{
@@ -318,7 +328,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 								</Card>
 
 								<Card>
-									<Descriptions title="Approval" items={approvalItems} column={2} />
+									<Descriptions title="Approval" items={approvalItems} column={columns} />
 								</Card>
 							</Space>
 						</Tabs.TabPane>
