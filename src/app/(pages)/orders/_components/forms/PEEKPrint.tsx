@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions, Space } from "antd";
+import { Button, Steps, Input, DatePicker, Result, Form, Descriptions, Space } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
+import CustomDropdown from "@/app/_components/CustomDropdown";
 
 const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -54,20 +55,13 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<>
 					<Form layout="vertical" form={FormData}>
 						<Form.Item label="Print Machine" name="printMachine">
-							<Select placeholder="Select Print Machine">
-								<Select.Option value="PM 300">PM 300</Select.Option>
-								<Select.Option value="F160">F160</Select.Option>
-							</Select>
+							<CustomDropdown type="implantPrintMachines" placeholder="Select Printing Machine" />
 						</Form.Item>
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
 						<Form.Item label="Material" name="material">
-							<Select placeholder="Select Print Material">
-								<Select.Option value="PEEK">PEEK</Select.Option>
-								<Select.Option value="PMMA">PMMA</Select.Option>
-								<Select.Option value="Bonlecule">Bonlecule</Select.Option>
-							</Select>
+							<CustomDropdown type="material" placeholder="Select print material" />
 						</Form.Item>
 						<Form.Item label="Batch Number" name="batchNumber">
 							<Input />

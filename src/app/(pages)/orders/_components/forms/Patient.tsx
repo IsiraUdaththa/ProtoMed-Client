@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { RuleObject } from "antd/es/form";
 
 import api from "@/lib/axiosInstance";
+import CustomDropdown from "@/app/_components/CustomDropdown";
 
 interface PhoneNumberValue {
 	areaCode: string;
@@ -209,24 +210,10 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					<Form.Item
 						label="CT Scan Collecting Method"
-						name="collectingMethod"
+						name="ctScanMethod"
 						rules={[{ message: "Please select a method" }]}
 					>
-						<Select>
-							{[
-								"DVD - Courrier by patient",
-								"DVD - Collect by company",
-								"Google Drive Upload",
-								"Website Upload",
-								"WeTransfer",
-								"Clay Model",
-								"None",
-							].map((method) => (
-								<Select.Option key={method} value={method}>
-									{method}
-								</Select.Option>
-							))}
-						</Select>
+						<CustomDropdown type="CT Collecting Method" />
 					</Form.Item>
 
 					<Form.Item
@@ -238,19 +225,19 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<PhoneInput distinct enableSearch onlyCountries={["us", "lk", "in", "sg"]} />
 					</Form.Item>
 
-					<Form.Item label="Doctor's Name" name="surgeonName">
-						<Input />
+					<Form.Item label="Surgeon's Name" name="surgeonName">
+						<CustomDropdown type="surgeons" />
 					</Form.Item>
 
 					<Form.Item label="Hospital Name" name="hospital">
-						<Input />
+						<CustomDropdown type="hospitals" />
 					</Form.Item>
 
 					<Form.Item label="Ward" name="ward">
 						<Input />
 					</Form.Item>
 
-					<Form.Item label="Planned Date" name="plannedDate">
+					<Form.Item label="Planned Date" name="plannedSurgeryDate">
 						<DatePicker />
 					</Form.Item>
 

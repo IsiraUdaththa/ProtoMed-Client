@@ -1,130 +1,149 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
-import {
-  Select,
-  Input,
-  Button,
-  Space,
-  Popconfirm,
-  Typography,
-  message,
-} from "antd";
+import { Select, Popconfirm, Typography } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
+
 import api from "@/lib/axiosInstance";
 
-const { Option } = Select;
-const { Text } = Typography;
-
-interface DropdownSelectorProps {
-  type: string; // e.g. "doctors", "hospitals", "labs"
-  label: string; // e.g. "Doctor", "Hospital"
-  prefix?: string; // e.g. "Dr." for doctors
-  value?: string;
-  onChange?: (value: string) => void;
+interface CustomDropdownProps {
+	type: string; // e.g. "doctors", "categories", "labs"
+	prefix?: string; // optional prefix (e.g. "Dr.")
+	value?: string;
+	placeholder?: string; // customizable placeholder
+	onChange?: (value: string | undefined) => void;
 }
 
-const DropdownSelector: React.FC<DropdownSelectorProps> = ({
-  type,
-  label,
-  prefix,
-  value,
-  onChange,
-}) => {
-  const [items, setItems] = useState<string[]>([]);
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(value);
-  const [newItem, setNewItem] = useState<string>("");
-  const [error, setError] = useState<string>("");
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ type, prefix, value, placeholder, onChange }) => {
+	const [items, setItems] = useState<string[]>([]);
+	const [selectedItem, setSelectedItem] = useState<string | undefined>(value);
+	const [error, setError] = useState<string>("");
+	const [searchText, setSearchText] = useState<string>("");
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await api.get(`dropdowns/${type}`);
-        setItems(response.data);
-      } catch (err) {
-        message.error(`Failed to load ${label.toLowerCase()}s, using fallback list`);
-        setItems([`${prefix ? prefix + " " : ""}Default ${label} 1`, `${prefix ? prefix + " " : ""}Default ${label} 2`]);
-      }
-    };
-    fetchItems();
-  }, [type, label, prefix]);
+	// Load dropdown items
+	useEffect(() => {
+		const fetchItems = async () => {
+			try {
+				const response = await api.get(`dropdowns/${type}`);
+				setItems(response.data || []);
+			} catch {
+				// fallback if API fails
+			}
+		};
+		fetchItems();
+	}, [type, prefix]);
 
-  const addItem = async () => {
-    const formattedName = `${prefix ? prefix + " " : ""}${newItem.trim()}`;
-    if (!newItem.trim()) {
-      setError(`Please enter a ${label.toLowerCase()} name`);
-      return;
-    }
-    if (items.includes(formattedName)) {
-      setError(`"${formattedName}" already exists`);
-      return;
-    }
-    try {
-      await api.put(`dropdowns/${type}`, { name: formattedName });
-      setItems([...items, formattedName]);
-      setSelectedItem(formattedName);
-      onChange?.(formattedName);
-      setNewItem("");
-      setError("");
-      message.success(`${formattedName} added!`);
-    } catch (err) {
-      message.error(`Failed to add ${label.toLowerCase()}`);
-    }
-  };
+	// Add new item
+	const addItem = async (name: string) => {
+		const formattedName = `${prefix ? prefix + " " : ""}${name.trim()}`;
+		if (!name.trim()) {
+			setError("Please enter a valid value");
+			return;
+		}
+		if (items.includes(formattedName)) {
+			setError(`"${formattedName}" already exists`);
+			return;
+		}
+		try {
+			await api.post(`dropdowns/${type}`, { item: formattedName });
+			const updatedItems = [...items, formattedName];
+			setItems(updatedItems);
+			setSelectedItem(formattedName);
+			onChange?.(formattedName);
+			setSearchText(""); // clear search after add
+			setError("");
+		} catch {
+			setError("Failed to add item");
+		}
+	};
 
-  const deleteItem = async (name: string) => {
-    try {
-      await api.delete(`dropdowns/${type}/${encodeURIComponent(name)}`);
-      setItems(items.filter((i) => i !== name));
-      if (selectedItem === name) {
-        setSelectedItem(undefined);
-        onChange?.("");
-      }
-      message.success(`${name} deleted!`);
-    } catch (err) {
-      message.error(`Failed to delete ${label.toLowerCase()}`);
-    }
-  };
+	// Delete item
+	const deleteItem = async (name: string) => {
+		try {
+			await api.delete(`dropdowns/${type}`, { data: { item: name } });
+			const updatedItems = items.filter((i) => i !== name);
+			setItems(updatedItems);
+			if (selectedItem === name) {
+				setSelectedItem(undefined);
+				onChange?.("");
+			}
+		} catch {
+			setError("Failed to delete item");
+		}
+	};
 
-  return (
-    <Select
-      style={{ width: 300 }}
-      placeholder={`Select or add a ${label.toLowerCase()}`}
-      value={selectedItem}
-      onChange={(val) => {
-        setSelectedItem(val);
-        onChange?.(val);
-      }}
-      dropdownRender={(menu) => (
-        <>
-          {menu}
-          <Space direction="vertical" style={{ padding: "8px", display: "flex" }}>
-            <Input
-              placeholder={`Enter name (without '${prefix || ""}')`}
-              value={newItem}
-              onChange={(e) => { setNewItem(e.target.value); setError(""); }}
-              onPressEnter={addItem}
-            />
-            {error && <Text type="danger">{error}</Text>}
-            <Button type="link" icon={<PlusOutlined />} onClick={addItem}>
-              Add
-            </Button>
-          </Space>
-        </>
-      )}
-      optionLabelProp="label"
-    >
-      {items.map((item) => (
-        <Option key={item} value={item} label={item}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span>{item}</span>
-            <Popconfirm title={`Delete ${item}?`} onConfirm={() => deleteItem(item)} okText="Yes" cancelText="No">
-              <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "red" }} />
-            </Popconfirm>
-          </div>
-        </Option>
-      ))}
-    </Select>
-  );
+	// Check if search text already exists
+	const exists = items.some((i) => i.toLowerCase() === searchText.toLowerCase());
+
+	return (
+		<>
+			<Select
+				style={{ width: "100%" }}
+				placeholder={placeholder}
+				value={selectedItem}
+				showSearch
+				onSearch={(val) => setSearchText(val)}
+				filterOption={(input, option) => (option?.value as string).toLowerCase().includes(input.toLowerCase())}
+				onChange={(val) => {
+					if (typeof val === "string" && val.startsWith("__add_new__:")) {
+						const newVal = val.replace("__add_new__:", "");
+						addItem(newVal);
+					} else {
+						setSelectedItem(val);
+						onChange?.(val);
+					}
+				}}
+				onInputKeyDown={(e) => {
+					if (e.key === "Enter" && searchText && !exists) {
+						addItem(searchText);
+					}
+				}}
+				optionLabelProp="label"
+			>
+				{/* Normal items */}
+				{items.map((item) => (
+					<Select.Option key={item} value={item} label={item}>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}
+						>
+							<Highlighter
+								highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+								searchWords={[searchText]}
+								autoEscape
+								textToHighlight={item}
+							/>
+							<Popconfirm title={`Delete "${item}"?`} onConfirm={() => deleteItem(item)}>
+								<DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "red" }} />
+							</Popconfirm>
+						</div>
+					</Select.Option>
+				))}
+
+				{/* "Add new" item */}
+				{searchText && !exists && (
+					<Select.Option
+						key="__add_new__"
+						value={`__add_new__:${searchText}`} // special value to detect "add new"
+						label={`Add "${searchText}"`}
+						style={{ display: "flex", alignItems: "center" }}
+					>
+						<PlusOutlined style={{ marginRight: 8 }} />
+						Add &quot;{searchText}&quot;
+					</Select.Option>
+				)}
+			</Select>
+
+			{error && (
+				<Typography.Text type="danger" style={{ marginTop: 4, display: "block" }}>
+					{error}
+				</Typography.Text>
+			)}
+		</>
+	);
 };
 
-export default DropdownSelector;
+export default CustomDropdown;
