@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Select, Input, Button, Space, Popconfirm, Typography } from "antd";
+import { Select, Popconfirm, Typography } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
 
 import api from "@/lib/axiosInstance";
 
@@ -13,17 +14,11 @@ interface CustomDropdownProps {
 	onChange?: (value: string | undefined) => void;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({
-	type,
-	prefix,
-	value,
-	placeholder,
-	onChange,
-}) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ type, prefix, value, placeholder, onChange }) => {
 	const [items, setItems] = useState<string[]>([]);
 	const [selectedItem, setSelectedItem] = useState<string | undefined>(value);
-	const [newItem, setNewItem] = useState<string>("");
 	const [error, setError] = useState<string>("");
+	const [searchText, setSearchText] = useState<string>("");
 
 	// Load dropdown items
 	useEffect(() => {
@@ -32,16 +27,16 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 				const response = await api.get(`dropdowns/${type}`);
 				setItems(response.data || []);
 			} catch {
-				// setItems([`${prefix ? prefix + " " : ""}Default 1`, `${prefix ? prefix + " " : ""}Default 2`]);
+				// fallback if API fails
 			}
 		};
 		fetchItems();
 	}, [type, prefix]);
 
 	// Add new item
-	const addItem = async () => {
-		const formattedName = `${prefix ? prefix + " " : ""}${newItem.trim()}`;
-		if (!newItem.trim()) {
+	const addItem = async (name: string) => {
+		const formattedName = `${prefix ? prefix + " " : ""}${name.trim()}`;
+		if (!name.trim()) {
 			setError("Please enter a valid value");
 			return;
 		}
@@ -55,7 +50,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 			setItems(updatedItems);
 			setSelectedItem(formattedName);
 			onChange?.(formattedName);
-			setNewItem("");
+			setSearchText(""); // clear search after add
 			setError("");
 		} catch {
 			setError("Failed to add item");
@@ -77,48 +72,77 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 		}
 	};
 
+	// Check if search text already exists
+	const exists = items.some((i) => i.toLowerCase() === searchText.toLowerCase());
+
 	return (
-		<Select
-			style={{ width: "100%" }}
-			placeholder={placeholder}
-			value={selectedItem}
-			onChange={(val) => {
-				setSelectedItem(val);
-				onChange?.(val);
-			}}
-			popupRender={(menu) => (
-				<>
-					{menu}
-					<Space direction="vertical" style={{ padding: "8px", display: "flex" }}>
-						<Input
-							placeholder={`Enter value${prefix ? ` (without '${prefix}')` : ""}`}
-							value={newItem}
-							onChange={(e) => {
-								setNewItem(e.target.value);
-								setError("");
+		<>
+			<Select
+				style={{ width: "100%" }}
+				placeholder={placeholder}
+				value={selectedItem}
+				showSearch
+				onSearch={(val) => setSearchText(val)}
+				filterOption={(input, option) => (option?.value as string).toLowerCase().includes(input.toLowerCase())}
+				onChange={(val) => {
+					if (typeof val === "string" && val.startsWith("__add_new__:")) {
+						const newVal = val.replace("__add_new__:", "");
+						addItem(newVal);
+					} else {
+						setSelectedItem(val);
+						onChange?.(val);
+					}
+				}}
+				onInputKeyDown={(e) => {
+					if (e.key === "Enter" && searchText && !exists) {
+						addItem(searchText);
+					}
+				}}
+				optionLabelProp="label"
+			>
+				{/* Normal items */}
+				{items.map((item) => (
+					<Select.Option key={item} value={item} label={item}>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
 							}}
-							onPressEnter={addItem}
-						/>
-						{error && <Typography.Text type="danger">{error}</Typography.Text>}
-						<Button type="link" icon={<PlusOutlined />} onClick={addItem}>
-							Add new
-						</Button>
-					</Space>
-				</>
+						>
+							<Highlighter
+								highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+								searchWords={[searchText]}
+								autoEscape
+								textToHighlight={item}
+							/>
+							<Popconfirm title={`Delete "${item}"?`} onConfirm={() => deleteItem(item)}>
+								<DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "red" }} />
+							</Popconfirm>
+						</div>
+					</Select.Option>
+				))}
+
+				{/* "Add new" item */}
+				{searchText && !exists && (
+					<Select.Option
+						key="__add_new__"
+						value={`__add_new__:${searchText}`} // special value to detect "add new"
+						label={`Add "${searchText}"`}
+						style={{ display: "flex", alignItems: "center" }}
+					>
+						<PlusOutlined style={{ marginRight: 8 }} />
+						Add &quot;{searchText}&quot;
+					</Select.Option>
+				)}
+			</Select>
+
+			{error && (
+				<Typography.Text type="danger" style={{ marginTop: 4, display: "block" }}>
+					{error}
+				</Typography.Text>
 			)}
-			optionLabelProp="label"
-		>
-			{items.map((item) => (
-				<Select.Option key={item} value={item} label={item}>
-					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-						<span>{item}</span>
-						<Popconfirm title={`Delete "${item}"?`} onConfirm={() => deleteItem(item)}>
-							<DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "red" }} />
-						</Popconfirm>
-					</div>
-				</Select.Option>
-			))}
-		</Select>
+		</>
 	);
 };
 
