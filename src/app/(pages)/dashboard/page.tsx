@@ -1,11 +1,11 @@
 "use client";
 
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Space } from "antd";
 import Link from "next/link";
 
 import StageAnalytics from "./StageAnalytics";
 import AssignedTable from "./AssignedTable";
-import UnassignedTable from "./UnassignedTable";
+import Dashboard from "./Charts";
 
 export default function DashboardPage() {
 	return (
@@ -21,11 +21,11 @@ export default function DashboardPage() {
 					},
 				]}
 			/>
-			<StageAnalytics />
-			<br />
-			<AssignedTable />
-			<br />
-			<UnassignedTable />
+			<Space direction="vertical" size={"large"} style={{width:"100%"} }>
+				<StageAnalytics />
+				<Dashboard />
+				<AssignedTable />
+			</Space>
 		</div>
 	);
 }
