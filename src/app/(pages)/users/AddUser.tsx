@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import PhoneInput from "antd-phone-input";
 import { RuleObject } from "antd/es/form";
 
 import api from "@/lib/axiosInstance";
 
-const App: React.FC = () => {
+interface User {
+	_id: string;
+	title?: string;
+	name: string;
+	email: string;
+	phone: string;
+	address?: string;
+	roles: string[];
+}
+
+interface AppProps {
+	user?: User;
+}
+
+const App: React.FC<AppProps> = ({ user }) => {
 	const [form] = Form.useForm();
+
 	type PhoneValue = {
 		countryCode: string;
 		areaCode: string;
@@ -36,17 +51,55 @@ const App: React.FC = () => {
 		{ value: "Dr.", label: "Dr." },
 	];
 
+	useEffect(() => {
+		if (user) {
+			let phoneValue;
+			if (user.phone && typeof user.phone === "string") {
+				// Extract countryCode, areaCode, and phoneNumber safely
+				const match = user.phone.match(/^\+?(\d{1,3})(\d{0,4})(\d+)$/);
+				if (match) {
+					const [, countryCode, areaCode = "", phoneNumber] = match;
+					phoneValue = {
+						countryCode,
+						areaCode,
+						phoneNumber,
+						valid: () => true,
+					};
+				}
+			}
+
+			form.setFieldsValue({
+				title: user.title,
+				name: user.name,
+				email: user.email,
+				phone: phoneValue,
+				roles: user.roles,
+				address: user.address,
+			});
+		}
+	}, [user, form]);
+
 	const onFinish = async (values: { phone: { countryCode: string; areaCode: string; phoneNumber: string } }) => {
 		console.log(values);
 		try {
-			const user = {
+			const phone = values.phone
+				? `+${values.phone.countryCode}${values.phone.areaCode}${values.phone.phoneNumber}`
+				: "";
+
+			const payload = {
 				...values,
-				password: "password",
-				phone: `+${values.phone.countryCode}${values.phone.areaCode}${values.phone.phoneNumber}`,
+				phone,
 			};
-			await api.post(`/users`, user);
-			message.success("User created successfully!");
-			form.resetFields();
+			if (user?._id) {
+				// Update existing user
+				await api.put(`/users/${user._id}`, payload);
+				message.success("User updated successfully!");
+			} else {
+				// Create new user
+				await api.post("/users", { ...payload, password: "password" });
+				message.success("User created successfully!");
+				form.resetFields();
+			}
 		} catch (error) {
 			console.error(error);
 			message.error("Failed to create user.");
