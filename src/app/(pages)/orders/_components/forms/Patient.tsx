@@ -25,7 +25,7 @@ interface IFormData {
 	gender?: string;
 	age?: string;
 	category?: string;
-	collectingMethod?: string;
+	ctScanMethod?: string;
 	contactNumber?: PhoneNumberValue | string;
 	surgeonName?: string;
 	hospital?: string;
@@ -46,7 +46,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 		if (orderId) {
 			const fetchOrderData = async () => {
 				try {
-					const response = await api.get(`orders/${orderId}`);
+					const response = await api.get(`orders/${orderId}/patient`);
 					console.log(response);
 
 					const order = response.data;
@@ -59,7 +59,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						gender: order.gender,
 						age: order.age,
 						category: order.category,
-						collectingMethod: order.collectingMethod,
+						ctScanMethod: order.ctScanMethod,
 						contactNumber: order.contactNumber,
 						surgeonName: order.surgeonName,
 						hospital: order.hospital,
@@ -147,13 +147,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} layout="vertical" onFinish={handleNext}>
-					<Form.Item
-						label="Country"
-						name="country"
-						initialValue={"SL"}
-						rules={[{ message: "Please select a country" }]}
-						required
-					>
+					<Form.Item label="Country" name="country" rules={[{ message: "Please select a country" }]} required>
 						<Select>
 							{[
 								{ label: "Sri Lanka", value: "SL" },
@@ -168,7 +162,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]}>
+					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]} required>
 						<Input />
 					</Form.Item>
 
@@ -212,6 +206,8 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						label="CT Scan Collecting Method"
 						name="ctScanMethod"
 						rules={[{ message: "Please select a method" }]}
+						valuePropName="value"
+						getValueFromEvent={(val) => val}
 					>
 						<CustomDropdown type="CT Collecting Method" />
 					</Form.Item>
@@ -230,7 +226,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Hospital Name" name="hospital">
-						<CustomDropdown type="hospitals" />
+						<CustomDropdown type="hospitals" value="dasdas" />
 					</Form.Item>
 
 					<Form.Item label="Ward" name="ward">
@@ -265,7 +261,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								{ label: "Gender", children: formData.gender },
 								{ label: "Age", children: formData.age },
 								{ label: "Category", children: formData.category },
-								{ label: "CT Scan Collecting Method", children: formData.collectingMethod },
+								{ label: "CT Scan Collecting Method", children: formData.ctScanMethod },
 								{ label: "Phone Number", children: formData.contactNumber as string },
 								{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
 								{ label: "Hospital Name", children: formData.hospital || "N/A" },
