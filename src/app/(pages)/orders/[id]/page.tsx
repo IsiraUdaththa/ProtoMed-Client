@@ -135,7 +135,7 @@ export default function OrderStatusPage() {
 								key: "status",
 								label: "Current Status",
 								children: orderStatus?.status ? (
-									<ActiveForm orderId={orderId} status={orderStatus?.status} />
+									<ActiveForm orderId={orderId} status={orderStatus?.status} category={orderStatus?.patientDetails.category} />
 								) : (
 									<Alert message="No form available for current status" type="info" showIcon />
 								),

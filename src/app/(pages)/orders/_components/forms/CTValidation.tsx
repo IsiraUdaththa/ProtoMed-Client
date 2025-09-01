@@ -17,7 +17,7 @@ interface IFormData {
 	"ct-image-3d"?: string;
 }
 
-const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
+const MultiStepForm: React.FC<{ orderId: string, category: string }> = ({ orderId, category }) => {
 	const [form] = Form.useForm<IFormData>();
 	const [formData, setFormData] = useState<IFormData>({
 		height: 0,
@@ -186,7 +186,7 @@ const MultiStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="implant-name"
 						rules={[{ required: true, message: "Please enter name" }]}
 					>
-						<CustomDropdown type="implantName" />
+						<CustomDropdown type={category} />
 					</Form.Item>
 
 					<Form.Item

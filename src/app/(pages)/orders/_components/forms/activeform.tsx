@@ -34,7 +34,7 @@ import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
 // Function to render the appropriate form based on status
-const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, status }) => {
+const ActiveForm: React.FC<{ orderId: string; status: string; category: string }> = ({ orderId, status, category }) => {
 	if (status.startsWith("canceled")) {
 		return (
 			<Card>
@@ -62,7 +62,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			case "scanValidation":
 				return (
 					<Card>
-						<CTValidation orderId={orderId} />
+						<CTValidation orderId={orderId}  category={category}/>
 					</Card>
 				);
 
@@ -247,7 +247,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 							<CTScan orderId={orderId} />
 						</Card>
 						<Card title="CT Scan Validation">
-							<CTValidation orderId={orderId} />
+							<CTValidation orderId={orderId} category={category} />
 						</Card>
 					</Space>
 				);
