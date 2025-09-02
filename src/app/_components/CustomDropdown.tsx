@@ -33,6 +33,10 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ type, prefix, value, pl
 		fetchItems();
 	}, [type, prefix]);
 
+	useEffect(() => {
+		setSelectedItem(value);
+	}, [value]);
+
 	// Add new item
 	const addItem = async (name: string) => {
 		const formattedName = `${prefix ? prefix + " " : ""}${name.trim()}`;
