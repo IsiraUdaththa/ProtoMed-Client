@@ -2,9 +2,25 @@
 
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState, useEffect } from "react";
-import { Button, DatePicker, Form, Input, Radio, Select, Steps, Result, Descriptions, Space, Flex } from "antd";
+import {
+	Button,
+	DatePicker,
+	Form,
+	Input,
+	Radio,
+	Select,
+	Steps,
+	Result,
+	Descriptions,
+	Space,
+	Flex,
+} from "antd";
 import PhoneInput from "antd-phone-input";
-import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
+import {
+	SolutionOutlined,
+	FileTextOutlined,
+	SmileOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import { RuleObject } from "antd/es/form";
 
@@ -30,14 +46,13 @@ interface IFormData {
 	surgeonName?: string;
 	hospital?: string;
 	ward?: string;
-	plannedDate?: Date;
+	plannedSurgeryDate?: any;
 	comment?: string;
 }
 
 const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm<IFormData>();
 	const [formData, setFormData] = useState<IFormData>({});
-
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
@@ -47,12 +62,10 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			const fetchOrderData = async () => {
 				try {
 					const response = await api.get(`orders/${orderId}/patient`);
-					console.log(response);
-
 					const order = response.data;
 					setFormData(order);
 
-					// Populate form fields with the fetched data
+					// Populate form fields with fetched data
 					form.setFieldsValue({
 						country: order.country,
 						name: order.name,
@@ -60,11 +73,14 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						age: order.age,
 						category: order.category,
 						ctScanMethod: order.ctScanMethod,
+						// ✅ Allow both string and PhoneInput
 						contactNumber: order.contactNumber,
 						surgeonName: order.surgeonName,
 						hospital: order.hospital,
 						ward: order.ward,
-						plannedDate: order.plannedDate,
+						plannedSurgeryDate: order.plannedSurgeryDate
+							? dayjs(order.plannedSurgeryDate)
+							: null,
 						comment: order.comment,
 					});
 				} catch (error) {
@@ -73,21 +89,30 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			};
 			fetchOrderData();
 		} else {
-			// If no orderId, initialize form with empty data for a new order
 			form.resetFields();
 		}
 	}, [orderId, form]);
 
-	// Phone number validator
+	// ✅ Phone number validator
 	const phoneValidator = (_rule: RuleObject, value: unknown): Promise<void> => {
-		const phoneValue = value as PhoneNumberValue;
+		const phoneValue = value as PhoneNumberValue | string;
 
-		if (typeof phoneValue?.valid === "function" && phoneValue.valid()) {
+		// Allow non-empty strings (from backend)
+		if (typeof phoneValue === "string" && phoneValue.trim() !== "") {
+			return Promise.resolve();
+		}
+
+		// Allow PhoneInput objects
+		if (
+			typeof (phoneValue as PhoneNumberValue)?.valid === "function" &&
+			(phoneValue as PhoneNumberValue).valid()
+		) {
 			return Promise.resolve();
 		}
 
 		return Promise.reject("Invalid phone number");
 	};
+
 	// Step navigation
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -95,48 +120,38 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	// Handle Form Submission (First Step)
 	const handleNext = async (values: IFormData) => {
 		const contact = values.contactNumber as PhoneNumberValue;
-		if (contact) {
+		if (contact && typeof contact !== "string") {
 			const { countryCode, areaCode = "", phoneNumber } = contact;
 			values.contactNumber = `+${countryCode} ${areaCode}${phoneNumber}`;
 		}
-
 		setFormData(values);
-		next(); // Move to confirmation step
+		next();
 	};
 
 	// Handle Final Confirmation & Send POST or PUT request
 	const handleConfirm = async () => {
 		const submissionData = {
 			...formData,
-			plannedDate: formData.plannedDate ? dayjs(formData.plannedDate).format("YYYY-MM-DD") : "",
+			plannedSurgeryDate: formData.plannedSurgeryDate
+				? dayjs(formData.plannedSurgeryDate).format("YYYY-MM-DD")
+				: "",
 		};
 
-		try {
-			if (orderId) {
-				// Update existing order (PUT request)
-				const response = await api.post(`/orders/${orderId}`, submissionData);
-				if (response.status === 200) {
-					setIsSuccess(true);
-				} else {
-					setIsSuccess(false);
-				}
-			} else {
-				// Create new order (POST request)
-				const response = await api.post("/orders", submissionData);
-				if (response.status === 201) {
-					setIsSuccess(true);
-				} else {
-					setIsSuccess(false);
-				}
-			}
+		try {if (orderId) {
+	const response = await api.put(`orders/${orderId}/patient`, submissionData);
+	setIsSuccess(response.status === 200);
+} else {
+	const response = await api.post("/orders", submissionData);
+	setIsSuccess(response.status === 201);
+}
+
 		} catch (error) {
 			console.error("Error during submission:", error);
 			setIsSuccess(false);
 		}
-
 		next();
-		// Move to success/error step
 	};
+
 	return (
 		<>
 			<Steps current={current}>
@@ -147,7 +162,11 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 0 && (
 				<Form form={form} layout="vertical" onFinish={handleNext}>
-					<Form.Item label="Country" name="country" rules={[{ message: "Please select a country" }]} required>
+					<Form.Item
+						label="Country"
+						name="country"
+						rules={[{ required: true, message: "Please select a country" }]}
+					>
 						<Select>
 							{[
 								{ label: "Sri Lanka", value: "SL" },
@@ -162,26 +181,37 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="Name" name="name" rules={[{ message: "Please enter your name" }]} required>
+					<Form.Item
+						label="Name"
+						name="name"
+						rules={[{ required: true, message: "Please enter your name" }]}
+					>
 						<Input />
 					</Form.Item>
 
-					<Form.Item label="Gender" name="gender" rules={[{ message: "Please select your gender" }]}>
+					<Form.Item
+						label="Gender"
+						name="gender"
+						rules={[{ required: true, message: "Please select your gender" }]}
+					>
 						<Radio.Group>
 							<Radio value="Male">Male</Radio>
 							<Radio value="Female">Female</Radio>
 						</Radio.Group>
 					</Form.Item>
 
-					<Form.Item label="Age" name="age" rules={[{ message: "Please enter your age" }]}>
+					<Form.Item
+						label="Age"
+						name="age"
+						rules={[{ required: true, message: "Please enter your age" }]}
+					>
 						<Input type="number" min={1} max={100} />
 					</Form.Item>
 
 					<Form.Item
 						label="Category"
 						name="category"
-						rules={[{ message: "Please select a category" }]}
-						required
+						rules={[{ required: true, message: "Please select a category" }]}
 					>
 						<Select>
 							{[
@@ -205,7 +235,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Form.Item
 						label="CT Scan Collecting Method"
 						name="ctScanMethod"
-						rules={[{ message: "Please select a method" }]}
+						rules={[{ required: true, message: "Please select a method" }]}
 						valuePropName="value"
 						getValueFromEvent={(val) => val}
 					>
@@ -215,10 +245,13 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Form.Item
 						label="Phone Number"
 						name="contactNumber"
-						rules={[{ validator: phoneValidator }]}
-						required
+						rules={[{ required: true, validator: phoneValidator }]}
 					>
-						<PhoneInput distinct enableSearch onlyCountries={["us", "lk", "in", "sg"]} />
+						<PhoneInput
+							distinct
+							enableSearch
+							onlyCountries={["us", "lk", "in", "sg"]}
+						/>
 					</Form.Item>
 
 					<Form.Item label="Surgeon's Name" name="surgeonName">
@@ -226,15 +259,19 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Form.Item>
 
 					<Form.Item label="Hospital Name" name="hospital">
-						<CustomDropdown type="hospitals" value="dasdas" />
+						<CustomDropdown type="hospitals" />
 					</Form.Item>
 
 					<Form.Item label="Ward" name="ward">
 						<Input />
 					</Form.Item>
 
-					<Form.Item label="Planned Date" name="plannedSurgeryDate">
-						<DatePicker />
+					<Form.Item
+						label="Planned Date"
+						name="plannedSurgeryDate"
+						rules={[{ required: true, message: "Please select a date" }]}
+					>
+						<DatePicker style={{ width: "100%" }} />
 					</Form.Item>
 
 					<Form.Item label="Comment" name="comment">
@@ -252,29 +289,45 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 1 && formData && (
 				<>
 					<Space direction="vertical" style={{ width: "100%" }}>
-						<Descriptions
-							bordered
-							size="small"
-							column={1}
-							items={[
-								{ label: "Name", children: formData.name },
-								{ label: "Gender", children: formData.gender },
-								{ label: "Age", children: formData.age },
-								{ label: "Category", children: formData.category },
-								{ label: "CT Scan Collecting Method", children: formData.ctScanMethod },
-								{ label: "Phone Number", children: formData.contactNumber as string },
-								{ label: "Doctor&apos;s Name", children: formData.surgeonName || "N/A" },
-								{ label: "Hospital Name", children: formData.hospital || "N/A" },
-								{ label: "Ward", children: formData.ward || "N/A" },
-								{
-									label: "Planned Date",
-									children: formData.plannedDate
-										? dayjs(formData.plannedDate).format("YYYY-MM-DD")
-										: "N/A",
-								},
-								{ label: "Comment", children: formData.comment || "N/A" },
-							]}
-						></Descriptions>
+						<Descriptions bordered size="small" column={1}>
+							<Descriptions.Item label="Name">
+								{formData.name}
+							</Descriptions.Item>
+							<Descriptions.Item label="Gender">
+								{formData.gender}
+							</Descriptions.Item>
+							<Descriptions.Item label="Age">
+								{formData.age}
+							</Descriptions.Item>
+							<Descriptions.Item label="Category">
+								{formData.category}
+							</Descriptions.Item>
+							<Descriptions.Item label="CT Scan Collecting Method">
+								{formData.ctScanMethod}
+							</Descriptions.Item>
+							<Descriptions.Item label="Phone Number">
+								{formData.contactNumber as string}
+							</Descriptions.Item>
+							<Descriptions.Item label="Doctor's Name">
+								{formData.surgeonName || "N/A"}
+							</Descriptions.Item>
+							<Descriptions.Item label="Hospital Name">
+								{formData.hospital || "N/A"}
+							</Descriptions.Item>
+							<Descriptions.Item label="Ward">
+								{formData.ward || "N/A"}
+							</Descriptions.Item>
+							<Descriptions.Item label="Planned Date">
+								{formData.plannedSurgeryDate
+									? dayjs(formData.plannedSurgeryDate).format(
+											"YYYY-MM-DD"
+									  )
+									: "N/A"}
+							</Descriptions.Item>
+							<Descriptions.Item label="Comment">
+								{formData.comment || "N/A"}
+							</Descriptions.Item>
+						</Descriptions>
 						<Space>
 							<Button onClick={prev}>Back</Button>
 							<Button type="primary" onClick={handleConfirm}>
@@ -284,11 +337,16 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 					</Space>
 				</>
 			)}
+
 			{current === 2 && isSuccess !== null && (
 				<>
 					<Result
 						status={isSuccess ? "success" : "error"}
-						title={isSuccess ? "Order Submitted Successfully" : "Submission Failed"}
+						title={
+							isSuccess
+								? "Order Submitted Successfully"
+								: "Submission Failed"
+						}
 						subTitle={
 							isSuccess
 								? "Your order has been submitted successfully."
