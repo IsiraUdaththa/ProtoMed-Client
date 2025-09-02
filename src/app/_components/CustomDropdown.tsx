@@ -8,28 +8,19 @@ import api from "@/lib/axiosInstance";
 
 interface CustomDropdownProps {
 	type: string; // e.g. "doctors", "categories", "labs"
-	prefix?: string;
+	prefix?: string; // optional prefix (e.g. "Dr.")
 	value?: string;
-	placeholder?: string;
+	placeholder?: string; // customizable placeholder
 	onChange?: (value: string | undefined) => void;
-	/** If true, fetch value from API on mount */
-	fetchSelected?: boolean;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({
-	type,
-	prefix,
-	value,
-	placeholder,
-	onChange,
-	fetchSelected = false,
-}) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ type, prefix, value, placeholder, onChange }) => {
 	const [items, setItems] = useState<string[]>([]);
 	const [selectedItem, setSelectedItem] = useState<string | undefined>(value);
 	const [error, setError] = useState<string>("");
 	const [searchText, setSearchText] = useState<string>("");
 
-	// Fetch dropdown items
+	// Load dropdown items
 	useEffect(() => {
 		const fetchItems = async () => {
 			try {
@@ -41,30 +32,6 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 		};
 		fetchItems();
 	}, [type, prefix]);
-
-	// Sync with external value (controlled component behavior)
-	useEffect(() => {
-		setSelectedItem(value);
-	}, [value]);
-
-	// Optionally fetch the current selected value from API
-	useEffect(() => {
-		if (fetchSelected) {
-			const fetchValue = async () => {
-				try {
-					const response = await api.get(`dropdowns/${type}/selected`);
-					const fetchedValue = response.data?.value;
-					if (fetchedValue) {
-						setSelectedItem(fetchedValue);
-						onChange?.(fetchedValue);
-					}
-				} catch {
-					// ignore if fails
-				}
-			};
-			fetchValue();
-		}
-	}, [fetchSelected, type, onChange]);
 
 	// Add new item
 	const addItem = async (name: string) => {
@@ -83,7 +50,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 			setItems(updatedItems);
 			setSelectedItem(formattedName);
 			onChange?.(formattedName);
-			setSearchText("");
+			setSearchText(""); // clear search after add
 			setError("");
 		} catch {
 			setError("Failed to add item");
@@ -98,7 +65,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 			setItems(updatedItems);
 			if (selectedItem === name) {
 				setSelectedItem(undefined);
-				onChange?.(undefined);
+				onChange?.("");
 			}
 		} catch {
 			setError("Failed to delete item");
@@ -116,9 +83,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 				value={selectedItem}
 				showSearch
 				onSearch={(val) => setSearchText(val)}
-				filterOption={(input, option) =>
-					(option?.value as string).toLowerCase().includes(input.toLowerCase())
-				}
+				filterOption={(input, option) => (option?.value as string).toLowerCase().includes(input.toLowerCase())}
 				onChange={(val) => {
 					if (typeof val === "string" && val.startsWith("__add_new__:")) {
 						const newVal = val.replace("__add_new__:", "");
@@ -138,7 +103,13 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 				{/* Normal items */}
 				{items.map((item) => (
 					<Select.Option key={item} value={item} label={item}>
-						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}
+						>
 							<Highlighter
 								highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
 								searchWords={[searchText]}
@@ -146,10 +117,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 								textToHighlight={item}
 							/>
 							<Popconfirm title={`Delete "${item}"?`} onConfirm={() => deleteItem(item)}>
-								<DeleteOutlined
-									onClick={(e) => e.stopPropagation()}
-									style={{ color: "red" }}
-								/>
+								<DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "red" }} />
 							</Popconfirm>
 						</div>
 					</Select.Option>
@@ -159,7 +127,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
 				{searchText && !exists && (
 					<Select.Option
 						key="__add_new__"
-						value={`__add_new__:${searchText}`}
+						value={`__add_new__:${searchText}`} // special value to detect "add new"
 						label={`Add "${searchText}"`}
 						style={{ display: "flex", alignItems: "center" }}
 					>
