@@ -46,7 +46,7 @@ interface IFormData {
 	surgeonName?: string;
 	hospital?: string;
 	ward?: string;
-	plannedSurgeryDate?: any;
+	plannedSurgeryDate?: Date;
 	comment?: string;
 }
 
@@ -80,7 +80,7 @@ const RegistrationForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						ward: order.ward,
 						plannedSurgeryDate: order.plannedSurgeryDate
 							? dayjs(order.plannedSurgeryDate)
-							: null,
+							: "",
 						comment: order.comment,
 					});
 				} catch (error) {
