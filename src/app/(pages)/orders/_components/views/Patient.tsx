@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Descriptions, Spin, Alert, Tooltip, Button, Modal, Flex } from "antd";
+import { Descriptions, Spin, Alert, Tooltip, Button, Flex, Drawer } from "antd";
 import { ExclamationCircleOutlined, EditOutlined } from "@ant-design/icons";
 import type { DescriptionsProps } from "antd";
 
@@ -81,11 +81,7 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 	return (
 		<>
-			<div style={{ display: "inline-flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
-				<Button type="text" icon={<EditOutlined />} onClick={() => setIsModalVisible(true)} />
-			</div>
 			<Descriptions items={data} column={2} />
-
 			<Flex justify="flex-end" gap={8} style={{ marginTop: 16 }}>
 				{patient?.registeredBy && (
 					<Tooltip
@@ -108,15 +104,15 @@ const OrderInfo: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<Button type="text" icon={<EditOutlined />} onClick={() => setIsModalVisible(true)} />
 			</Flex>
 
-			<Modal
+			<Drawer
 				title="Edit Registration"
 				open={isModalVisible}
-				onCancel={() => setIsModalVisible(false)}
+				onClose={() => setIsModalVisible(false)}
 				footer={null}
 				width={800}
 			>
 				<RegistrationForm orderId={orderId} />
-			</Modal>
+			</Drawer>
 		</>
 	);
 };
