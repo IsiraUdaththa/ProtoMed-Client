@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { List, Avatar, Tag, Space, Input, Select, Flex, Pagination } from "antd";
-import { MailOutlined, PhoneOutlined, HomeOutlined } from "@ant-design/icons";
+import { List, Avatar, Tag, Space, Input, Select, Flex, Pagination, Button, Popconfirm, Drawer } from "antd";
+import { MailOutlined, PhoneOutlined, HomeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+
+import AddUser from "./AddUser";
 
 import api from "@/lib/axiosInstance";
 
@@ -10,6 +12,7 @@ const PAGE_SIZE = 10;
 
 type User = {
 	_id: string;
+	title?: string;
 	name: string;
 	email: string;
 	phone: string;
@@ -35,6 +38,9 @@ const UserList: React.FC = () => {
 	const [roleFilter, setRoleFilter] = useState<string>("All");
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
+	const [editingUser, setEditingUser] = useState<User | null>(null);
+	const openDrawer = (user: User) => setEditingUser(user);
+	const closeDrawer = () => setEditingUser(null);
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
@@ -72,6 +78,17 @@ const UserList: React.FC = () => {
 	const handleSearch = (value: string) => {
 		setSearchQuery(value);
 		setCurrentPage(1);
+	};
+
+	const deleteUser = async (id: string) => {
+		try {
+			const response = await api.delete(`/users/${id}`);
+			console.log(response);
+		} catch (error) {
+			console.error("Failed to fetch users", error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -121,6 +138,18 @@ const UserList: React.FC = () => {
 								</Space>
 							}
 						/>
+						<Button type="text" icon={<EditOutlined />} onClick={() => openDrawer(item)} />
+						<Popconfirm title={"Delete the user"} onConfirm={() => deleteUser(item._id)}>
+							<Button type="text" icon={<DeleteOutlined />} />
+						</Popconfirm>
+						<Drawer
+							title={editingUser ? `Edit ${editingUser.name}` : ""}
+							width={720}
+							open={!!editingUser}
+							onClose={closeDrawer}
+						>
+							{editingUser && <AddUser user={editingUser} />}
+						</Drawer>
 					</List.Item>
 				)}
 			/>

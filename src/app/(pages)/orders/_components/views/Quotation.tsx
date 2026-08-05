@@ -32,7 +32,7 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 
 				const quotationRes = await api.get(`/orders/${orderId}/quotation`);
 
-				setQuotation(quotationRes.data?.quotation || null);
+				setQuotation(quotationRes.data || null);
 			} catch (err) {
 				console.error("Error fetching payment info:", err);
 				setError("Failed to fetch payment information. Please try again.");

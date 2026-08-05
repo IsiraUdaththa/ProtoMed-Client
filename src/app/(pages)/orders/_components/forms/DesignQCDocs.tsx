@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/i
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface QCFormValues {
 	skullDefectSpecificationA?: number;
@@ -27,9 +26,6 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState<number>(0); // Track the current step
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -95,7 +91,7 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: `Please upload ${"skullDefectSpecificationImage"}` }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => {
@@ -109,26 +105,14 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Upload.Dragger>
 					</Form.Item>
 
-					<Form.Item
-						label="A"
-						name="skullDefectSpecificationA"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="A" name="skullDefectSpecificationA" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="B"
-						name="skullDefectSpecificationB"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="B" name="skullDefectSpecificationB" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="C"
-						name="skullDefectSpecificationC"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="C" name="skullDefectSpecificationC" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item
@@ -138,7 +122,7 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: `Please upload ${"implantModelSpecificationImage"}` }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							multiple={false}
 							maxCount={1}
 							onChange={(info) => handleChange(info, "implantModelSpecificationImage")}
@@ -150,26 +134,14 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						</Upload.Dragger>
 					</Form.Item>
 
-					<Form.Item
-						label="A"
-						name="implantModelSpecificationA"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="A" name="implantModelSpecificationA" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="B"
-						name="implantModelSpecificationB"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="B" name="implantModelSpecificationB" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="C"
-						name="implantModelSpecificationC"
-						rules={[{ message: "Please enter length" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="C" name="implantModelSpecificationC" rules={[{ message: "Please enter length" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item className="mt-6">
@@ -187,11 +159,29 @@ const DesignQCDocsForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "Username", children: username },
-							{ label: "Date/Time", children: currentDate },
 							{
 								label: "Implant Model Specification (A)",
 								children: formData.implantModelSpecificationA || "Not provided",
+							},
+							{
+								label: "Implant Model Specification (B)",
+								children: formData.implantModelSpecificationB || "Not provided",
+							},
+							{
+								label: "Implant Model Specification (C)",
+								children: formData.implantModelSpecificationC || "Not provided",
+							},
+							{
+								label: "Skull Model Specification (A)",
+								children: formData.skullDefectSpecificationA || "Not provided",
+							},
+							{
+								label: "Skull Model Specification (B)",
+								children: formData.skullDefectSpecificationB || "Not provided",
+							},
+							{
+								label: "Skull Model Specification (C)",
+								children: formData.skullDefectSpecificationC || "Not provided",
 							},
 						]}
 					></Descriptions>

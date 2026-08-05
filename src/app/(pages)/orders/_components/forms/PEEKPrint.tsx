@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
+import { Button, Steps, Input, DatePicker, Result, Form, Descriptions, Space } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
+import CustomDropdown from "@/app/_components/CustomDropdown";
 
 const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -54,29 +55,22 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 				<>
 					<Form layout="vertical" form={FormData}>
 						<Form.Item label="Print Machine" name="printMachine">
-							<Select placeholder="Select Print Machine">
-								<Select.Option value="PM 300">PM 300</Select.Option>
-								<Select.Option value="F160">F160</Select.Option>
-							</Select>
+							<CustomDropdown type="implantPrintMachines" placeholder="Select Printing Machine" />
 						</Form.Item>
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
 						<Form.Item label="Material" name="material">
-							<Select placeholder="Select Print Material">
-								<Select.Option value="PEEK">PEEK</Select.Option>
-								<Select.Option value="PMMA">PMMA</Select.Option>
-								<Select.Option value="Bonlecule">Bonlecule</Select.Option>
-							</Select>
+							<CustomDropdown type="material" placeholder="Select print material" />
 						</Form.Item>
 						<Form.Item label="Batch Number" name="batchNumber">
 							<Input />
 						</Form.Item>
-						<Form.Item label="Weight" name="weight" >
-							<Input type="number" min={0} addonAfter="g"/>
+						<Form.Item label="Weight" name="weight">
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 						<Form.Item label="Waste Weight" name="wasteWeight">
-							<Input type="number" min={0} addonAfter="g"/>
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 					</Form>
 
@@ -90,21 +84,28 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 1 && (
 				<>
 					<Descriptions bordered size="small" column={1}>
-						<Descriptions.Item label="Color">{FormData.getFieldValue("color")}</Descriptions.Item>
-						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
-						<Descriptions.Item label="Print Machine">{FormData.getFieldValue("printMachine")}</Descriptions.Item>
+						<Descriptions.Item label="Print Machine">
+							{FormData.getFieldValue("printMachine")}
+						</Descriptions.Item>
 						<Descriptions.Item label="Print Date">
 							{FormData.getFieldValue("printDate")?.format("YYYY-MM-DD")}
 						</Descriptions.Item>
-						<Descriptions.Item label="Print Time">{FormData.getFieldValue("printTime")}</Descriptions.Item>
+						<Descriptions.Item label="Material">{FormData.getFieldValue("material")}</Descriptions.Item>
+						<Descriptions.Item label="Batch Number">
+							{FormData.getFieldValue("batchNumber")}
+						</Descriptions.Item>
+						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
+						<Descriptions.Item label="Waste Weight">
+							{FormData.getFieldValue("wasteWeight")} g
+						</Descriptions.Item>
 					</Descriptions>
 
-					<div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>
-					</div>
+					</Space>
 				</>
 			)}
 
@@ -112,9 +113,9 @@ const PLAFlapPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{isSuccess === true ? (
-						<Result status="success" title="Print Successful" />
+						<Result status="success" title="PEEK Print Data Submission Successfully" />
 					) : (
-						<Result status="error" title="Print Failed" subTitle="Please try again." />
+						<Result status="error" title="Data Submission Failed" subTitle="Please try again." />
 					)}
 				</>
 			)}

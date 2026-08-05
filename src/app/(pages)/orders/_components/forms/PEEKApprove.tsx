@@ -22,8 +22,6 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -111,19 +109,20 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "Approval Status ", children: approvalData.isApproved },
+							{
+								label: "Approval Status ",
+								children: approvalData.isApproved ? "Approved" : "Not Approved",
+							},
 							{ label: "Comment", children: approvalData.comment },
-							{ label: "User", children: username },
-							{ label: "Date and Time:", children: currentDate },
 						]}
 					></Descriptions>
 
-					<Form.Item>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
-					</Form.Item>
+					</Space>
 				</>
 			)}
 

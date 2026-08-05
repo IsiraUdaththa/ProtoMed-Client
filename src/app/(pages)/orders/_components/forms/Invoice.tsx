@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Steps, Result, Descriptions } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, Steps, Result, Descriptions, Space } from "antd";
 import { SolutionOutlined, FileTextOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -10,21 +10,7 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm();
 	const [current, setCurrent] = useState(0);
 	const [invoiceNumber, setInvoiceNumber] = useState("");
-	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		// Simulating a user fetch
-		setTimeout(() => setUserName("John Doe"), 1000);
-
-		// Update date & time every second
-		const interval = setInterval(() => {
-			setDateTime(new Date().toLocaleString());
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -35,11 +21,10 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	};
 
 	const handleConfirm = async () => {
-		console.log("Submitting Invoice:", { invoiceNumber, userName, dateTime });
+		console.log("Submitting Invoice:", { invoiceNumber });
 
 		const formData = {
 			invoiceNumber: invoiceNumber,
-			sentDate: dateTime,
 		};
 
 		try {
@@ -84,19 +69,15 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						bordered
 						size="small"
 						column={1}
-						items={[
-							{ label: "User", children: userName },
-							{ label: "Date and Time:", children: dateTime },
-							{ label: "Invoice Number", children: invoiceNumber },
-						]}
+						items={[{ label: "Invoice Number", children: invoiceNumber }]}
 					></Descriptions>
 
-					<>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 
@@ -105,7 +86,11 @@ const InvoicePage: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="Invoice Submitted Successfully" />
 					) : (
-						<Result status="error" title="Invoice Submission Failed" subTitle="Please check the invoice details." />
+						<Result
+							status="error"
+							title="Invoice Submission Failed"
+							subTitle="Please check the invoice details."
+						/>
 					)}
 				</>
 			)}

@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button, Steps, Result, Form, Descriptions, message, Input } from "antd";
+import React, { useState } from "react";
+import { Button, Steps, Result, Form, Descriptions, message, Input, Space } from "antd";
 import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 type FormDataType = {
-  images: string[]; // array of images URLs
-  implantModelA?: string;
-  implantModelB?: string;
-  implantModelC?: string;
-  markingDate?: string;
+	images: string[]; // array of images URLs
+	implantModelA?: string;
+	implantModelB?: string;
+	implantModelC?: string;
 };
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -22,17 +20,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	const [formData, setFormData] = useState<FormDataType>({ images: [] });
 
 	const [current, setCurrent] = useState(0);
-	const [userName, setUserName] = useState("Fetching...");
-	const [dateTime, setDateTime] = useState("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	useEffect(() => {
-		setTimeout(() => setUserName("John Doe"), 1000);
-		const interval = setInterval(() => {
-			setDateTime(new Date().toLocaleString());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, []);
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -43,10 +31,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	};
 
 	const handleConfirm = async () => {
-		console.log(`Submitting PEEK Laser Marking Process:`, { userName, dateTime });
-
-		formData["markingDate"] = dateTime;
-
 		try {
 			const response = await api.post(`/orders/${orderId}/peek-qcdocs`, formData);
 			console.log("File uploaded successfully:", response.data);
@@ -58,7 +42,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		next();
 	};
 
-	const handleChange = (info: UploadChangeParam<UploadFile<{url: string}>>, fieldName: keyof FormDataType) => {
+	const handleChange = (info: UploadChangeParam<UploadFile<{ url: string }>>, fieldName: keyof FormDataType) => {
 		if (info.file.status === "done") {
 			const fileList = info.fileList
 				.filter((file) => file.status === "done")
@@ -98,7 +82,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 							rules={[{ required: true, message: `Please upload the images` }]}
 						>
 							<Upload
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								onChange={(info) => handleChange(info, "images")}
 								listType="picture"
 								maxCount={10}
@@ -109,26 +93,14 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 						</Form.Item>
 					</div>
 
-					<Form.Item
-						label="A"
-						name="implantModelA"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="A" name="implantModelA" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="B"
-						name="implantModelB"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="B" name="implantModelB" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
-					<Form.Item
-						label="C"
-						name="implantModelC"
-						rules={[{ message: "Please enter implantModel" }]}
-					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+					<Form.Item label="C" name="implantModelC" rules={[{ message: "Please enter implantModel" }]}>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item className="mt-6">
@@ -141,21 +113,17 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 
 			{current === 1 && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "User", children: userName },
-							{ label: "Date and Time:", children: dateTime },
-						]}
-					></Descriptions>
-					<>
+					<Descriptions bordered size="small" column={1}>
+						<Descriptions.Item label="implantModelA">{formData["implantModelA"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelB">{formData["implantModelB"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelC">{formData["implantModelC"]}</Descriptions.Item>
+					</Descriptions>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 

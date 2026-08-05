@@ -10,12 +10,7 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
 	const [currency, setCurrency] = useState<string>("USD");
 	const [formData, setFormData] = useState<{ currency?: string; quotationValue?: number }>({});
-	const [dateTime, setDateTime] = useState<string>("");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const dummyUsername = "JohnDoe"; // Dummy username
-
-	// Get current date and time
-	const getCurrentDateTime = () => new Date().toLocaleString();
 
 	// Steps Navigation
 	const next = () => setCurrent(current + 1);
@@ -24,7 +19,6 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 	// Handle form submission
 	const handleSubmit = (values: { quotationValue: number }) => {
 		setFormData({ ...values, currency });
-		setDateTime(getCurrentDateTime());
 		next();
 	};
 
@@ -117,8 +111,6 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						size="small"
 						column={1}
 						items={[
-							{ label: "User", children: dummyUsername },
-							{ label: "Date and Time:", children: dateTime },
 							{
 								label: "Amount",
 								children: (
@@ -130,7 +122,7 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 						]}
 					></Descriptions>
 
-					<Space>
+					<Space style={{ marginTop: "8px" }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm
@@ -145,7 +137,11 @@ const QuotationPage: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{isSuccess ? (
 						<Result status="success" title="Data Submitted Successfully" />
 					) : (
-						<Result status="error" title="Submission Failed" subTitle="Please check details and try again." />
+						<Result
+							status="error"
+							title="Submission Failed"
+							subTitle="Please check details and try again."
+						/>
 					)}
 				</>
 			)}

@@ -31,8 +31,7 @@ const ForumDiscussion: React.FC<ForumDiscussionProps> = ({ orderId }) => {
 		setLoading(true);
 		try {
 			const res = await api.get(`/orders/${orderId}/discussions`);
-			console.log(res.data);
-			setDiscussions(res.data.discussions);
+			setDiscussions(res.data);
 		} catch (error) {
 			console.error(error);
 			AntMessage.error("Failed to fetch discussions.");

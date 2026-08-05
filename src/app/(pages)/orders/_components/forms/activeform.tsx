@@ -2,9 +2,10 @@
 
 // import "@ant-design/v5-patch-for-react-19";
 import React from "react";
-import { Card, Alert, Space } from "antd";
-
+import { Card, Alert, Space, Result } from "antd";
 // Import all individual form components
+import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+
 import Design from "../views/Design";
 import CTValidationView from "../views/CTValidation";
 
@@ -33,7 +34,15 @@ import PaymentCompletion from "./PaymentCompletion";
 import Invoice from "./Invoice";
 
 // Function to render the appropriate form based on status
-const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, status }) => {
+const ActiveForm: React.FC<{ orderId: string; status: string; category: string }> = ({ orderId, status, category }) => {
+	if (status.startsWith("canceled")) {
+		return (
+			<Card>
+				<Result icon={<FrownOutlined />} title="Order has been cancelled!" />
+			</Card>
+		);
+	}
+
 	const renderForm = () => {
 		switch (status) {
 			case "draft":
@@ -53,7 +62,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 			case "scanValidation":
 				return (
 					<Card>
-						<CTValidation orderId={orderId} />
+						<CTValidation orderId={orderId}  category={category}/>
 					</Card>
 				);
 
@@ -209,7 +218,11 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 					</Card>
 				);
 			case "completed":
-				return <Alert message="Success Text" type="success" />;
+				return (
+					<Card>
+						<Result icon={<SmileOutlined />} title="Great, we have done all the operations!" />
+					</Card>
+				);
 			default:
 				return (
 					<Alert
@@ -234,7 +247,7 @@ const ActiveForm: React.FC<{ orderId: string; status: string }> = ({ orderId, st
 							<CTScan orderId={orderId} />
 						</Card>
 						<Card title="CT Scan Validation">
-							<CTValidation orderId={orderId} />
+							<CTValidation orderId={orderId} category={category} />
 						</Card>
 					</Space>
 				);

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Typography, Steps, Result, Form, Input, message, Space } from "antd";
+import { Button, Steps, Result, Form, Input, message, Space, Descriptions } from "antd";
 import { CreditCardOutlined, CheckCircleOutlined, SolutionOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -99,14 +99,25 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{/* Step 2: Confirm*/}
 			{current === 1 && (
 				<>
-					<Typography.Text>Click below to complete your payment.</Typography.Text>
+					<Descriptions
+						bordered
+						size="small"
+						column={1}
+						items={[
+							{
+								label: "Payment Status",
+								children: formData?.isPaid ? "Paid" : "Skip",
+							},
+							{ label: "Comment", children: formData?.comment || "No comment provided" },
+						]}
+					></Descriptions>
 
-					<>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handlePayment}>
-							Pay Now
+							Confirm
 						</Button>
-					</>
+					</Space>
 				</>
 			)}
 
@@ -114,9 +125,9 @@ const PaymentProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
 			{current === 2 && (
 				<>
 					{paymentStatus === "success" ? (
-						<Result status="success" title="Payment Successful" />
+						<Result status="success" title="Payment Data Submission Successful" />
 					) : (
-						<Result status="error" title="Payment Failed" subTitle="Please try again." />
+						<Result status="error" title="Data Submission Failed" subTitle="Please try again." />
 					)}
 				</>
 			)}

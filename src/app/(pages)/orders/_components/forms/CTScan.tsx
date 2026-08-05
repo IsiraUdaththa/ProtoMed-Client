@@ -6,8 +6,7 @@ import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/i
 import dayjs from "dayjs";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	ctScanLink?: string;
@@ -79,7 +78,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						rules={[{ required: true, message: "Please enter CT scan link/DVD number" }]}
 					>
 						<Upload.Dragger
-							action={`${apiUrl}/upload`}
+							customRequest={uploadToAzure}
 							disabled={manualEntry}
 							multiple={false}
 							maxCount={1}
@@ -95,6 +94,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 									setManualEntry(false);
 								} else if (info.file.status === "removed") {
 									setIsUploaded(false);
+									setManualEntry(true);
 								}
 							}}
 						>
@@ -110,10 +110,10 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							disabled={isUploaded}
 							value={form.getFieldValue("ctScanLink")}
 							onChange={(e) => {
-								const value = e.target.value;
-								form.setFieldsValue({ ctScanLink: value });
-								setManualEntry(!!value);
-								setIsUploaded(false);
+								setManualEntry(e.target.value !== "");
+							}}
+							onBlur={(e) => {
+								form.setFieldsValue({ ctScanLink: e.target.value });
 							}}
 						/>
 					</Form.Item>
@@ -138,11 +138,9 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Input.TextArea rows={4} />
 					</Form.Item>
 
-					<Form.Item>
-						<Button type="primary" htmlType="submit" block>
-							Next
-						</Button>
-					</Form.Item>
+					<Button type="primary" htmlType="submit" block>
+						Next
+					</Button>
 				</Form>
 			)}
 
@@ -162,7 +160,7 @@ const CTScanForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							{ label: "Comment:", children: formData.comment },
 						]}
 					></Descriptions>
-					<Space>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleConfirm}>
 							Confirm

@@ -10,19 +10,29 @@ import DateDisplay from "@/app/_components/DateDisplay";
 interface Data {
 	invoiceNumber: string;
 	isSent: boolean;
-	sentDate: Date;
 	doneBy: string;
+	createdAt: Date;
 }
 
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.invoice);
+				const response = await api.get(`orders/${orderId}/invoice`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -39,7 +49,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Descriptions
-				column={2}
+				column={columns}
 				items={[
 					{
 						label: "Status",
@@ -50,7 +60,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						),
 					},
 					{ label: "Verified By", children: data.doneBy ? <UserTag userId={data.doneBy} /> : "N/A" },
-					{ label: "Date", children: data.sentDate ? <DateDisplay isoDate={data.sentDate} /> : "N/A" },
+					{ label: "Date", children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A" },
 					{ label: "Invoice Number", children: data.invoiceNumber ?? "N/A" },
 				]}
 			/>

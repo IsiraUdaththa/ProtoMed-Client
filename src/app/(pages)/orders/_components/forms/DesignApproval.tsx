@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions, Space } from "antd";
+import { Form, Input, Button, Steps, Result, message, Descriptions, Space } from "antd";
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -22,8 +22,6 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [approvalData, setApprovalData] = useState<DesignApproval | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -116,17 +114,16 @@ const DesignApprovalForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 								children: approvalData.isApproved ? "Approved" : "Not Approved",
 							},
 							{ label: "Comment", children: approvalData.comment || "No comment provided" },
-							{ label: "Username", children: username },
-							{ label: "Date/Time", children: currentDate },
 						]}
 					></Descriptions>
-					<Card></Card>
 
-					<Form.Item>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={submitApproval} loading={loading}>
-							Submit Approval
-						</Button>
+					<Form.Item style={{ marginTop: 8 }}>
+						<Space>
+							<Button onClick={prev}>Back</Button>
+							<Button type="primary" onClick={submitApproval} loading={loading}>
+								Submit Approval
+							</Button>
+						</Space>
 					</Form.Item>
 				</>
 			)}

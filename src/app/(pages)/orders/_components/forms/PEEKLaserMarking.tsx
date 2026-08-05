@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button, Steps, Result, Form, Descriptions, message } from "antd";
-import { UserOutlined, CheckCircleOutlined, SolutionOutlined, UploadOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Button, Steps, Result, Form, message } from "antd";
+import { UserOutlined, CheckCircleOutlined, UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
 	image?: string;
-	markingDate?: Date;
+	createdAt?: Date;
 }
 
 const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -19,25 +18,13 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 	const [formData, setFormData] = useState<IFormData>({});
 
 	const [current, setCurrent] = useState(0);
-	const [userName, setUserName] = useState("Fetching...");
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
-	useEffect(() => {
-		setTimeout(() => setUserName("John Doe"), 1000);
-	}, []);
-
 	const next = () => setCurrent(current + 1);
-	const prev = () => setCurrent(current - 1);
 
-	const handleSubmit = (values: IFormData) => {
-		setFormData(values);
-		next();
-	};
-
-	const handleConfirm = async () => {
-		console.log(`Submitting PEEK Laser Marking Process:`, { userName });
-
+	const handleConfirm = async (values: IFormData) => {
 		try {
+			setFormData(values);
 			const response = await api.post(`/orders/${orderId}/peek-laser-marking`, formData);
 			console.log("File uploaded successfully:", response.data);
 			setIsSuccess(true);
@@ -72,12 +59,11 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 		<>
 			<Steps current={current} direction="horizontal">
 				<Steps.Step title="Start" icon={<UserOutlined />} />
-				<Steps.Step title="Confirm" icon={<SolutionOutlined />} />
 				<Steps.Step title="Status" icon={<CheckCircleOutlined />} />
 			</Steps>
 
 			{current === 0 && (
-				<Form form={form} onFinish={handleSubmit} layout="vertical">
+				<Form form={form} onFinish={handleConfirm} layout="vertical">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<Form.Item
 							key="image"
@@ -86,7 +72,7 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 							rules={[{ required: true, message: `Please upload the image` }]}
 						>
 							<Upload
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								onChange={(info) => handleChange(info, "image")}
 								listType="picture"
 								maxCount={1}
@@ -105,25 +91,6 @@ const PEEKLaserMarkingProcess: React.FC<{ orderId: string }> = ({ orderId }) => 
 			)}
 
 			{current === 1 && (
-				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "User", children: userName },
-						]}
-					></Descriptions>
-					<>
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleConfirm}>
-							Confirm
-						</Button>
-					</>
-				</>
-			)}
-
-			{current === 2 && (
 				<>
 					{isSuccess ? (
 						<Result status="success" title="PEEK Laser Marking Process Confirmed Successfully" />

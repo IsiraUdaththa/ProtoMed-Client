@@ -2,40 +2,29 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import React, { useState } from "react";
-import { Form, Upload, Button, Space, Steps, Typography, Result, message } from "antd";
+import { Form, Upload, Button, Space, Steps, Result, message } from "antd";
 import { FileImageOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
-
-const apiUrl = process.env["NEXT_PUBLIC_API_URL"];
+import uploadToAzure from "@/services/azure.service";
 
 interface IFormData {
-	"implant-video"?: string;
-	"implant-image"?: string;
-	"packing-image"?: string;
+	implantVideo?: string;
+	implantImage?: string;
+	packedImage?: string;
 }
 
 const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [form] = Form.useForm<IFormData>();
-	const [formData, setFormData] = useState<IFormData>({});
-
 	const [current, setCurrent] = useState(0);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
 	const next = () => setCurrent(current + 1);
-	const prev = () => setCurrent(current - 1);
 
-	const onFinish = (values: IFormData) => {
-		setFormData(values);
-		next();
-	};
-
-	const handleSubmit = async () => {
-		if (!formData) return;
-
+	const handleSubmit = async (values: IFormData) => {
 		try {
-			const response = await api.post(`/orders/${orderId}/packing`, formData);
-			console.log("File uploaded successfully:", response.data);
+			const response = await api.post(`/orders/${orderId}/packing`, values);
+			console.log("File uploaded successfully:", response);
 			setIsSuccess(true);
 			message.success("File uploaded successfully.");
 		} catch (error) {
@@ -57,10 +46,10 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				</Steps>
 
 				{current === 0 && (
-					<Form form={form} onFinish={onFinish}>
-						<Form.Item name="implant-video">
+					<Form form={form} onFinish={handleSubmit}>
+						<Form.Item name="implantVideo">
 							<Upload.Dragger
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								accept="video/*"
 								multiple={false}
 								maxCount={1}
@@ -69,7 +58,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implant-video": fileUrl,
+												implantVideo: fileUrl,
 											});
 										}
 									}
@@ -82,9 +71,9 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item name="implant-image">
+						<Form.Item name="implantImage">
 							<Upload.Dragger
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								accept="image/*"
 								multiple={false}
 								maxCount={1}
@@ -93,7 +82,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"implant-image": fileUrl,
+												implantImage: fileUrl,
 											});
 										}
 									}
@@ -106,10 +95,10 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 							</Upload.Dragger>
 						</Form.Item>
 
-						<Form.Item name="packing-image">
+						<Form.Item name="packedImage">
 							<Upload.Dragger
 								accept="image/*"
-								action={`${apiUrl}/upload`}
+								customRequest={uploadToAzure}
 								multiple={false}
 								maxCount={1}
 								onChange={(info) => {
@@ -117,7 +106,7 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 										const fileUrl = info.file.response?.url;
 										if (fileUrl) {
 											form.setFieldsValue({
-												"packing-image": fileUrl,
+												packedImage: fileUrl,
 											});
 										}
 									}
@@ -141,20 +130,6 @@ const PackingStepForm: React.FC<{ orderId: string }> = ({ orderId }) => {
 				)}
 
 				{current === 1 && (
-					<>
-						{/* TODO:  */}
-						{/* <Typography.Text strong>User: {formData.userName || "Not Provided"}</Typography.Text> */}
-
-						<Typography.Text strong>Date & Time: {new Date().toLocaleString()}</Typography.Text>
-
-						<Button onClick={prev}>Back</Button>
-						<Button type="primary" onClick={handleSubmit}>
-							Confirm
-						</Button>
-					</>
-				)}
-
-				{current === 2 && (
 					<>
 						{isSuccess ? (
 							<Result status="success" title="Packing Detail Submission Successful" />

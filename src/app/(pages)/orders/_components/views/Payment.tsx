@@ -17,12 +17,22 @@ interface Data {
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.fullPayment);
+				const response = await api.get(`orders/${orderId}/payment-completion`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -39,7 +49,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	return (
 		<>
 			<Descriptions
-				column={2}
+				column={columns}
 				items={[
 					{
 						label: "Status",

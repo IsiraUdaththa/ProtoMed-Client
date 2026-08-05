@@ -2,7 +2,7 @@
 
 import "@ant-design/v5-patch-for-react-19";
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Steps, Result, message, Descriptions } from "antd";
+import { Form, Input, Button, Steps, Result, message, Descriptions, Space } from "antd";
 import { FileTextOutlined, SolutionOutlined, SmileOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
@@ -23,9 +23,6 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState<number>(0); // Track the current step
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-
-	const [username] = useState("John Doe"); // Example username, replace with actual username from your app
-	const [currentDate] = useState(new Date().toLocaleString()); // Get current date and time
 
 	const next = () => setCurrent(current + 1);
 	const prev = () => setCurrent(current - 1);
@@ -70,42 +67,42 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 						name="skullDefectA"
 						rules={[{ message: "Please enter skullDefectA" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter skullDefectB"
 						name="skullDefectB"
 						rules={[{ message: "Please enter skullDefectB" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter skullDefectC"
 						name="skullDefectC"
 						rules={[{ message: "Please enter skullDefectC" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelA"
 						name="implantModelA"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelB"
 						name="implantModelB"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 					<Form.Item
 						label="Enter implantModelC"
 						name="implantModelC"
 						rules={[{ message: "Please enter implantModel" }]}
 					>
-						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm"/>
+						<Input type="number" min={1} max={1000} step={0.01} addonAfter="mm" />
 					</Form.Item>
 
 					<Form.Item className="mt-6">
@@ -118,23 +115,21 @@ const PLAApproval: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 			{current === 1 && formData && (
 				<>
-					<Descriptions
-						bordered
-						size="small"
-						column={1}
-						items={[
-							{ label: "Username", children: username },
-							{ label: "Date/Time", children: currentDate },
-						]}
-					></Descriptions>
-					<Card></Card>
+					<Descriptions bordered size="small" column={1}>
+						<Descriptions.Item label="skullDefectA">{formData["skullDefectA"]}</Descriptions.Item>
+						<Descriptions.Item label="skullDefectB">{formData["skullDefectB"]}</Descriptions.Item>
+						<Descriptions.Item label="skullDefectC">{formData["skullDefectC"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelA">{formData["implantModelA"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelB">{formData["implantModelB"]}</Descriptions.Item>
+						<Descriptions.Item label="implantModelC">{formData["implantModelC"]}</Descriptions.Item>
+					</Descriptions>
 
-					<Form.Item>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={submitApproval} loading={loading}>
 							Submit Approval
 						</Button>
-					</Form.Item>
+					</Space>
 				</>
 			)}
 

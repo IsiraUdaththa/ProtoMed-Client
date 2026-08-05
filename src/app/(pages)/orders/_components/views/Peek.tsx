@@ -19,13 +19,13 @@ interface IPEEKPrint {
 }
 
 interface IPEEKAnnealing {
-	processDate: Date;
+	createdAt: Date;
 	doneBy: string;
 }
 
 interface IPEEKPolishing {
 	polishingBy: string;
-	polishingDate: Date;
+	createdAt: Date;
 }
 
 interface IPeekQCDocs {
@@ -40,20 +40,19 @@ interface IPeekQCDocs {
 
 interface IPEEKApproval {
 	isApproved: boolean;
-	checkedBy: string; // ????
-	approvalDate: Date;
+	createdAt: Date;
 	approvedBy: string;
 	comment?: string;
 }
 interface IPEEKLaserMarking {
 	doneBy: string;
-	markingDate: Date;
+	createdAt: Date;
 	image: string;
 }
 
 interface IPEEKFinalPolishing extends Document {
 	doneBy: string;
-	date: Date;
+	createdAt: Date;
 }
 
 interface PEEK {
@@ -72,12 +71,22 @@ type Data = PEEK[];
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.peek);
+				const response = await api.get(`orders/${orderId}/peek`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -150,8 +159,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.annealing?.processDate ? (
-								<DateDisplay isoDate={section.annealing?.processDate} />
+							children: section.annealing?.createdAt ? (
+								<DateDisplay isoDate={section.annealing?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -171,8 +180,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.polishing?.polishingDate ? (
-								<DateDisplay isoDate={section.polishing?.polishingDate} />
+							children: section.polishing?.createdAt ? (
+								<DateDisplay isoDate={section.polishing?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -198,10 +207,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.approval?.approvalDate ? (
-								<DateDisplay isoDate={section.approval?.approvalDate} />
+							children: section.approval?.createdAt ? (
+								<DateDisplay isoDate={section.approval?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -233,10 +242,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.laserMarking?.markingDate ? (
-								<DateDisplay isoDate={section.laserMarking?.markingDate} />
+							children: section.laserMarking?.createdAt ? (
+								<DateDisplay isoDate={section.laserMarking?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -256,8 +265,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "printDate",
 							label: "Print Date",
-							children: section.finalPolishing?.date ? (
-								<DateDisplay isoDate={section.finalPolishing?.date} />
+							children: section.finalPolishing?.createdAt ? (
+								<DateDisplay isoDate={section.finalPolishing?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -267,24 +276,31 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						<Tabs.TabPane tab={`PEEK Attempt #${index + 1}`} key={index}>
 							<Space direction="vertical">
 								<Card>
-									<Descriptions title="Print" items={printItems} column={2} />
+									<Descriptions title="Print" items={printItems} column={columns} />
 								</Card>
 
 								<Card>
-									<Descriptions title="Annealing" items={annealingItems} column={2} />
+									<Descriptions title="Annealing" items={annealingItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="Polishing" items={polishingItems} column={2} />
+									<Descriptions title="Polishing" items={polishingItems} column={columns} />
 								</Card>
 
 								<Card>
-									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Divider />
-									<Image.PreviewGroup>
-										{section.qcDocs?.images.map((imgSrc, index) => (
-											<Image key={index} width={200} src={imgSrc} alt={`Image ${index + 1}`} />
-										))}
-									</Image.PreviewGroup>
+									<Flex wrap justify="space-evenly">
+										<Image.PreviewGroup >
+											{section.qcDocs?.images.map((imgSrc, index) => (
+												<Image
+													key={index}
+													width={200}
+													src={imgSrc}
+													alt={`Image ${index + 1}`}
+												/>
+											))}
+										</Image.PreviewGroup>
+									</Flex>
 									<Divider />
 									<Flex justify="space-around">
 										<Table
@@ -332,15 +348,21 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 									</Flex>
 								</Card>
 								<Card>
-									<Descriptions title="Laser Marking" items={laserMarkingItems} column={2} />
+									<Descriptions title="Laser Marking" items={laserMarkingItems} column={columns} />
 									<Divider />
-									<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
+									<Flex wrap justify="space-evenly">
+										<Image key={index} width={200} src={section.laserMarking?.image} alt={``} />
+									</Flex>
 								</Card>
 								<Card>
-									<Descriptions title="Final Polishing" items={finalPolishingItems} column={2} />
+									<Descriptions
+										title="Final Polishing"
+										items={finalPolishingItems}
+										column={columns}
+									/>
 								</Card>
 								<Card>
-									<Descriptions title="Approval" items={approvalItems} column={2} />
+									<Descriptions title="Approval" items={approvalItems} column={columns} />
 								</Card>
 							</Space>
 						</Tabs.TabPane>

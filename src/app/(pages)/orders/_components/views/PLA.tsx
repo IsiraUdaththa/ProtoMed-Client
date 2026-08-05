@@ -28,7 +28,7 @@ interface IPLAFlapPrint {
 
 interface IPLAQCDocs extends Document {
 	doneBy: string;
-	designDate: Date;
+	createdAt: Date;
 
 	skullDefectA: number;
 	skullDefectB: number;
@@ -41,12 +41,8 @@ interface IPLAQCDocs extends Document {
 
 interface IPLAApproval {
 	isApproved: boolean;
-	approvalDate: Date;
+	createdAt: Date;
 	approvedBy: string;
-	fitFinishCheckedBy: string; // ????
-	accuracyCheckedBy: string; // ????
-	qcDesignDoc?: string; // ????
-	qcMeasureValuesDoc?: string; // ????
 	comment?: string;
 }
 
@@ -62,12 +58,22 @@ type Data = PLA[];
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [data, setData] = useState<Data | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [columns, setColumns] = useState(2);
+
+	useEffect(() => {
+		function handleResize() {
+			setColumns(window.innerWidth < 768 ? 1 : 2);
+		}
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.pla);
+				const response = await api.get(`orders/${orderId}/pla`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -174,10 +180,10 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 							children: section.qcDocs?.doneBy ? <UserTag userId={section.qcDocs?.doneBy} /> : "N/A",
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.qcDocs?.designDate ? (
-								<DateDisplay isoDate={section.qcDocs?.designDate} />
+							children: section.qcDocs?.createdAt ? (
+								<DateDisplay isoDate={section.qcDocs?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -188,17 +194,17 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 						{
 							key: "isApproved",
 							label: "Approved",
-							children: section.approval.isApproved ? (
+							children: section.approval?.isApproved ? (
 								<Badge count="Approved" style={{ backgroundColor: "#52c41a" }} />
 							) : (
 								<Badge count="Rejected" />
 							),
 						},
 						{
-							key: "approvalDate",
+							key: "createdAt",
 							label: "Approval Date",
-							children: section.approval?.approvalDate ? (
-								<DateDisplay isoDate={section.approval?.approvalDate} />
+							children: section.approval?.createdAt ? (
+								<DateDisplay isoDate={section.approval?.createdAt} />
 							) : (
 								"N/A"
 							),
@@ -221,17 +227,17 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 
 					return (
 						<Tabs.TabPane tab={`Print Attempt #${index + 1}`} key={index}>
-							<Space direction="vertical">
+							<Space direction="vertical" style={{width:"100%"}}>
 								<Card>
-									<Descriptions title="Inner Print" items={outerItems} column={2} />
+									<Descriptions title="Inner Print" items={outerItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="Outer Print" items={innerItems} column={2} />
+									<Descriptions title="Outer Print" items={innerItems} column={columns} />
 								</Card>
 								<Card>
-									<Descriptions title="QC Docs" items={qcDocsItems} column={2} />
+									<Descriptions title="QC Docs" items={qcDocsItems} column={columns} />
 									<Divider />
-									<Flex justify="space-around">
+									<Flex justify="space-around" wrap>
 										<Table
 											columns={[
 												{
@@ -322,7 +328,7 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 								</Card>
 
 								<Card>
-									<Descriptions title="Approval" items={approvalItems} column={2} />
+									<Descriptions title="Approval" items={approvalItems} column={columns} />
 								</Card>
 							</Space>
 						</Tabs.TabPane>

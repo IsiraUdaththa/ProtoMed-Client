@@ -32,7 +32,7 @@ const PaymentInfo = ({ orderId }: { orderId: string }) => {
 				setError(null);
 
 				const advanceRes = await api.get(`/orders/${orderId}/payment-advance`);
-				setData(advanceRes.data?.advancePayment || null);
+				setData(advanceRes.data || null);
 			} catch (err) {
 				console.error("Error fetching payment info:", err);
 				setError("Failed to fetch payment information. Please try again.");

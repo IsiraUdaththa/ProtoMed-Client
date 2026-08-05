@@ -8,7 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 
 import AssignOrder from "./_components/AssignOrder";
-import OrderActions from "./_components/MoveButtons";
+import {OrderActions} from "./_components/MoveButtons";
 
 import api from "@/lib/axiosInstance";
 
@@ -226,7 +226,33 @@ const App: React.FC = () => {
 		{
 			title: "Status",
 			dataIndex: ["status"],
-			sorter: true,
+			filters: [
+				{ text: "draft", value: "draft" },
+				{ text: "scanUpload", value: "scanUpload" },
+				{ text: "scanValidation", value: "scanValidation" },
+				{ text: "quotation", value: "quotation" },
+				{ text: "advancePayment", value: "advancePayment" },
+				{ text: "designImages", value: "designImages" },
+				{ text: "designQCDocs", value: "designQCDocs" },
+				{ text: "designFile", value: "designFile" },
+				{ text: "internalApproval", value: "internalApproval" },
+				{ text: "outerPrint", value: "outerPrint" },
+				{ text: "flapPrint", value: "flapPrint" },
+				{ text: "plaQCDocs", value: "plaQCDocs" },
+				{ text: "plasticApproval", value: "plasticApproval" },
+				{ text: "implantPrint", value: "implantPrint" },
+				{ text: "annealing", value: "annealing" },
+				{ text: "roughPolishing", value: "roughPolishing" },
+				{ text: "peekQCDocs", value: "peekQCDocs" },
+				{ text: "implantApproval", value: "implantApproval" },
+				{ text: "laserMarking", value: "laserMarking" },
+				{ text: "finalPolishing", value: "finalPolishing" },
+				{ text: "packing", value: "packing" },
+				{ text: "finalPayment", value: "finalPayment" },
+				{ text: "invoice", value: "invoice" },
+				{ text: "completed", value: "completed" },
+				{ text: "canceled", value: "canceled" },
+			],
 		},
 		{
 			title: "Category",

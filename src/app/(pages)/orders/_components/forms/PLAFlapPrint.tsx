@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Steps, Input, Select, DatePicker, Result, Form, Descriptions } from "antd";
+import { Button, Steps, Input, DatePicker, Result, Form, Descriptions, Space } from "antd";
 import { SolutionOutlined, CheckCircleOutlined, PrinterOutlined } from "@ant-design/icons";
 
 import api from "@/lib/axiosInstance";
+import CustomDropdown from "@/app/_components/CustomDropdown";
 
 const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 	const [current, setCurrent] = useState(0);
@@ -57,19 +58,16 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 							<Input />
 						</Form.Item>
 						<Form.Item label="Weight" name="weight">
-							<Input type="number" min={0} addonAfter="g"/>
+							<Input type="number" min={0} addonAfter="g" />
 						</Form.Item>
 						<Form.Item label="Print Machine" name="printMachine">
-							<Select placeholder="Select Print Machine">
-								<Select.Option value="PM 300">PM 300</Select.Option>
-								<Select.Option value="Cubic M3 Max">Cubic M3 Max</Select.Option>
-							</Select>
+							<CustomDropdown type="plaPrintMachines" placeholder="Select Printing Machine" />
 						</Form.Item>
 						<Form.Item label="Print Date" name="printDate">
 							<DatePicker />
 						</Form.Item>
 						<Form.Item label="Print Time" name="printTime">
-							<Input type="number" addonAfter="min"/>
+							<Input type="number" addonAfter="min" />
 						</Form.Item>
 					</Form>
 					<Button type="primary" onClick={handleNext} block>
@@ -84,19 +82,21 @@ const PLAPrint: React.FC<{ orderId: string }> = ({ orderId }) => {
 					<Descriptions bordered size="small" column={1}>
 						<Descriptions.Item label="Color">{FormData.getFieldValue("color")}</Descriptions.Item>
 						<Descriptions.Item label="Weight">{FormData.getFieldValue("weight")} g</Descriptions.Item>
-						<Descriptions.Item label="Print Machine">{FormData.getFieldValue("printMachine")}</Descriptions.Item>
+						<Descriptions.Item label="Print Machine">
+							{FormData.getFieldValue("printMachine")}
+						</Descriptions.Item>
 						<Descriptions.Item label="Print Date">
 							{FormData.getFieldValue("printDate")?.format("YYYY-MM-DD")}
 						</Descriptions.Item>
 						<Descriptions.Item label="Print Time">{FormData.getFieldValue("printTime")}</Descriptions.Item>
 					</Descriptions>
 
-					<div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+					<Space style={{ marginTop: 8 }}>
 						<Button onClick={prev}>Back</Button>
 						<Button type="primary" onClick={handleSubmit}>
 							Confirm
 						</Button>
-					</div>
+					</Space>
 				</>
 			)}
 

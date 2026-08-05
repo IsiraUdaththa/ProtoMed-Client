@@ -15,7 +15,6 @@ const Apsdap: React.FC = () => {
 	const onFinish = async (values: { email: string; password: string }) => {
 		try {
 			await login(values.email, values.password);
-			await new Promise((resolve) => setTimeout(resolve, 0));
 			router.push("/dashboard");
 		} catch (error) {
 			message.error("Login failed. Please check your credentials.");
@@ -52,7 +51,7 @@ const Apsdap: React.FC = () => {
 						<Input prefix={<UserOutlined />} placeholder="email" />
 					</Form.Item>
 					<Form.Item name="password" rules={[{ required: true, message: "Please input your Password!" }]}>
-						<Input prefix={<LockOutlined />} type="password" placeholder="password" />
+						<Input.Password prefix={<LockOutlined />} type="password" placeholder="password" />
 					</Form.Item>
 					<Form.Item>
 						<Flex justify="space-between" align="center">

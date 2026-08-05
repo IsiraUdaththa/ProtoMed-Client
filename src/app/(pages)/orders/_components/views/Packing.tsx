@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Alert, Descriptions, Divider, Spin } from "antd";
+import { Alert, Descriptions, Divider, Flex, Spin } from "antd";
 import { Image } from "antd";
 
 import api from "@/lib/axiosInstance";
@@ -10,10 +10,10 @@ import DateDisplay from "@/app/_components/DateDisplay";
 
 interface PackingData {
 	packedBy: string;
-	packedDate: Date;
-	finalImplantVideo: string;
-	finalImplantPicture: string;
-	finalPackPicture: string;
+	createdAt: Date;
+	implantVideo: string;
+	implantImage: string;
+	packedImage: string;
 }
 
 const App: React.FC<{ orderId: string }> = ({ orderId }) => {
@@ -23,8 +23,8 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await api.get(`orders/${orderId}/`);
-				setData(response.data.packing);
+				const response = await api.get(`orders/${orderId}/packing`);
+				setData(response.data);
 			} catch (error) {
 				console.error("Error fetching order data:", error);
 			} finally {
@@ -45,56 +45,55 @@ const App: React.FC<{ orderId: string }> = ({ orderId }) => {
 					{ label: "Packed By", children: data.packedBy ? <UserTag userId={data.packedBy} /> : "N/A" },
 					{
 						label: "Packed Date",
-						children: data.packedDate ? <DateDisplay isoDate={data.packedDate} /> : "N/A",
+						children: data.createdAt ? <DateDisplay isoDate={data.createdAt} /> : "N/A",
 					},
 				]}
 			/>
 			<Divider />
-
-			<Image
-				width={200}
-				preview={
-					data.finalImplantVideo
-						? {
-								destroyOnClose: true,
-								imageRender: () => <video muted height="100%" controls src={data.finalImplantVideo} />,
-								toolbarRender: () => null,
-								mask: "Final Implant Video",
-							}
-						: false
-				}
-				src="Video"
-				fallback="https://placehold.co/200x200?text=Not+available"
-				alt=""
-			/>
-			<Image
-				width={200}
-				alt="Implant Picture"
-				src={data.finalImplantPicture}
-				fallback="https://placehold.co/200x200?text=Not+available"
-				preview={
-					data.finalImplantPicture
-						? {
-								visible: data.finalImplantPicture ? true : false,
-								mask: "Final Implant Picture",
-							}
-						: false
-				}
-			/>
-			<Image
-				width={200}
-				alt="Final Pack Picture"
-				src={data.finalPackPicture}
-				fallback="https://placehold.co/200x200?text=Not+available"
-				preview={
-					data.finalPackPicture
-						? {
-								visible: data.finalPackPicture ? true : false,
-								mask: "Final Pack Picture",
-							}
-						: false
-				}
-			/>
+			<Flex wrap justify="space-evenly">
+				<Image
+					width={200}
+					preview={
+						data.implantVideo
+							? {
+									destroyOnClose: true,
+									imageRender: () => <video muted height="100%" controls src={data.implantVideo} />,
+									// toolbarRender: () => null,
+									mask: "Final Implant Video",
+								}
+							: false
+					}
+					src={data.implantVideo ? "https://placehold.co/200x200/5f77ff/white?text=Click+to+Preview" : "https://placehold.co/200x200?text=Not+available" }
+					fallback="https://placehold.co/200x200?text=Not+available"
+					alt=""
+				/>
+				<Image
+					width={200}
+					alt="Implant Picture"
+					src={data.implantImage}
+					fallback="https://placehold.co/200x200?text=Not+available"
+					preview={
+						data.implantImage
+							? {
+									mask: "Final Implant Picture",
+								}
+							: false
+					}
+				/>
+				<Image
+					width={200}
+					alt="Final Pack Picture"
+					src={data.packedImage}
+					fallback="https://placehold.co/200x200?text=Not+available"
+					preview={
+						data.packedImage
+							? {
+									mask: "Final Pack Picture",
+								}
+							: false
+					}
+				/>
+			</Flex>
 		</>
 	);
 };
