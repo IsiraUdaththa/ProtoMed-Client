@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { List, Card, message, Spin, Tag, Avatar } from "antd";
 import { UserOutlined, FileTextOutlined } from "@ant-design/icons";
 import Link from "next/link";

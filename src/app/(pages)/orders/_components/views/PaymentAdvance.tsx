@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Descriptions, Spin, Alert } from "antd";
 
 import api from "@/lib/axiosInstance";
